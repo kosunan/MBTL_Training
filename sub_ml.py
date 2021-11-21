@@ -101,15 +101,15 @@ def situationCheck():
         ReadMem(cfg.h_pro, ad.ANTEN_STOP_AD, cfg.b_anten_stop, 1, None)
 
     elif hi_ko_flag1 == 1:  # 琥珀
-        ReadMem(cfg.h_pro, ad.X_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_x_p1, 4, None)
-        ReadMem(cfg.h_pro, ad.ATK_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_atk_p1, 4, None)
-        ReadMem(cfg.h_pro, ad.HITSTOP_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_hitstop_p1, 4, None)
-        ReadMem(cfg.h_pro, ad.HIT_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_hit_p1, 2, None)
-        ReadMem(cfg.h_pro, ad.NOGUARD_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_noguard_p1, 1, None)
-        ReadMem(cfg.h_pro, ad.MOTION_TYPE_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_mftp_p1, 2, None)
-        ReadMem(cfg.h_pro, ad.MOTION_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_mf_p1, 4, None)
-        ReadMem(cfg.h_pro, ad.GAUGE_P1_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_gauge_p1, 4, None)
-        ReadMem(cfg.h_pro, ad.ANTEN_STOP_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_anten_stop, 1, None)
+        ReadMem(cfg.h_pro, ad.X_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_x_p1, 4, None)
+        ReadMem(cfg.h_pro, ad.ATK_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_atk_p1, 4, None)
+        ReadMem(cfg.h_pro, ad.HITSTOP_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_hitstop_p1, 4, None)
+        ReadMem(cfg.h_pro, ad.HIT_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_hit_p1, 2, None)
+        ReadMem(cfg.h_pro, ad.NOGUARD_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_noguard_p1, 1, None)
+        ReadMem(cfg.h_pro, ad.MOTION_TYPE_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_mftp_p1, 2, None)
+        ReadMem(cfg.h_pro, ad.MOTION_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_mf_p1, 4, None)
+        ReadMem(cfg.h_pro, ad.GAUGE_P1_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_gauge_p1, 4, None)
+        ReadMem(cfg.h_pro, ad.ANTEN_STOP_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_anten_stop, 1, None)
 
     if hi_ko_flag2 == 0:  # 翡翠
         ReadMem(cfg.h_pro, ad.X_P2_AD, cfg.b_x_p2, 4, None)
@@ -124,16 +124,16 @@ def situationCheck():
         ReadMem(cfg.h_pro, ad.UKEMI_AD, cfg.b_ukemi, 2, None)
 
     elif hi_ko_flag2 == 1:  # 琥珀
-        ReadMem(cfg.h_pro, ad.X_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_x_p2, 4, None)
-        ReadMem(cfg.h_pro, ad.ATK_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_atk_p2, 4, None)
-        ReadMem(cfg.h_pro, ad.HIT_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_hit_p2, 2, None)
-        ReadMem(cfg.h_pro, ad.HITSTOP_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_hitstop_p2, 4, None)
-        ReadMem(cfg.h_pro, ad.NOGUARD_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_noguard_p2, 1, None)
-        ReadMem(cfg.h_pro, ad.MOTION_TYPE_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_mftp_p2, 2, None)
-        ReadMem(cfg.h_pro, ad.MOTION_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_mf_p2, 4, None)
-        ReadMem(cfg.h_pro, ad.ANTEN2_STOP_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_anten2_stop, 1, None)
-        ReadMem(cfg.h_pro, ad.GAUGE_P2_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_gauge_p2, 4, None)
-        ReadMem(cfg.h_pro, ad.UKEMI_AD + (ad.PLR_STRUCT_SIZE*2), cfg.b_ukemi, 2, None)
+        ReadMem(cfg.h_pro, ad.X_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_x_p2, 4, None)
+        ReadMem(cfg.h_pro, ad.ATK_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_atk_p2, 4, None)
+        ReadMem(cfg.h_pro, ad.HIT_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_hit_p2, 2, None)
+        ReadMem(cfg.h_pro, ad.HITSTOP_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_hitstop_p2, 4, None)
+        ReadMem(cfg.h_pro, ad.NOGUARD_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_noguard_p2, 1, None)
+        ReadMem(cfg.h_pro, ad.MOTION_TYPE_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_mftp_p2, 2, None)
+        ReadMem(cfg.h_pro, ad.MOTION_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_mf_p2, 4, None)
+        ReadMem(cfg.h_pro, ad.ANTEN2_STOP_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_anten2_stop, 1, None)
+        ReadMem(cfg.h_pro, ad.GAUGE_P2_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_gauge_p2, 4, None)
+        ReadMem(cfg.h_pro, ad.UKEMI_AD + (ad.PLR_STRUCT_SIZE * 2), cfg.b_ukemi, 2, None)
 
     # 状況チェック
     ReadMem(cfg.h_pro, ad.TIMER_AD, cfg.b_f_timer, 4, None)
