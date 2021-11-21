@@ -116,6 +116,6 @@ CAM_3_AD = 0x669EF8 + base_ad
 STOP_AD = 0x680AE8 + base_ad
 DAMAGE_AD = 0x669520 + base_ad
 
-TIMER_AD = 0xA8F1F4 + base_ad
+TIMER_AD = 0x563994 + base_ad
 DMY_TIMER_AD = 0x154AF9C + base_ad
 DMYEND_TIMER_AD = 0x154AFA0 + base_ad
