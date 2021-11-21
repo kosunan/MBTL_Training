@@ -56,7 +56,13 @@ while 1:
         f_timer = cfg_ml.f_timer
 
         # 状況記憶
-        if keyboard.is_pressed("F2"):
+        # リセット
+        if keyboard.is_pressed("F1"):
+            if flag1 == 0:
+                flag1 = 1
+                save_flag = 0
+
+        elif keyboard.is_pressed("F2"):
             if flag1 == 0:
                 sub_ml.pause()
                 sub_ml.situationMem()

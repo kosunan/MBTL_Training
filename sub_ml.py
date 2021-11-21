@@ -517,7 +517,7 @@ def view():
     state_str += '|FirstActive' + act_P1
     state_str += '|Overall' + zen_P1
     state_str += '|Circuit' + gauge_p1 + '%' + \
-        '        Position and moon save F2key Switching moon F3key　' + END
+        '   F1key Reset    F2key Position and moon save    F3key Switching moon' + END
 
     state_str += '2P|Position' + x_p2
     state_str += '|FirstActive' + act_P2

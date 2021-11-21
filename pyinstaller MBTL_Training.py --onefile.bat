@@ -1,0 +1,1 @@
+pyinstaller MBTL_Training.py --onefile
