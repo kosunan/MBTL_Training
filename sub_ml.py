@@ -3,6 +3,7 @@ from struct import unpack, pack
 import psutil
 import cfg_ml
 import ad_ml
+import time
 # import copy
 OpenProcess = windll.kernel32.OpenProcess
 CloseHandle = windll.kernel32.CloseHandle
@@ -56,29 +57,25 @@ def play():
 
 def situationMem():
     # 状況を記憶
-    ReadMem(cfg_ml.h_pro, ad_ml.CAM_AD, cfg_ml.b_cam, 1500, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.X_P1_AD, cfg_ml.b_dat_p1, 4, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.X_P2_AD, cfg_ml.b_dat_p2, 4, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.X_P3_AD, cfg_ml.b_dat_p3, 4, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.X_P4_AD, cfg_ml.b_dat_p4, 4, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.M_ST_P1_AD, cfg_ml.b_m_st_p1, 1, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.M_ST_P2_AD, cfg_ml.b_m_st_p2, 1, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.M_GAUGE_P1_AD, cfg_ml.b_m_gauge_p1, 4, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.M_GAUGE_P2_AD, cfg_ml.b_m_gauge_p2, 4, None)
-
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT1_AD, cfg_ml.b_dat_1, 4619, None)
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT2_AD, cfg_ml.b_dat_2, 2000, None)
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT_P1_AD, cfg_ml.b_dat_p1, 3060, None)
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT_P2_AD, cfg_ml.b_dat_p2, 3060, None)
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT_P3_AD, cfg_ml.b_dat_p3, 3060, None)
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT_P3_AD, cfg_ml.b_dat_p3, 3060, None)
 
 def situationWrit():
     # 状況を再現
-    WriteMem(cfg_ml.h_pro, ad_ml.CAM_AD, cfg_ml.b_cam, 1500, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.X_P1_AD, cfg_ml.b_dat_p1, 4, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.X_P2_AD, cfg_ml.b_dat_p2, 4, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.X_P3_AD, cfg_ml.b_dat_p3, 4, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.X_P4_AD, cfg_ml.b_dat_p4, 4, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.M_ST_P1_AD, cfg_ml.b_m_st_p1, 1, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.M_ST_P2_AD, cfg_ml.b_m_st_p2, 1, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.M_GAUGE_P1_AD, cfg_ml.b_m_gauge_p1, 4, None)
-    WriteMem(cfg_ml.h_pro, ad_ml.M_GAUGE_P2_AD, cfg_ml.b_m_gauge_p2, 4, None)
-
+    WriteMem(cfg_ml.h_pro, ad_ml.DAT1_AD, cfg_ml.b_dat_1, 4619, None)
+    # WriteMem(cfg_ml.h_pro, ad_ml.DAT2_AD, cfg_ml.b_dat_2, 2000, None)
+    WriteMem(cfg_ml.h_pro, ad_ml.DAT_P1_AD, cfg_ml.b_dat_p1, 3060, None)
+    WriteMem(cfg_ml.h_pro, ad_ml.DAT_P2_AD, cfg_ml.b_dat_p2, 3060, None)
+    # WriteMem(cfg_ml.h_pro, ad_ml.DAT_P3_AD, cfg_ml.b_dat_p3, 3060, None)
+    # WriteMem(cfg_ml.h_pro, ad_ml.DAT_P3_AD, cfg_ml.b_dat_p3, 3060, None)
+    print("2")
+    time.sleep(1)
+    # 再生
+    WriteMem(cfg_ml.h_pro, ad_ml.STOP_AD, b'\x00', 1, None)
 
 def situationCheck():
 

@@ -59,14 +59,19 @@ while 1:
         if keyboard.is_pressed("F2"):
             if flag1 == 0:
                 sub_ml.pause()
+                time.sleep(1)
                 sub_ml.situationMem()
                 save_flag = 1
                 flag1 = 1
         # 状況再現
-        elif f_timer <= 4 and save_flag == 1:
-            sub_ml.bar_ini()
-            sub_ml.situationWrit()
-
+        elif keyboard.is_pressed("F4"):
+            if flag1 == 0:
+                sub_ml.bar_ini()
+                print("1")
+                sub_ml.pause()
+                time.sleep(1)
+                sub_ml.situationWrit()
+                flag1 = 1
         # # ダミー自動リセット
         # elif cfg_ml.dmy_timer >= cfg_ml.dmyend_timer and cfg_ml.hit_p2 != 0:
         #     sub_ml.situationWrit()

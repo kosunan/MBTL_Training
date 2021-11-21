@@ -41,6 +41,17 @@ b_m_gauge_p2 = create_string_buffer(4)
 b_dmy_timer = create_string_buffer(4)
 b_dmyend_timer = create_string_buffer(4)
 
+
+
+b_dat_1 = create_string_buffer(4619)#補正　カメラ
+b_dat_2 = create_string_buffer(2000)#pouse
+
+b_dat_p1 = create_string_buffer(3060)
+b_dat_p2 = create_string_buffer(3060)
+b_dat_p3 = create_string_buffer(3060)
+b_dat_p4 = create_string_buffer(3060)
+
+
 # 表示するパラメーター類
 Bar_flag = 0
 Bar_num = 1

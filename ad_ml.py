@@ -58,11 +58,6 @@ base_ad = unpack('q', b_baseAddr.raw)[0]
 
 PLR_STRUCT_SIZE = 0xBF4  # 3060
 
-DAT_P1_AD = 0xA8C150 + base_ad  # 1Pデータ開始位置
-DAT_P2_AD = DAT_P1_AD + PLR_STRUCT_SIZE  # 2Pデータ開始位置
-DAT_P3_AD = DAT_P2_AD + PLR_STRUCT_SIZE
-DAT_P4_AD = DAT_P3_AD + PLR_STRUCT_SIZE
-
 # ST_AD = 0x0155C150  # 状況データ開始位置 6032
 # STOP_ST_AD = 0x0059B390  # 停止状況データ開始位置
 
@@ -119,3 +114,15 @@ DAMAGE_AD = 0x669520 + base_ad
 TIMER_AD = 0xA8F1F4 + base_ad
 DMY_TIMER_AD = 0x154AF9C + base_ad
 DMYEND_TIMER_AD = 0x154AFA0 + base_ad
+
+DAT1_AD = 0x6690F8 + base_ad #補正　カメラ
+DAT2_AD = 0x680AE4 + base_ad #pouse
+
+DAT_P1_AD = 0xA8F120 + base_ad  # 1Pデータ開始位置
+DAT_P2_AD = DAT_P1_AD + PLR_STRUCT_SIZE  # 2Pデータ開始位置
+DAT_P3_AD = DAT_P2_AD + PLR_STRUCT_SIZE
+DAT_P4_AD = DAT_P3_AD + PLR_STRUCT_SIZE
+
+# DAT = 0x684AC0+ base_ad
+# OBJ_DAT = 0x6854E4 + base_ad #
+# objCount_offset = 0x6854E0 + base_ad #
