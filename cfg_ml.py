@@ -40,6 +40,8 @@ b_m_gauge_p1 = create_string_buffer(4)
 b_m_gauge_p2 = create_string_buffer(4)
 b_dmy_timer = create_string_buffer(4)
 b_dmyend_timer = create_string_buffer(4)
+b_hi_ko_flag_p1 = create_string_buffer(1)
+b_hi_ko_flag_p2 = create_string_buffer(1)
 
 # 表示するパラメーター類
 Bar_flag = 0
