@@ -111,5 +111,3 @@ for n in range(len(p2_barlist)):
 
 p1_index = 0
 p2_index = 0
-
-# print(mylist)  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
