@@ -11,8 +11,6 @@ Module32First = windll.kernel32.Module32First
 Module32Next = windll.kernel32.Module32Next
 
 # constant
-
-
 class MODULEENTRY32(ctypes.Structure):
     _fields_ = [
         ("dwSize",             wintypes.DWORD),
