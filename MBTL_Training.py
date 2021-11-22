@@ -30,30 +30,26 @@ start_time = time.time()
 
 long_x = 0
 while 1:
-    time.sleep(0.001)
-
-    # 各種数値の取得
-    sub_ml.situationCheck()
-    # 各種数値の取得
-    sub_ml.get_values()
+    time.sleep(0.003)
+    sub_ml.timer_check()
 
     if unpack('b', cfg_ml.b_tr_flag)[0] == 44:
 
         # フレームの切り替わりを監視
         if cfg_ml.f_timer != cfg_ml.f_timer2:
             cfg_ml.f_timer2 = cfg_ml.f_timer
-            cfg_ml.kaisuu = 0
 
-        elif cfg_ml.f_timer == cfg_ml.f_timer2:
-            cfg_ml.kaisuu += 1
+            time.sleep(0.001)
+            # 各種数値の取得
+            sub_ml.situationCheck()
 
-        if cfg_ml.kaisuu == 6:
+            # 各種数値の取得
+            sub_ml.get_values()
+
             # ゲーム状況の取得
             sub_ml.view_st()
 
-        sub_ml.view()
-
-        f_timer = cfg_ml.f_timer
+            sub_ml.view()
 
         # 状況記憶
         # リセット

@@ -139,7 +139,7 @@ def situationCheck():
     ReadMem(cfg.h_pro, ad.TIMER_AD, cfg.b_f_timer, 4, None)
     ReadMem(cfg.h_pro, ad.HOSEI_AD, cfg.b_hosei, 4, None)
     ReadMem(cfg.h_pro, ad.UKEMI2_AD, cfg.b_ukemi2, 2, None)
-    ReadMem(cfg.h_pro, ad.TR_FLAG_AD, cfg.b_tr_flag, 1, None)
+
     ReadMem(cfg.h_pro, ad.DAMAGE_AD, cfg.b_damage, 4, None)
     ReadMem(cfg.h_pro, ad.DMY_TIMER_AD, cfg.b_dmy_timer, 4, None)
     ReadMem(cfg.h_pro, ad.DMYEND_TIMER_AD, cfg.b_dmyend_timer, 4, None)
@@ -419,7 +419,7 @@ def firstActive_calc():
 
 
 def get_values():
-    cfg.f_timer = unpack('l', cfg.b_f_timer.raw)[0]
+
     cfg.x_p1 = unpack('l', cfg.b_x_p1.raw)[0]
     cfg.x_p2 = unpack('l', cfg.b_x_p2.raw)[0]
     cfg.mftp_p1 = unpack('h', cfg.b_mftp_p1.raw)[0]
@@ -616,3 +616,8 @@ def determineReset():
     # 即時リセット
     if bar_ini_flag == 1:
         bar_ini()
+
+def timer_check():
+    ReadMem(cfg.h_pro, ad.TIMER_AD, cfg.b_f_timer, 4, None)
+    cfg.f_timer = unpack('l', cfg.b_f_timer.raw)[0]
+    ReadMem(cfg.h_pro, ad.TR_FLAG_AD, cfg.b_tr_flag, 1, None)
