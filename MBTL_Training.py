@@ -64,8 +64,9 @@ while 1:
                 sub_ml.situationMem()
                 save_flag = 1
                 flag1 = 1
+
         # 状況再現
-        elif f_timer <= 4 and save_flag == 1:
+        elif cfg_ml.f_timer <= 1 and save_flag == 1:
             sub_ml.bar_ini()
             sub_ml.situationWrit()
 

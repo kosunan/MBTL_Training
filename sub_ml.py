@@ -482,6 +482,22 @@ def get_values():
         cfg.mf_p1 = 0
         cfg.mftp_p1 = 0
 
+    if cfg.noguard_p1 == 77 and cfg.mftp_p1 == 81:
+        cfg.mf_p1 = 0
+        cfg.mftp_p1 = 0
+
+    if cfg.noguard_p2 == 77 and cfg.mftp_p2 == 81:
+        cfg.mf_p2 = 0
+        cfg.mftp_p2 = 0
+
+    if cfg.noguard_p1 == 77 and cfg.mftp_p1 == 80:
+        cfg.mf_p1 = 0
+        cfg.mftp_p1 = 0
+
+    if cfg.noguard_p2 == 77 and cfg.mftp_p2 == 80:
+        cfg.mf_p2 = 0
+        cfg.mftp_p2 = 0
+
     # if cfg.noguard_p1 == 77 and cfg.mftp_p1 == 39:
     #     cfg.mf_p1 = 0
     #     cfg.mftp_p1 = 0
@@ -616,6 +632,7 @@ def determineReset():
     # 即時リセット
     if bar_ini_flag == 1:
         bar_ini()
+
 
 def timer_check():
     ReadMem(cfg.h_pro, ad.TIMER_AD, cfg.b_f_timer, 4, None)
