@@ -1,2 +1,0 @@
-# MBTL_Training
-sdf
