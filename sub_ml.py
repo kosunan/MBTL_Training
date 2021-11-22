@@ -498,9 +498,6 @@ def get_values():
         cfg.mf_p2 = 0
         cfg.mftp_p2 = 0
 
-    # if cfg.noguard_p1 == 77 and cfg.mftp_p1 == 39:
-    #     cfg.mf_p1 = 0
-    #     cfg.mftp_p1 = 0
 
     if (cfg.mftp_p1 == 0 or cfg.mftp_p1 == 10 or
             cfg.mftp_p1 == 11 or cfg.mftp_p1 == 12 or
