@@ -9,3 +9,4 @@ build/MBTL_Training/PYZ-00.toc
 build/MBTL_Training/warn-MBTL_Training.txt
 build/MBTL_Training/xref-MBTL_Training.html
 *.pyc
+*.spec

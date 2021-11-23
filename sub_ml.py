@@ -55,6 +55,9 @@ def play():
     # 再生
     WriteMem(cfg.h_pro, ad.STOP_AD, b'\x00', 1, None)
 
+def startposi():
+
+    WriteMem(cfg_ml.h_pro, ad_ml.START_POSI_AD, b'\x00', 1, None)
 
 def situationMem():
     # 状況を記憶

@@ -67,6 +67,7 @@ while 1:
 
         # 状況再現
         elif cfg_ml.f_timer <= 1 and save_flag == 1:
+            sub_ml.startposi()
             sub_ml.bar_ini()
             sub_ml.situationWrit()
 

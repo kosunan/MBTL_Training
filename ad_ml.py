@@ -119,3 +119,5 @@ DAMAGE_AD = 0x669520 + base_ad
 TIMER_AD = 0x563994 + base_ad
 DMY_TIMER_AD = 0x154AF9C + base_ad
 DMYEND_TIMER_AD = 0x154AFA0 + base_ad
+
+START_POSI_AD = 0x563A78 + base_ad
