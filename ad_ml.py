@@ -123,6 +123,8 @@ DAT_P2_AD = DAT_P1_AD + PLR_STRUCT_SIZE  # 2Pデータ開始位置
 DAT_P3_AD = DAT_P2_AD + PLR_STRUCT_SIZE
 DAT_P4_AD = DAT_P3_AD + PLR_STRUCT_SIZE
 
+TEST_DAT_AD = 0x5624A8
+
 # DAT = 0x684AC0+ base_ad
 # OBJ_DAT = 0x6854E4 + base_ad #
 # objCount_offset = 0x6854E0 + base_ad #

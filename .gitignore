@@ -8,3 +8,4 @@ build/MBTL_Training/warn-MBTL_Training.txt
 build/MBTL_Training/xref-MBTL_Training.html
 *.spec
 *.pyc
+build/MBTL_Training/__pycache__

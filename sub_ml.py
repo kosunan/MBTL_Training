@@ -57,8 +57,10 @@ def play():
 
 def situationMem():
     # 状況を記憶
-    ReadMem(cfg_ml.h_pro, ad_ml.DAT1_AD, cfg_ml.b_dat_1, 4619, None)
-    ReadMem(cfg_ml.h_pro, ad_ml.DAT2_AD, cfg_ml.b_dat_2, 2000, None)
+
+    ReadMem(cfg_ml.h_pro, ad_ml.TEST_DAT_AD, cfg_ml.b_test_dat, 10000, None)
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT1_AD, cfg_ml.b_dat_1, 10000, None)
+    ReadMem(cfg_ml.h_pro, ad_ml.DAT2_AD, cfg_ml.b_dat_2, 10000, None)
     ReadMem(cfg_ml.h_pro, ad_ml.DAT_P1_AD, cfg_ml.b_dat_p1, 3060, None)
     ReadMem(cfg_ml.h_pro, ad_ml.DAT_P2_AD, cfg_ml.b_dat_p2, 3060, None)
     ReadMem(cfg_ml.h_pro, ad_ml.DAT_P3_AD, cfg_ml.b_dat_p3, 3060, None)
@@ -66,14 +68,16 @@ def situationMem():
 
 def situationWrit():
     # 状況を再現
-    WriteMem(cfg_ml.h_pro, ad_ml.DAT1_AD, cfg_ml.b_dat_1, 4619, None)
-    # WriteMem(cfg_ml.h_pro, ad_ml.DAT2_AD, cfg_ml.b_dat_2, 2000, None)
+    WriteMem(cfg_ml.h_pro, ad_ml.TEST_DAT_AD, cfg_ml.b_test_dat, 10000, None)
+
+    WriteMem(cfg_ml.h_pro, ad_ml.DAT1_AD, cfg_ml.b_dat_1, 10000, None)
+    # WriteMem(cfg_ml.h_pro, ad_ml.DAT2_AD, cfg_ml.b_dat_2, 10000, None)
     WriteMem(cfg_ml.h_pro, ad_ml.DAT_P1_AD, cfg_ml.b_dat_p1, 3060, None)
     WriteMem(cfg_ml.h_pro, ad_ml.DAT_P2_AD, cfg_ml.b_dat_p2, 3060, None)
     # WriteMem(cfg_ml.h_pro, ad_ml.DAT_P3_AD, cfg_ml.b_dat_p3, 3060, None)
     # WriteMem(cfg_ml.h_pro, ad_ml.DAT_P3_AD, cfg_ml.b_dat_p3, 3060, None)
     print("2")
-    time.sleep(1)
+    # time.sleep(1)
     # 再生
     WriteMem(cfg_ml.h_pro, ad_ml.STOP_AD, b'\x00', 1, None)
 
