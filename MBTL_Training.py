@@ -4,12 +4,14 @@ import os
 
 import time
 import keyboard
-import ad_ml
 
+import ad_ml
 import cfg_ml
 import sub_ml
 
-sub_ml.ex_cmd_enable()
+sub = sub_ml
+cfg = cfg_ml
+sub.ex_cmd_enable()
 os.system('mode con: cols=166 lines=9')
 os.system('cls')
 
@@ -26,61 +28,62 @@ flag1 = 0
 ###############################################################
 
 start_time = time.time()
-# sub_ml.pidget()
+# sub.pidget()
 
 long_x = 0
 while 1:
     time.sleep(0.003)
-    sub_ml.timer_check()
+    sub.timer_check()
 
-    if unpack('b', cfg_ml.b_tr_flag)[0] == 44:
+    if unpack('b', cfg.b_tr_flag)[0] == 44:
+
 
         # フレームの切り替わりを監視
-        if cfg_ml.f_timer != cfg_ml.f_timer2:
-            cfg_ml.f_timer2 = cfg_ml.f_timer
+        if cfg.f_timer != cfg.f_timer2:
+            cfg.f_timer2 = cfg.f_timer
 
             time.sleep(0.001)
             # 各種数値の取得
-            sub_ml.situationCheck()
+            sub.situationCheck()
 
             # 各種数値の取得
-            sub_ml.get_values()
+            sub.get_values()
 
             # ゲーム状況の取得
-            sub_ml.view_st()
+            sub.view_st()
 
-            sub_ml.view()
+            sub.view()
 
-        # 状況記憶
         # リセット
         if keyboard.is_pressed("F1"):
             if flag1 == 0:
                 flag1 = 1
                 save_flag = 0
 
+        # 状況記憶
         elif keyboard.is_pressed("F2"):
             if flag1 == 0:
-                sub_ml.pause()
-                sub_ml.situationMem()
+                sub.pause()
+                sub.situationMem()
                 save_flag = 1
                 flag1 = 1
 
-        # 状況再現
-        elif cfg_ml.f_timer <= 1 and save_flag == 1:
-            sub_ml.startposi()
-            sub_ml.bar_ini()
-            sub_ml.situationWrit()
-
-        # # ダミー自動リセット
-        # elif cfg_ml.dmy_timer >= cfg_ml.dmyend_timer and cfg_ml.hit_p2 != 0:
-        #     sub_ml.situationWrit()
-
-        # moon切り替え
+        # 月切り替え
         elif keyboard.is_pressed("F3"):
             if flag1 == 0:
                 flag1 = 1
-                sub_ml.moon_change()
+                sub.moon_change()
 
         elif flag1 == 1:
             flag1 = 0
-            sub_ml.play()
+            sub.play()
+
+        # リセット時の開始位置固定化
+        if save_flag == 1:
+            sub.startposi()
+
+        # 状況再現
+        if cfg.x_p1 == -40960 and cfg.x_p2 == 40960 and save_flag == 1:
+            sub.bar_ini()
+            sub.situationWrit()
+            sub.bar_ini()
