@@ -42,6 +42,7 @@ b_dmy_timer = create_string_buffer(4)
 b_dmyend_timer = create_string_buffer(4)
 b_hi_ko_flag_p1 = create_string_buffer(1)
 b_hi_ko_flag_p2 = create_string_buffer(1)
+b_start_posi = create_string_buffer(1)
 
 # 表示するパラメーター類
 Bar_flag = 0
@@ -99,15 +100,15 @@ zen_P1 = 0
 zen_P2 = 0
 dmy_timer = 0
 dmyend_timer = 0
-anten=0
-old_mftp=0
-p1_barlist = list(range(81))
-p2_barlist = list(range(81))
+anten = 0
+old_mftp = 0
+p1_barlist = list(range(80))
+p2_barlist = list(range(80))
 for n in range(len(p1_barlist)):
-    p1_barlist[n] =""
+    p1_barlist[n] = ""
 
 for n in range(len(p2_barlist)):
-    p2_barlist[n] =""
+    p2_barlist[n] = ""
 
 p1_index = 0
 p2_index = 0
