@@ -84,6 +84,7 @@ while 1:
 
         # 状況再現
         if cfg.x_p1 == -40960 and cfg.x_p2 == 40960 and save_flag == 1:
-            sub.bar_ini()
             sub.situationWrit()
+
+        if cfg_ml.f_timer <= 1:
             sub.bar_ini()
