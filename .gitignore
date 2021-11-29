@@ -16,3 +16,5 @@ pyinstaller MBTL_Training.py --onefile.bat
 *.toc
 *.pkg
 *.bat
+.vscode/settings.json
+.vscode/launch.json
