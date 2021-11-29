@@ -1,9 +1,13 @@
-
 import psutil
 import ctypes
-from ctypes import *
 from struct import unpack
 import cfg_ml
+
+wintypes = ctypes.wintypes
+windll = ctypes.windll
+sizeof = ctypes.sizeof
+create_string_buffer = ctypes.create_string_buffer
+byref = ctypes.byref
 
 OpenProcess = windll.kernel32.OpenProcess
 CreateToolhelp32Snapshot = windll.kernel32.CreateToolhelp32Snapshot
