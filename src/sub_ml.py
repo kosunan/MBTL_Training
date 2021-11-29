@@ -191,6 +191,7 @@ def view_st():
         cfg.Bar_flag = 0
         cfg.interval += 1
 
+    #バーリセット判定
     determineReset()
 
     # 表示管理　表示するものが無くても前回の表示からインターバルの間は無条件で表示する
@@ -345,7 +346,8 @@ def bar_add():
     cfg.p2_barlist[cfg.Bar_num] = P2_b_c + p2num.rjust(2, " ")[-2:]
     if cfg.anten <= 1:
         cfg.Bar_num += 1
-
+        if cfg.Bar_num == 80 :
+            cfg.Bar_num = 0
 
 def bar_ini():
     cfg.P1_Bar = ""
@@ -510,11 +512,20 @@ def view():
 
     cfg.P1_Bar = ""
     cfg.P2_Bar = ""
-    for n in cfg.p1_barlist:
-        cfg.P1_Bar += n
+    temp = cfg.Bar_num
 
-    for n in cfg.p2_barlist:
-        cfg.P2_Bar += n
+    for n in range(len(cfg.p1_barlist)):
+        if temp == 80:
+            temp = 0
+        cfg.P1_Bar += cfg.p1_barlist[temp]
+        temp += 1
+
+    for n in range(len(cfg.p2_barlist)):
+        if temp == 80:
+            temp = 0
+        cfg.P2_Bar += cfg.p2_barlist[temp]
+        temp += 1
+
 
     if kyori < 0:
         kyori = kyori * -1
@@ -570,23 +581,23 @@ def determineReset():
 
     cfg.interval2 += 1
 
-    # 起き上がりセットプレイ研究用リセット
-    if (
-        cfg.mftp_p2 == 590 and
-        cfg.interval2 > 80
-    ):
-        bar_ini_flag = 1
+    # # 起き上がりセットプレイ研究用リセット
+    # if (
+    #     cfg.mftp_p2 == 590 and
+    #     cfg.interval2 > 80
+    # ):
+    #     bar_ini_flag = 1
 
-    # 1Pがジャンプする際にリセット
-    if (
-        (
-            (cfg.mftp_p1 == 36 and cfg.old_mftp != 36) or
-            (cfg.mftp_p1 == 35 and cfg.old_mftp != 35) or
-            (cfg.mftp_p1 == 39 and cfg.old_mftp != 39) or
-            (cfg.mftp_p1 == 38 and cfg.old_mftp != 38)
-        ) and cfg.interval2 > 80
-    ):
-        bar_ini_flag = 1
+    # # 1Pがジャンプする際にリセット
+    # if (
+    #     (
+    #         (cfg.mftp_p1 == 36 and cfg.old_mftp != 36) or
+    #         (cfg.mftp_p1 == 35 and cfg.old_mftp != 35) or
+    #         (cfg.mftp_p1 == 39 and cfg.old_mftp != 39) or
+    #         (cfg.mftp_p1 == 38 and cfg.old_mftp != 38)
+    #     ) and cfg.interval2 > 80
+    # ):
+    #     bar_ini_flag = 1
 
     cfg.old_mftp = cfg.mftp_p1
 
