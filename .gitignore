@@ -11,3 +11,8 @@ build/MBTL_Training/xref-MBTL_Training.html
 *.pyc
 *.spec
 *.bat
+MBTL_Training.bat
+pyinstaller MBTL_Training.py --onefile.bat
+*.toc
+*.pkg
+*.bat
