@@ -10,3 +10,4 @@ build/MBTL_Training/warn-MBTL_Training.txt
 build/MBTL_Training/xref-MBTL_Training.html
 *.pyc
 *.spec
+*.bat
