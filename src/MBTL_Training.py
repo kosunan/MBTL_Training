@@ -37,9 +37,15 @@ while 1:
 
     if unpack('b', cfg.b_tr_flag)[0] == 44:
 
-
         # フレームの切り替わりを監視
-        if cfg.f_timer != cfg.f_timer2:
+        # if (cfg.f_timer != cfg.f_timer2) or (cfg.mf_p1 != cfg.mf_p1_2) or (cfg.mf_p2 != cfg.mf_p2_2):
+
+        #     cfg.f_timer2 = cfg.f_timer
+        #     cfg.mf_p1_2 = cfg.mf_p1
+        #     cfg.mf_p2_2 = cfg.mf_p2
+
+        if (cfg.f_timer != cfg.f_timer2):
+
             cfg.f_timer2 = cfg.f_timer
 
             time.sleep(0.001)

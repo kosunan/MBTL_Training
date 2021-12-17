@@ -83,6 +83,8 @@ kaisuu = 0
 lng_flag = 1
 mf_p1 = 0
 mf_p2 = 0
+mf_p1_2 = 0
+mf_p2_2 = 0
 mftp_p1 = 0
 mftp_p2 = 0
 moonchange_flag = 0
@@ -103,6 +105,7 @@ dmy_timer = 0
 dmyend_timer = 0
 anten = 0
 old_mftp = 0
+reset_flag = 0
 p1_barlist = list(range(80))
 p2_barlist = list(range(80))
 for n in range(len(p1_barlist)):
