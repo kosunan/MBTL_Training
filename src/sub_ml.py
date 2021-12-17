@@ -590,10 +590,10 @@ def view():
     state_str += '2P|' + cfg.P2_Bar + END
     print(state_str)
 
-    print("hit_p1 " + str(cfg.hit_p1).rjust(7, " ") + " noguard_p1 " + str(cfg.noguard_debug_p1).rjust(7, " ") + "  mftp_p1 " +
-          str(cfg.mftp_debug_p1).rjust(7, " ") + "  mf_p1 " + str(cfg.mf_p1).rjust(7, " "))
-    print("hit_p2 " + str(cfg.hit_p2).rjust(7, " ") + " noguard_p2 " + str(cfg.noguard_debug_p2).rjust(7, " ") + "  mftp_p2 " +
-          str(cfg.mftp_debug_p2).rjust(7, " ") + "  mf_p2 " + str(cfg.mf_p2).rjust(7, " "))
+    # print("hit_p1 " + str(cfg.hit_p1).rjust(7, " ") + " noguard_p1 " + str(cfg.noguard_debug_p1).rjust(7, " ") + "  mftp_p1 " +
+    #       str(cfg.mftp_debug_p1).rjust(7, " ") + "  mf_p1 " + str(cfg.mf_p1).rjust(7, " "))
+    # print("hit_p2 " + str(cfg.hit_p2).rjust(7, " ") + " noguard_p2 " + str(cfg.noguard_debug_p2).rjust(7, " ") + "  mftp_p2 " +
+    #       str(cfg.mftp_debug_p2).rjust(7, " ") + "  mf_p2 " + str(cfg.mf_p2).rjust(7, " "))
 
 
 def determineReset():
