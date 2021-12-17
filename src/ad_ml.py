@@ -15,8 +15,6 @@ Module32First = windll.kernel32.Module32First
 Module32Next = windll.kernel32.Module32Next
 
 # constant
-
-
 class MODULEENTRY32(ctypes.Structure):
     _fields_ = [
         ("dwSize",             wintypes.DWORD),
@@ -112,7 +110,7 @@ HOSEI_AD = 0x66A504 + base_ad
 UKEMI_AD = DAT_P1_AD + 0xED8
 UKEMI2_AD = 0x66A50C + base_ad
 
-TR_FLAG_AD = 0x634E54 + base_ad  # a
+TR_FLAG_AD = 0x634E54 + base_ad
 
 CAM_AD = 0x66ADF0 + base_ad
 # CAM_1_AD = 0x669EC8 + base_ad
@@ -122,7 +120,7 @@ CAM_AD = 0x66ADF0 + base_ad
 STOP_AD = 0x681AD8 + base_ad
 DAMAGE_AD = 0x66A510 + base_ad
 
-TIMER_AD = 0x66A178 + base_ad  # a
+TIMER_AD = 0x66A178 + base_ad
 DMY_TIMER_AD = 0x154AF9C + base_ad
 DMYEND_TIMER_AD = 0x154AFA0 + base_ad
 
