@@ -611,7 +611,7 @@ def determineReset():
     if cfg.Bar_num >= 80:
         cfg.interval_time = 10
     else:
-        cfg.interval_time = 40
+        cfg.interval_time = 50
 
     # インターバル後の初期化
     if cfg.interval_time <= cfg.interval:
