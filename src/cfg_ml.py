@@ -25,8 +25,10 @@ b_mftp_p2 = create_string_buffer(2)
 b_noguard_p1 = create_string_buffer(1)
 b_noguard_p2 = create_string_buffer(1)
 b_tr_flag = create_string_buffer(1)
-b_ukemi = create_string_buffer(2)
+
+b_ukemi1 = create_string_buffer(2)
 b_ukemi2 = create_string_buffer(2)
+
 b_dat_p1 = create_string_buffer(4)
 b_dat_p2 = create_string_buffer(4)
 b_dat_p3 = create_string_buffer(4)
@@ -95,7 +97,7 @@ p2num = ""
 pid = 0
 save_flag = 0
 ukemi2 = 0
-ukemi = 0
+ukemi1 = 0
 x_p1 = 0
 x_p2 = 0
 yuuriF = 0

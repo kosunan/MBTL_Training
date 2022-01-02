@@ -14,7 +14,7 @@ CreateToolhelp32Snapshot = windll.kernel32.CreateToolhelp32Snapshot
 Module32First = windll.kernel32.Module32First
 Module32Next = windll.kernel32.Module32Next
 
-# constant
+
 class MODULEENTRY32(ctypes.Structure):
     _fields_ = [
         ("dwSize",             wintypes.DWORD),
@@ -106,9 +106,15 @@ ANTEN2_STOP_AD = ANTEN_STOP_AD + PLR_STRUCT_SIZE
 HI_KO_P1_AD = DAT_P1_AD + 0x2A2
 HI_KO_P2_AD = HI_KO_P1_AD + PLR_STRUCT_SIZE
 
+UKEMI1_P1_AD = DAT_P1_AD + 0x2DC  # のけぞり時間
+UKEMI1_P2_AD = UKEMI1_P1_AD + PLR_STRUCT_SIZE
+
+UKEMI2_P1_AD = DAT_P1_AD + 0x2E4  # 受け身不能時間
+UKEMI2_P2_AD = UKEMI2_P1_AD + PLR_STRUCT_SIZE
+
 HOSEI_AD = 0x66A504 + base_ad
-UKEMI_AD = DAT_P1_AD + 0xED8
-UKEMI2_AD = 0x66A50C + base_ad
+UKEMI_AD = 0x66A50C + base_ad  # 始動受け身不能時間補正
+
 
 TR_FLAG_AD = 0x634E54 + base_ad
 
@@ -120,7 +126,7 @@ CAM_AD = 0x66ADF0 + base_ad
 STOP_AD = 0x681AD8 + base_ad
 DAMAGE_AD = 0x66A510 + base_ad
 
-TIMER_AD = 0x66A178 + base_ad
+TIMER_AD = 0x66A308 + base_ad
 DMY_TIMER_AD = 0x154AF9C + base_ad
 DMYEND_TIMER_AD = 0x154AFA0 + base_ad
 

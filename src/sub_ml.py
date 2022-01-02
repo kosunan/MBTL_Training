@@ -3,6 +3,8 @@ from struct import unpack, pack
 import psutil
 import cfg_ml
 import ad_ml
+import save
+
 cfg = cfg_ml
 ad = ad_ml
 # import copy
@@ -73,6 +75,13 @@ def situationMem():
     ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD, cfg.b_m_gauge_p1, 4, None)
     ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD, cfg.b_m_gauge_p2, 4, None)
 
+    save.hitstop_p1 = cfg.b_hitstop_p1  # ヒットストップ
+
+    cfg.b_mftp_p1  # モーションタイプ
+    cfg.b_mf_p1  # モーション
+    cfg.b_gauge_p1
+    cfg.b_ukemi1
+
 
 def situationWrit():
     # 状況を再現
@@ -132,12 +141,14 @@ def situationCheck():
             PLR_STRUCT_SIZE2, cfg.b_anten2_stop, 1, None)
     ReadMem(cfg.h_pro, ad.GAUGE_P2_AD +
             PLR_STRUCT_SIZE2, cfg.b_gauge_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.UKEMI_AD + PLR_STRUCT_SIZE2, cfg.b_ukemi, 2, None)
+
+    ReadMem(cfg.h_pro, ad.UKEMI2_P2_AD +
+            PLR_STRUCT_SIZE2, cfg.b_ukemi1, 2, None)
 
     # 状況チェック
     ReadMem(cfg.h_pro, ad.TIMER_AD, cfg.b_f_timer, 4, None)
     ReadMem(cfg.h_pro, ad.HOSEI_AD, cfg.b_hosei, 4, None)
-    ReadMem(cfg.h_pro, ad.UKEMI2_AD, cfg.b_ukemi2, 2, None)
+    ReadMem(cfg.h_pro, ad.UKEMI_AD, cfg.b_ukemi2, 2, None)
 
     ReadMem(cfg.h_pro, ad.DAMAGE_AD, cfg.b_damage, 4, None)
     ReadMem(cfg.h_pro, ad.DMY_TIMER_AD, cfg.b_dmy_timer, 4, None)
@@ -413,8 +424,8 @@ def get_values():
     cfg.hosei = unpack('l', cfg.b_hosei.raw)[0]
     cfg.gauge_p1 = unpack('l', cfg.b_gauge_p1.raw)[0]
     cfg.gauge_p2 = unpack('l', cfg.b_gauge_p2.raw)[0]
-    if unpack('h', cfg.b_ukemi.raw)[0] != 0:
-        cfg.ukemi = unpack('h', cfg.b_ukemi.raw)[0] + 1
+    if unpack('h', cfg.b_ukemi1.raw)[0] != 0:
+        cfg.ukemi1 = unpack('h', cfg.b_ukemi1.raw)[0] + 1
 
     cfg.ukemi2 = unpack('h', cfg.b_ukemi2.raw)[0]
     cfg.damage = unpack('l', cfg.b_damage.raw)[0]
@@ -540,7 +551,7 @@ def view():
 
     yuuriF = str(cfg.yuuriF).rjust(4, " ")
     hosei = str(cfg.hosei).rjust(3, " ")
-    ukemi = str(cfg.ukemi).rjust(3, " ")
+    ukemi1 = str(cfg.ukemi1).rjust(3, " ")
     ukemi2 = str(cfg.ukemi2).rjust(3, " ")
     kyori = cfg.x_p1 - cfg.x_p2
 
@@ -590,7 +601,7 @@ def view():
 
     state_str += '  |Advantage' + yuuriF
     state_str += '    Proration ' + hosei + "%"
-    state_str += ' Untec' + ukemi + ',' + ukemi2
+    state_str += ' Untec' + ukemi1 + ',' + ukemi2
     state_str += '  Range ' + kyori + 'M' + '|' + END
 
     state_str += '  | 1 2 3 4 5 6 7 8 91011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980' + END
@@ -602,6 +613,7 @@ def view():
     #       str(cfg.mftp_debug_p1).rjust(7, " ") + "  mf_p1 " + str(cfg.mf_p1).rjust(7, " "))
     # print("hit_p2 " + str(cfg.hit_p2).rjust(7, " ") + " noguard_p2 " + str(cfg.noguard_debug_p2).rjust(7, " ") + "  mftp_p2 " +
     #       str(cfg.mftp_debug_p2).rjust(7, " ") + "  mf_p2 " + str(cfg.mf_p2).rjust(7, " "))
+    # print("f_timer " + str(cfg.f_timer).rjust(7, " "))
 
 
 def determineReset():
