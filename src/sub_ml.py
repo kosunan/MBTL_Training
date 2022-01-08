@@ -126,11 +126,13 @@ def situationMem():
     ReadMem(cfg.h_pro, ad.X_P3_AD, cfg.b_dat_p3, 4, None)
     ReadMem(cfg.h_pro, ad.X_P4_AD, cfg.b_dat_p4, 4, None)
 
-    ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD, save.m_gauge_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD, save.m_gauge_p2, 4, None)
 
     SIZE = cfg.size_p1
     SIZE2 = cfg.size_p2
+
+    ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + SIZE, save.m_gauge_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD + SIZE2, save.m_gauge_p2, 4, None)
+
     ReadMem(cfg.h_pro, ad.M_ST_P1_AD + SIZE, cfg.b_m_st_p1, 1, None)
     ReadMem(cfg.h_pro, ad.M_ST_P2_AD + SIZE2, cfg.b_m_st_p2, 1, None)
 
@@ -147,15 +149,15 @@ def situationWrit():
     WriteMem(cfg.h_pro, ad.X_P3_AD, cfg.b_dat_p3, 4, None)
     WriteMem(cfg.h_pro, ad.X_P4_AD, cfg.b_dat_p4, 4, None)
 
-    WriteMem(cfg.h_pro, ad.M_GAUGE_P1_AD, save.m_gauge_p1, 4, None)
-    WriteMem(cfg.h_pro, ad.M_GAUGE_P2_AD, save.m_gauge_p2, 4, None)
 
     # タッグキャラ対策
     SIZE = cfg.size_p1
     SIZE2 = cfg.size_p2
+    WriteMem(cfg.h_pro, ad.M_GAUGE_P1_AD + SIZE, save.m_gauge_p1, 4, None)
+    WriteMem(cfg.h_pro, ad.M_GAUGE_P2_AD + SIZE2, save.m_gauge_p2, 4, None)
+
     WriteMem(cfg.h_pro, ad.M_ST_P1_AD + SIZE, cfg.b_m_st_p1, 1, None)
     WriteMem(cfg.h_pro, ad.M_ST_P2_AD + SIZE2, cfg.b_m_st_p2, 1, None)
-
 
 def situationWrit2():
     # 状況を再現
