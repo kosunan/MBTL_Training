@@ -14,12 +14,13 @@ cfg = cfg_ml
 sub.ex_cmd_enable()
 os.system('mode con: cols=166 lines=9')
 os.system('cls')
-
+os.system('title [F1]Reset [F2]Save [F3]Moon switch [F4]Max damage ini')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
 # 変数初期化
 save_flag = 0
+save_flag2 = 0
 f_timer = 0
 flag1 = 0
 
@@ -32,33 +33,12 @@ start_time = time.time()
 
 long_x = 0
 while 1:
+
     time.sleep(0.003)
-    sub.timer_check()
 
+    # トレーニングモードチェック
+    sub.tr_flag_check()
     if unpack('b', cfg.b_tr_flag)[0] == 44:
-
-        # フレームの切り替わりを監視
-        # if (cfg.f_timer != cfg.f_timer2) or (cfg.mf_p1 != cfg.mf_p1_2) or (cfg.mf_p2 != cfg.mf_p2_2):
-
-        #     cfg.f_timer2 = cfg.f_timer
-        #     cfg.mf_p1_2 = cfg.mf_p1
-        #     cfg.mf_p2_2 = cfg.mf_p2
-
-        if (cfg.f_timer != cfg.f_timer2):
-
-            cfg.f_timer2 = cfg.f_timer
-
-            time.sleep(0.001)
-            # 各種数値の取得
-            sub.situationCheck()
-
-            # 各種数値の取得
-            sub.get_values()
-
-            # ゲーム状況の取得
-            sub.view_st()
-
-            sub.view()
 
         # リセット
         if keyboard.is_pressed("F1"):
@@ -72,6 +52,7 @@ while 1:
                 sub.pause()
                 sub.situationMem()
                 save_flag = 1
+                save_flag2 = 1
                 flag1 = 1
 
         # 月切り替え
@@ -80,17 +61,44 @@ while 1:
                 flag1 = 1
                 sub.moon_change()
 
+        # 最大ダメージ初期化
+        elif keyboard.is_pressed("F4"):
+            if flag1 == 0:
+                flag1 = 1
+                sub.MAX_Damage_ini()
+
         elif flag1 == 1:
             flag1 = 0
             sub.play()
 
-        # リセット時の開始位置固定化
-        if save_flag == 1:
-            sub.startposi()
+        # タイマーチェック
+        sub.timer_check()
 
-        # 状況再現
-        if cfg.x_p1 == -40960 and cfg.x_p2 == 40960 and save_flag == 1:
-            sub.situationWrit()
+        # フレームの切り替わりを監視
+        if (cfg.f_timer != cfg.f_timer2):
 
-        if cfg_ml.f_timer <= 1:
-            sub.bar_ini()
+            cfg.f_timer2 = cfg.f_timer
+
+            if cfg_ml.f_timer <= 1:
+                sub.bar_ini()
+
+            time.sleep(0.001)
+
+            # 各種数値の取得
+            sub.situationCheck()
+
+            # 各種数値の取得
+            sub.get_values()
+
+            # ゲーム状況の取得
+            sub.view_st()
+            sub.view()
+
+            # 状況再現
+            if save_flag == 1:
+
+                # リセット時の開始位置固定化
+                sub.startposi()
+
+                if (cfg.x_p1 == -40960 and cfg.x_p2 == 40960):
+                    sub.situationWrit()

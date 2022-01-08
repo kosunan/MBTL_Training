@@ -8,7 +8,7 @@ b_atk_p1 = create_string_buffer(4)
 b_atk_p2 = create_string_buffer(4)
 b_cam = create_string_buffer(1500)
 b_damage = create_string_buffer(4)
-b_f_timer = create_string_buffer(4)
+b_timer = create_string_buffer(4)
 b_gauge_p1 = create_string_buffer(4)
 b_gauge_p2 = create_string_buffer(4)
 b_hit_p1 = create_string_buffer(2)
@@ -38,6 +38,22 @@ b_x_p1 = create_string_buffer(4)
 b_x_p2 = create_string_buffer(4)
 b_x_p3 = create_string_buffer(4)
 b_x_p4 = create_string_buffer(4)
+
+b_y_p1 = create_string_buffer(4)
+b_y_p2 = create_string_buffer(4)
+b_y_p3 = create_string_buffer(4)
+b_y_p4 = create_string_buffer(4)
+
+b_s_x_p1 = create_string_buffer(4)
+b_s_x_p2 = create_string_buffer(4)
+b_s_x_p3 = create_string_buffer(4)
+b_s_x_p4 = create_string_buffer(4)
+
+b_s_y_p1 = create_string_buffer(4)
+b_s_y_p2 = create_string_buffer(4)
+b_s_y_p3 = create_string_buffer(4)
+b_s_y_p4 = create_string_buffer(4)
+
 damage = create_string_buffer(4)
 b_m_gauge_p1 = create_string_buffer(4)
 b_m_gauge_p2 = create_string_buffer(4)
@@ -46,6 +62,8 @@ b_dmyend_timer = create_string_buffer(4)
 b_hi_ko_flag_p1 = create_string_buffer(1)
 b_hi_ko_flag_p2 = create_string_buffer(1)
 b_start_posi = create_string_buffer(1)
+
+temp = create_string_buffer(4)
 
 # 表示するパラメーター類
 Bar_flag = 0
@@ -71,6 +89,9 @@ f_timer2 = 0
 f_timer = 0
 gauge_p1 = 0
 gauge_p2 = 0
+m_gauge_p1 = 0
+m_gauge_p2 = 0
+
 h_pro = 0
 hit_p1 = 0
 hit_p2 = 0
@@ -118,3 +139,5 @@ for n in range(len(p2_barlist)):
 
 p1_index = 0
 p2_index = 0
+size_p1 = 0
+size_p2 = 0

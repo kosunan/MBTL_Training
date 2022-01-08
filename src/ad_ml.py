@@ -112,11 +112,14 @@ UKEMI1_P2_AD = UKEMI1_P1_AD + PLR_STRUCT_SIZE
 UKEMI2_P1_AD = DAT_P1_AD + 0x2E4  # 受け身不能時間
 UKEMI2_P2_AD = UKEMI2_P1_AD + PLR_STRUCT_SIZE
 
-HOSEI_AD = 0x66A504 + base_ad
-UKEMI_AD = 0x66A50C + base_ad  # 始動受け身不能時間補正
-
+START_POSI_AD = 0x564A68 + base_ad
 
 TR_FLAG_AD = 0x634E54 + base_ad
+
+TIMER_AD = 0x66A308 + base_ad
+HOSEI_AD = 0x66A504 + base_ad
+UKEMI_AD = 0x66A50C + base_ad  # 始動受け身不能時間補正
+DAMAGE_AD = 0x66A510 + base_ad
 
 CAM_AD = 0x66ADF0 + base_ad
 # CAM_1_AD = 0x669EC8 + base_ad
@@ -124,10 +127,14 @@ CAM_AD = 0x66ADF0 + base_ad
 # CAM_3_AD = 0x669EF8 + base_ad
 
 STOP_AD = 0x681AD8 + base_ad
-DAMAGE_AD = 0x66A510 + base_ad
 
-TIMER_AD = 0x66A308 + base_ad
+MAX_Damage_Pointer_AD = 0x68649C + base_ad
+
+
 DMY_TIMER_AD = 0x154AF9C + base_ad
 DMYEND_TIMER_AD = 0x154AFA0 + base_ad
 
-START_POSI_AD = 0x564A68 + base_ad
+
+SAVE_BASE_AD = 0x66A0E8 + base_ad
+# SAVE_BASE_AD = 0x5634A0 + base_ad
+SAVE_END_AD = 0x66B6DF + base_ad
