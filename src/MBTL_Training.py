@@ -20,8 +20,6 @@ windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
 # 変数初期化
 save_flag = 0
-save_flag2 = 0
-f_timer = 0
 flag1 = 0
 
 ###############################################################
@@ -29,9 +27,7 @@ flag1 = 0
 ###############################################################
 
 start_time = time.time()
-# sub.pidget()
 
-long_x = 0
 while 1:
 
     time.sleep(0.003)
@@ -40,7 +36,7 @@ while 1:
     sub.tr_flag_check()
     if unpack('b', cfg.b_tr_flag)[0] == 44:
 
-        # リセット
+        # セーブデータリセット
         if keyboard.is_pressed("F1"):
             if flag1 == 0:
                 flag1 = 1
@@ -52,7 +48,6 @@ while 1:
                 sub.pause()
                 sub.situationMem()
                 save_flag = 1
-                save_flag2 = 1
                 flag1 = 1
 
         # 月切り替え
@@ -79,9 +74,6 @@ while 1:
 
             cfg.f_timer2 = cfg.f_timer
 
-            if cfg_ml.f_timer <= 1:
-                sub.bar_ini()
-
             time.sleep(0.001)
 
             # 各種数値の取得
@@ -102,3 +94,6 @@ while 1:
 
                 if (cfg.x_p1 == -40960 and cfg.x_p2 == 40960):
                     sub.situationWrit()
+
+            if cfg_ml.f_timer <= 1:
+                sub.bar_ini()
