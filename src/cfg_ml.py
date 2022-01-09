@@ -1,8 +1,7 @@
 from ctypes import create_string_buffer
 # バイナリデータ変数定義
-b_anten_stop = create_string_buffer(1)
-
-b_anten2_stop = create_string_buffer(1)
+b_anten_stop_p1 = create_string_buffer(1)
+b_anten_stop_p2 = create_string_buffer(1)
 
 b_atk_p1 = create_string_buffer(4)
 b_atk_p2 = create_string_buffer(4)

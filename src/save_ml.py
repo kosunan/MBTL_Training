@@ -1,6 +1,5 @@
 from ctypes import create_string_buffer
 
-
 m_st_p1 = create_string_buffer(1)
 m_st_p2 = create_string_buffer(1)
 
@@ -48,7 +47,6 @@ gauge_p2 = create_string_buffer(4)
 hitstop_p1 = create_string_buffer(4)
 hitstop_p2 = create_string_buffer(4)
 
-data_size = 0x8AB
 data_size = 3060
 P1_data1= create_string_buffer(data_size)
 P2_data1= create_string_buffer(data_size)

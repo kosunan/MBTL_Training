@@ -85,14 +85,14 @@ while 1:
             sub.view_st()
             sub.view()
 
-            # 状況再現
-            if save_flag == 1:
 
-                # リセット時の開始位置固定化
-                sub.startposi()
-
-                if (cfg.x_p1 == -40960 and cfg.x_p2 == 40960):
-                    sub.situationWrit()
+                # if (cfg.x_p1 == -40960 and cfg.x_p2 == 40960):
+            # リセット時の開始位置固定化
+            sub.startposi()
 
             if cfg_ml.f_timer <= 1:
-                sub.bar_ini()
+                if save_flag == 1:
+                    sub.bar_ini()
+
+                    # 状況再現
+                    sub.situationWrit()

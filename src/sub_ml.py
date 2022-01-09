@@ -60,11 +60,6 @@ def play():
     WriteMem(cfg.h_pro, ad.STOP_AD, b'\x00', 1, None)
 
 
-def startposi():
-
-    WriteMem(cfg_ml.h_pro, ad_ml.START_POSI_AD, b'\x00', 1, None)
-
-
 def tagCharacterCheck():
     ReadMem(cfg.h_pro, ad.HI_KO_P1_AD, cfg.b_hi_ko_flag_p1, 1, None)
     ReadMem(cfg.h_pro, ad.HI_KO_P2_AD, cfg.b_hi_ko_flag_p2, 1, None)
@@ -82,32 +77,29 @@ def situationCheck():
     # タッグキャラ対策
     tagCharacterCheck()
 
-    SIZE = cfg.size_p1
-    SIZE2 = cfg.size_p2
+    ReadMem(cfg.h_pro, ad.X_P1_AD + cfg.size_p1, cfg.b_x_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.ATK_P1_AD + cfg.size_p1, cfg.b_atk_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.HITSTOP_P1_AD + cfg.size_p1, cfg.b_hitstop_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.HIT_P1_AD + cfg.size_p1, cfg.b_hit_p1, 2, None)
+    ReadMem(cfg.h_pro, ad.NOGUARD_P1_AD + cfg.size_p1, cfg.b_noguard_p1, 1, None)
+    ReadMem(cfg.h_pro, ad.MOTION_TYPE_P1_AD + cfg.size_p1, cfg.b_mftp_p1, 2, None)
+    ReadMem(cfg.h_pro, ad.MOTION_P1_AD + cfg.size_p1, cfg.b_mf_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.GAUGE_P1_AD + cfg.size_p1, cfg.b_gauge_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.ANTEN_STOP_AD + cfg.size_p1, cfg.b_anten_stop_p1, 1, None)
+    ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, cfg.b_m_gauge_p1, 4, None)
 
-    ReadMem(cfg.h_pro, ad.X_P1_AD + SIZE, cfg.b_x_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.ATK_P1_AD + SIZE, cfg.b_atk_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.HITSTOP_P1_AD + SIZE, cfg.b_hitstop_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.HIT_P1_AD + SIZE, cfg.b_hit_p1, 2, None)
-    ReadMem(cfg.h_pro, ad.NOGUARD_P1_AD + SIZE, cfg.b_noguard_p1, 1, None)
-    ReadMem(cfg.h_pro, ad.MOTION_TYPE_P1_AD + SIZE, cfg.b_mftp_p1, 2, None)
-    ReadMem(cfg.h_pro, ad.MOTION_P1_AD + SIZE, cfg.b_mf_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.GAUGE_P1_AD + SIZE, cfg.b_gauge_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.ANTEN_STOP_AD + SIZE, cfg.b_anten_stop, 1, None)
-    ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + SIZE, cfg.b_m_gauge_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.X_P2_AD + cfg.size_p2, cfg.b_x_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.ATK_P2_AD + cfg.size_p2, cfg.b_atk_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.HIT_P2_AD + cfg.size_p2, cfg.b_hit_p2, 2, None)
+    ReadMem(cfg.h_pro, ad.HITSTOP_P2_AD + cfg.size_p2, cfg.b_hitstop_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.NOGUARD_P2_AD + cfg.size_p2, cfg.b_noguard_p2, 1, None)
+    ReadMem(cfg.h_pro, ad.MOTION_TYPE_P2_AD + cfg.size_p2, cfg.b_mftp_p2, 2, None)
+    ReadMem(cfg.h_pro, ad.MOTION_P2_AD + cfg.size_p2, cfg.b_mf_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.ANTEN2_STOP_AD + cfg.size_p2, cfg.b_anten_stop_p2, 1, None)
+    ReadMem(cfg.h_pro, ad.GAUGE_P2_AD + cfg.size_p2, cfg.b_gauge_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, cfg.b_m_gauge_p2, 4, None)
 
-    ReadMem(cfg.h_pro, ad.X_P2_AD + SIZE2, cfg.b_x_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.ATK_P2_AD + SIZE2, cfg.b_atk_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.HIT_P2_AD + SIZE2, cfg.b_hit_p2, 2, None)
-    ReadMem(cfg.h_pro, ad.HITSTOP_P2_AD + SIZE2, cfg.b_hitstop_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.NOGUARD_P2_AD + SIZE2, cfg.b_noguard_p2, 1, None)
-    ReadMem(cfg.h_pro, ad.MOTION_TYPE_P2_AD + SIZE2, cfg.b_mftp_p2, 2, None)
-    ReadMem(cfg.h_pro, ad.MOTION_P2_AD + SIZE2, cfg.b_mf_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.ANTEN2_STOP_AD + SIZE2, cfg.b_anten2_stop, 1, None)
-    ReadMem(cfg.h_pro, ad.GAUGE_P2_AD + SIZE2, cfg.b_gauge_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD + SIZE2, cfg.b_m_gauge_p2, 4, None)
-
-    ReadMem(cfg.h_pro, ad.UKEMI2_P2_AD + SIZE2, cfg.b_ukemi1, 2, None)
+    ReadMem(cfg.h_pro, ad.UKEMI2_P2_AD + cfg.size_p2, cfg.b_ukemi1, 2, None)
 
     # 状況チェック
     ReadMem(cfg.h_pro, ad.TIMER_AD, cfg.b_timer, 4, None)
@@ -127,14 +119,14 @@ def situationMem():
     ReadMem(cfg.h_pro, ad.X_P4_AD, cfg.b_dat_p4, 4, None)
 
 
-    SIZE = cfg.size_p1
-    SIZE2 = cfg.size_p2
+    cfg.size_p1 = cfg.size_p1
+    cfg.size_p2 = cfg.size_p2
 
-    ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + SIZE, save.m_gauge_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD + SIZE2, save.m_gauge_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, save.m_gauge_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, save.m_gauge_p2, 4, None)
 
-    ReadMem(cfg.h_pro, ad.M_ST_P1_AD + SIZE, cfg.b_m_st_p1, 1, None)
-    ReadMem(cfg.h_pro, ad.M_ST_P2_AD + SIZE2, cfg.b_m_st_p2, 1, None)
+    ReadMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
+    ReadMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, cfg.b_m_st_p2, 1, None)
 
     ReadMem(cfg.h_pro, ad.DAT_P1_AD, save.P1_data1, save.data_size, None)
     ReadMem(cfg.h_pro, ad.DAT_P2_AD, save.P2_data1, save.data_size, None)
@@ -149,15 +141,11 @@ def situationWrit():
     WriteMem(cfg.h_pro, ad.X_P3_AD, cfg.b_dat_p3, 4, None)
     WriteMem(cfg.h_pro, ad.X_P4_AD, cfg.b_dat_p4, 4, None)
 
+    WriteMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, save.m_gauge_p1, 4, None)
+    WriteMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, save.m_gauge_p2, 4, None)
 
-    # タッグキャラ対策
-    SIZE = cfg.size_p1
-    SIZE2 = cfg.size_p2
-    WriteMem(cfg.h_pro, ad.M_GAUGE_P1_AD + SIZE, save.m_gauge_p1, 4, None)
-    WriteMem(cfg.h_pro, ad.M_GAUGE_P2_AD + SIZE2, save.m_gauge_p2, 4, None)
-
-    WriteMem(cfg.h_pro, ad.M_ST_P1_AD + SIZE, cfg.b_m_st_p1, 1, None)
-    WriteMem(cfg.h_pro, ad.M_ST_P2_AD + SIZE2, cfg.b_m_st_p2, 1, None)
+    WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
+    WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, cfg.b_m_st_p2, 1, None)
 
 def situationWrit2():
     # 状況を再現
@@ -167,19 +155,15 @@ def situationWrit2():
 
 
 def moon_change():
-    # タッグキャラ対策
-    SIZE = cfg.size_p1
-    SIZE2 = cfg.size_p2
-
     if cfg.moonchange_flag == 0:
         cfg.moonchange_flag = 1
-        WriteMem(cfg.h_pro, ad.M_ST_P1_AD + SIZE, b'\x01', 1, None)
-        WriteMem(cfg.h_pro, ad.M_ST_P2_AD + SIZE2, b'\x01', 1, None)
+        WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, b'\x01', 1, None)
+        WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, b'\x01', 1, None)
 
     elif cfg.moonchange_flag == 1:
         cfg.moonchange_flag = 0
-        WriteMem(cfg.h_pro, ad.M_ST_P1_AD + SIZE, b'\x00', 1, None)
-        WriteMem(cfg.h_pro, ad.M_ST_P2_AD + SIZE2, b'\x00', 1, None)
+        WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, b'\x00', 1, None)
+        WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, b'\x00', 1, None)
 
 
 def MAX_Damage_ini():
@@ -418,8 +402,8 @@ def get_values():
     cfg.noguard_p2 = unpack('b', cfg.b_noguard_p2.raw)[0]
     cfg.noguard_debug_p1 = cfg.noguard_p1
     cfg.noguard_debug_p2 = cfg.noguard_p2
-    cfg.anten_stop = unpack('B', cfg.b_anten_stop.raw)[0]
-    cfg.anten2_stop = unpack('B', cfg.b_anten2_stop.raw)[0]
+    cfg.anten_stop = unpack('B', cfg.b_anten_stop_p1.raw)[0]
+    cfg.anten2_stop = unpack('B', cfg.b_anten_stop_p2.raw)[0]
 
     cfg.hosei = unpack('l', cfg.b_hosei.raw)[0]
     cfg.gauge_p1 = unpack('l', cfg.b_gauge_p1.raw)[0]
@@ -556,8 +540,11 @@ def view():
     act_P1 = str(cfg.act_P1).rjust(3, " ")
     act_P2 = str(cfg.act_P2).rjust(3, " ")
 
-    yuuriF = str(cfg.yuuriF).rjust(4, " ")
-    hosei = str(cfg.hosei).rjust(3, " ")
+    # yuuriF = str(cfg.yuuriF).rjust(4, " ")
+    yuuriF = str(cfg.yuuriF).rjust(7, " ")
+
+
+    hosei = str(cfg.hosei).rjust(4, " ")
     ukemi1 = str(cfg.ukemi1).rjust(3, " ")
     ukemi2 = str(cfg.ukemi2).rjust(3, " ")
     kyori = cfg.x_p1 - cfg.x_p2
@@ -605,13 +592,13 @@ def view():
     state_str += ' FirstActive' + act_P2
     state_str += ' Overall' + zen_P2
     state_str += ' Circuit' + gauge_p2 + '%'
-    state_str += ' Moon' + m_gauge_p2 + '%'
+    state_str += ' Moon' + m_gauge_p2 + '%' + END
 
-    state_str += '  Proration' + hosei + "%"
+
+    state_str += '  |Advantage' + yuuriF
+    state_str += ' Proration' + hosei + "%"
     state_str += ' Untec' + ukemi1 + ',' + ukemi2
     state_str += '  Range ' + kyori + 'M' + END
-
-    state_str += '  |Advantage' + yuuriF + END
 
     state_str += '  | 1 2 3 4 5 6 7 8 91011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980' + END
     state_str += '1P|' + cfg.P1_Bar + END
@@ -678,3 +665,28 @@ def timer_check():
 def tr_flag_check():
 
     ReadMem(cfg.h_pro, ad.TR_FLAG_AD, cfg.b_tr_flag, 1, None)
+
+def startposi():
+    x_p1 = unpack('l', cfg.b_dat_p1.raw)[0]
+    x_p2 = unpack('l', cfg.b_dat_p2.raw)[0]
+
+    b_ini_posi_flag = b'\x00'
+    if x_p1 < x_p2:
+        b_ini_posi_flag = b'\x00'
+
+    if x_p1 > x_p2:
+        b_ini_posi_flag = b'\x05'
+
+    if x_p1 == 262144:
+        b_ini_posi_flag = b'\x04'
+
+    if x_p1 == -262144:
+        b_ini_posi_flag = b'\x03'
+
+    if x_p2 == 262144:
+        b_ini_posi_flag = b'\x02'
+
+    if x_p2 == -262144:
+        b_ini_posi_flag = b'\x01'
+
+    WriteMem(cfg_ml.h_pro, ad_ml.START_POSI_AD, b_ini_posi_flag, 1, None)
