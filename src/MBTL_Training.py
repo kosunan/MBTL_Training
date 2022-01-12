@@ -14,7 +14,7 @@ cfg = cfg_ml
 sub.ex_cmd_enable()
 os.system('mode con: cols=166 lines=9')
 os.system('cls')
-os.system('title [F1]Reset [F2]Save [F3]Moon switch [F4]Max damage ini')
+# os.system('title [F1]Reset [F2]Save [F3]Moon switch [F4]Max damage ini')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
@@ -28,7 +28,6 @@ start_time = time.time()
 ###############################################################
 
 while 1:
-
     time.sleep(0.003)
 
     # トレーニングモードチェック
@@ -85,14 +84,13 @@ while 1:
             sub.view_st()
             sub.view()
 
-
-                # if (cfg.x_p1 == -40960 and cfg.x_p2 == 40960):
             # リセット時の開始位置固定化
             sub.startposi()
 
+            # if (cfg.x_p1 == -40960 and cfg.x_p2 == 40960):
             if cfg_ml.f_timer <= 1:
-                if save_flag == 1:
-                    sub.bar_ini()
+                sub.bar_ini()
 
+                if save_flag == 1:
                     # 状況再現
                     sub.situationWrit()

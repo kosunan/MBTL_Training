@@ -130,6 +130,7 @@ old_mftp = 0
 reset_flag = 0
 p1_barlist = list(range(80))
 p2_barlist = list(range(80))
+Bar80_flag = 0
 for n in range(len(p1_barlist)):
     p1_barlist[n] = ""
 

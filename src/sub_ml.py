@@ -118,7 +118,6 @@ def situationMem():
     ReadMem(cfg.h_pro, ad.X_P3_AD, cfg.b_dat_p3, 4, None)
     ReadMem(cfg.h_pro, ad.X_P4_AD, cfg.b_dat_p4, 4, None)
 
-
     cfg.size_p1 = cfg.size_p1
     cfg.size_p2 = cfg.size_p2
 
@@ -146,6 +145,7 @@ def situationWrit():
 
     WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
     WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, cfg.b_m_st_p2, 1, None)
+
 
 def situationWrit2():
     # 状況を再現
@@ -208,7 +208,8 @@ def view_st():
 
     # 表示管理　表示するものが無くても前回の表示からインターバルの間は無条件で表示する
     if cfg.interval_time >= cfg.interval and cfg.reset_flag == 0:
-        cfg.Bar_flag = 1
+        if cfg.Bar80_flag == 0:
+            cfg.Bar_flag = 1
 
     # 暗転判定処理
     if cfg.anten_stop == 128 or cfg.anten2_stop == 128:
@@ -243,6 +244,7 @@ def advantage_calc():
         # 不利フレーム検証
         if (cfg.hit_p1 != 0 or cfg.mftp_p1 != 0) and (cfg.hit_p2 == 0 and cfg.mftp_p2 == 0):
             cfg.yuuriF -= 1
+
 
 def overall_calc():
     # 全体フレームの取得
@@ -341,6 +343,7 @@ def bar_add():
         cfg.Bar_num += 1
         if cfg.Bar_num == 80:
             cfg.Bar_num = 0
+            cfg.Bar80_flag = 1
 
     cfg.p1_barlist[cfg.Bar_num] = P1_b_c + p1num.rjust(2, " ")[-2:]
     cfg.p2_barlist[cfg.Bar_num] = P2_b_c + p2num.rjust(2, " ")[-2:]
@@ -354,9 +357,10 @@ def bar_ini():
     cfg.interval = 0
     cfg.interval2 = 0
     cfg.bar_ini_flag2 = 0
-
+    cfg.Bar80_flag = 0
     cfg.p1_index = 0
     cfg.p2_index = 0
+    cfg.interval_time = 80
 
     for n in range(len(cfg.p1_barlist)):
         cfg.p1_barlist[n] = ""
@@ -543,7 +547,6 @@ def view():
     # yuuriF = str(cfg.yuuriF).rjust(4, " ")
     yuuriF = str(cfg.yuuriF).rjust(7, " ")
 
-
     hosei = str(cfg.hosei).rjust(4, " ")
     ukemi1 = str(cfg.ukemi1).rjust(3, " ")
     ukemi2 = str(cfg.ukemi2).rjust(3, " ")
@@ -586,14 +589,14 @@ def view():
     state_str += ' FirstActive' + act_P1
     state_str += ' Overall' + zen_P1
     state_str += ' Circuit' + gauge_p1 + '%'
-    state_str += ' Moon' + m_gauge_p1 + '%' + END
+
+    state_str += ' Moon' + m_gauge_p1 + '%' + '   [F1]Reset [F2]Save [F3]Moon switch [F4]Max damage ini' + END
 
     state_str += '2P|Position' + x_p2
     state_str += ' FirstActive' + act_P2
     state_str += ' Overall' + zen_P2
     state_str += ' Circuit' + gauge_p2 + '%'
     state_str += ' Moon' + m_gauge_p2 + '%' + END
-
 
     state_str += '  |Advantage' + yuuriF
     state_str += ' Proration' + hosei + "%"
@@ -615,12 +618,14 @@ def view():
 
 def determineReset():
     bar_ini_flag = 0
-    cfg.interval_time = 0
-    # 状況でインターバルを変化
-    if cfg.Bar_num >= 80:
-        cfg.interval_time = 10
-    else:
-        cfg.interval_time = 50
+
+    if cfg.Bar80_flag == 1:
+        cfg.interval_time = 1
+    # # 状況でインターバルを変化
+    # if cfg.Bar_num >= 80:
+    #     cfg.interval_time = 10
+    # else:
+    #     cfg.interval_time = 50
 
     # インターバル後の初期化
     if cfg.interval_time <= cfg.interval:
@@ -665,6 +670,7 @@ def timer_check():
 def tr_flag_check():
 
     ReadMem(cfg.h_pro, ad.TR_FLAG_AD, cfg.b_tr_flag, 1, None)
+
 
 def startposi():
     x_p1 = unpack('l', cfg.b_dat_p1.raw)[0]
