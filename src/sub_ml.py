@@ -227,7 +227,6 @@ def view_st():
 
 
 def advantage_calc():
-
     if cfg.hit_p1 == 0 and cfg.hit_p2 == 0 and cfg.mftp_p1 == 0 and cfg.mftp_p2 == 0:
         cfg.DataFlag1 = 0
 
@@ -288,6 +287,9 @@ def bar_add():
     elif cfg.mf_p1 != 0:  # モーション途中
         fb = mot
 
+    # elif cfg.noguard_p1 != 77:  # 硬直中
+    #     fb = mot
+
     elif cfg.hit_p1 != 0:  # ガード硬直中
         fb = grd
 
@@ -333,11 +335,19 @@ def bar_add():
     if cfg.hit_p2 != 0:
         p2num = str(cfg.hit_p2)
 
-    if p1num == '':
-        p1num = '0'
+    if p1num == '0' and cfg.DataFlag1 == 1:
+        P1_b_c = DEF + "\x1b[39m"
+        p1num = str(abs(cfg.yuuriF))
 
-    if p2num == '':
-        p2num = '0'
+    if p2num == '0' and cfg.DataFlag1 == 1:
+        P2_b_c = DEF + "\x1b[39m"
+        p2num = str(abs(cfg.yuuriF))
+
+    # if p1num == '':
+    #     p1num = '0'
+    #
+    # if p2num == '':
+    #     p2num = '0'
 
     if cfg.anten <= 1:
         cfg.Bar_num += 1
@@ -430,6 +440,25 @@ def get_values():
     if cfg.mf_p2 == 256:
         cfg.mf_p2 = 0
 
+    # #試作
+    # if cfg.noguard_p1 == 77 and cfg.mftp_p1 == cfg.mftp_p1_old and cfg.flag_77_p1 == 0:
+    #     cfg.flag_77_p1 = 1
+    #     cfg.mftp77_p1 = cfg.mftp_p1
+    #
+    #
+    # cfg.mftp_p1_old = cfg.mftp_p1
+    # cfg.mftp_p2_old = cfg.mftp_p2
+    #
+    # if cfg.noguard_p1 != 77:
+    #     cfg.flag_77_p1 = 0
+    #
+    # elif cfg.flag_77_p1 == 1 and cfg.mftp77_p1 == cfg.mftp_p1:
+    #     cfg.mf_p1 = 0
+    #     cfg.mftp_p1 = 0
+    #
+    # elif cfg.flag_77_p1 == 1 and cfg.mftp77_p1 != cfg.mftp_p1:
+    #     cfg.flag_77_p1 = 0
+
     if cfg.noguard_p1 == 77 and cfg.mf_p1 > 1:
         cfg.mf_p1 = 0
         cfg.mftp_p1 = 0
@@ -506,7 +535,7 @@ def get_values():
             cfg.mftp_p1 == 11 or cfg.mftp_p1 == 12 or
             cfg.mftp_p1 == 13 or cfg.mftp_p1 == 14 or
             cfg.mftp_p1 == 15 or cfg.mftp_p1 == 18 or
-            cfg.mftp_p1 == 40 or cfg.mftp_p1 == 20 or
+            cfg.mftp_p1 == 20 or
             cfg.mftp_p1 == 16 or cfg.mftp_p1 == 594 or
             cfg.mftp_p1 == 17):
         cfg.mftp_p1 = 0
@@ -515,7 +544,7 @@ def get_values():
             cfg.mftp_p2 == 11 or cfg.mftp_p2 == 12 or
             cfg.mftp_p2 == 13 or cfg.mftp_p2 == 14 or
             cfg.mftp_p2 == 15 or cfg.mftp_p2 == 18 or
-            cfg.mftp_p2 == 40 or cfg.mftp_p2 == 20 or
+            cfg.mftp_p2 == 20 or
             cfg.mftp_p2 == 16 or cfg.mftp_p2 == 594 or
             cfg.mftp_p2 == 17):
         cfg.mftp_p2 = 0
@@ -608,7 +637,7 @@ def view():
     state_str += '2P|' + cfg.P2_Bar + END
 
     print(state_str)
-
+    #
     # print("hit_p1 " + str(cfg.hit_p1).rjust(7, " ") + " noguard_p1 " + str(cfg.noguard_debug_p1).rjust(7, " ") + "  mftp_p1 " +
     #       str(cfg.mftp_debug_p1).rjust(7, " ") + "  mf_p1 " + str(cfg.mf_p1).rjust(7, " "))
     # print("hit_p2 " + str(cfg.hit_p2).rjust(7, " ") + " noguard_p2 " + str(cfg.noguard_debug_p2).rjust(7, " ") + "  mftp_p2 " +

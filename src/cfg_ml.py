@@ -109,6 +109,15 @@ mf_p1_2 = 0
 mf_p2_2 = 0
 mftp_p1 = 0
 mftp_p2 = 0
+mftp_p1_old = 0
+mftp_p2_old = 0
+
+mftp77_p1 = 0
+mftp77_p2 = 0
+
+flag_77_p1 = 0
+flag_77_p2 = 0
+
 moonchange_flag = 0
 noguard_p1 = 0
 noguard_p2 = 0
