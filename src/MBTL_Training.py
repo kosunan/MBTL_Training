@@ -14,7 +14,7 @@ cfg = cfg_ml
 sub.ex_cmd_enable()
 os.system('mode con: cols=166 lines=9')
 os.system('cls')
-# os.system('title [F1]Reset [F2]Save [F3]Moon switch [F4]Max damage ini')
+os.system('title MBTL_Training 1.3')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
