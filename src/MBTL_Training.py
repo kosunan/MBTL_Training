@@ -32,8 +32,8 @@ while 1:
 
     # トレーニングモードチェック
     sub.tr_flag_check()
-    # if unpack('b', cfg.b_tr_flag)[0] == 44:
-    if 1:
+    if unpack('b', cfg.b_tr_flag)[0] == 16:
+    # if 1:
 
         # セーブデータリセット
         if keyboard.is_pressed("F1"):

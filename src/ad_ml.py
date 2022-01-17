@@ -117,7 +117,7 @@ UKEMI2_P2_AD = UKEMI2_P1_AD + PLR_STRUCT_SIZE
 
 START_POSI_AD = 0x6EC8E8 + base_ad
 
-TR_FLAG_AD = 0x83BFF4 + base_ad
+TR_FLAG_AD = 0x6D00DF + base_ad
 
 TIMER_AD = 0x6D0720 + base_ad
 HOSEI_AD = 0x6D0934 + base_ad
