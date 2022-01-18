@@ -112,39 +112,38 @@ def situationCheck():
 
 def situationMem():
     # 状況を記憶
+    #situationWrit
     ReadMem(cfg.h_pro, ad.CAM_AD, cfg.b_cam, 1500, None)
-    ReadMem(cfg.h_pro, ad.X_P1_AD, cfg.b_dat_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.X_P2_AD, cfg.b_dat_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.X_P3_AD, cfg.b_dat_p3, 4, None)
-    ReadMem(cfg.h_pro, ad.X_P4_AD, cfg.b_dat_p4, 4, None)
-
-    cfg.size_p1 = cfg.size_p1
-    cfg.size_p2 = cfg.size_p2
+    ReadMem(cfg.h_pro, ad.X_P1_AD, save.x_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.X_P2_AD, save.x_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.X_P3_AD, save.x_p3, 4, None)
+    ReadMem(cfg.h_pro, ad.X_P4_AD, save.x_p4, 4, None)
 
     ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, save.m_gauge_p1, 4, None)
     ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, save.m_gauge_p2, 4, None)
 
-    ReadMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
-    ReadMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, cfg.b_m_st_p2, 1, None)
+    ReadMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, save.m_st_p1, 1, None)
+    ReadMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, save.m_st_p2, 1, None)
 
+    #situationWrit2
+    ReadMem(cfg.h_pro, ad.SAVE_BASE_AD, save.save_data, save.data_size2, None)
     ReadMem(cfg.h_pro, ad.DAT_P1_AD, save.P1_data1, save.data_size, None)
     ReadMem(cfg.h_pro, ad.DAT_P2_AD, save.P2_data1, save.data_size, None)
-    ReadMem(cfg.h_pro, ad.SAVE_BASE_AD, save.save_data, save.data_size2, None)
 
 
 def situationWrit():
     # 状況を再現
     WriteMem(cfg.h_pro, ad.CAM_AD, cfg.b_cam, 1500, None)
-    WriteMem(cfg.h_pro, ad.X_P1_AD, cfg.b_dat_p1, 4, None)
-    WriteMem(cfg.h_pro, ad.X_P2_AD, cfg.b_dat_p2, 4, None)
-    WriteMem(cfg.h_pro, ad.X_P3_AD, cfg.b_dat_p3, 4, None)
-    WriteMem(cfg.h_pro, ad.X_P4_AD, cfg.b_dat_p4, 4, None)
+    WriteMem(cfg.h_pro, ad.X_P1_AD, save.x_p1, 4, None)
+    WriteMem(cfg.h_pro, ad.X_P2_AD, save.x_p2, 4, None)
+    WriteMem(cfg.h_pro, ad.X_P3_AD, save.x_p3, 4, None)
+    WriteMem(cfg.h_pro, ad.X_P4_AD, save.x_p4, 4, None)
 
     WriteMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, save.m_gauge_p1, 4, None)
     WriteMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, save.m_gauge_p2, 4, None)
 
-    WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
-    WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, cfg.b_m_st_p2, 1, None)
+    WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, save.m_st_p1, 1, None)
+    WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, save.m_st_p2, 1, None)
 
 
 def situationWrit2():
@@ -702,8 +701,8 @@ def tr_flag_check():
 
 
 def startposi():
-    x_p1 = unpack('l', cfg.b_dat_p1.raw)[0]
-    x_p2 = unpack('l', cfg.b_dat_p2.raw)[0]
+    x_p1 = unpack('l', save.x_p1.raw)[0]
+    x_p2 = unpack('l', save.x_p2.raw)[0]
 
     b_ini_posi_flag = b'\x00'
     if x_p1 < x_p2:
