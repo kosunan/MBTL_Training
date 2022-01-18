@@ -32,7 +32,7 @@ while 1:
 
     # トレーニングモードチェック
     sub.tr_flag_check()
-    if unpack('b', cfg.b_tr_flag)[0] == 16:
+    if unpack('b', cfg.b_tr_flag)[0] == 1:
     # if 1:
 
         # セーブデータリセット
