@@ -85,10 +85,10 @@ while 1:
             sub.view_st()
             sub.view()
 
-            # リセット時の開始位置固定化
-            sub.startposi()
+            if save_flag == 1:
+                # リセット時の開始位置固定化
+                sub.startposi()
 
-            # if (cfg.x_p1 == -40960 and cfg.x_p2 == 40960):
             if cfg_ml.f_timer <= 1:
                 sub.bar_ini()
 
