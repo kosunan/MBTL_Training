@@ -76,7 +76,6 @@ def tagCharacterCheck():
 def situationCheck():
     # タッグキャラ対策
     tagCharacterCheck()
-
     ReadMem(cfg.h_pro, ad.X_P1_AD + cfg.size_p1, cfg.b_x_p1, 4, None)
     ReadMem(cfg.h_pro, ad.ATK_P1_AD + cfg.size_p1, cfg.b_atk_p1, 4, None)
     ReadMem(cfg.h_pro, ad.HITSTOP_P1_AD + cfg.size_p1, cfg.b_hitstop_p1, 4, None)
@@ -87,6 +86,8 @@ def situationCheck():
     ReadMem(cfg.h_pro, ad.GAUGE_P1_AD + cfg.size_p1, cfg.b_gauge_p1, 4, None)
     ReadMem(cfg.h_pro, ad.ANTEN_STOP_AD + cfg.size_p1, cfg.b_anten_stop_p1, 1, None)
     ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, cfg.b_m_gauge_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
+
 
     ReadMem(cfg.h_pro, ad.X_P2_AD + cfg.size_p2, cfg.b_x_p2, 4, None)
     ReadMem(cfg.h_pro, ad.ATK_P2_AD + cfg.size_p2, cfg.b_atk_p2, 4, None)
@@ -98,6 +99,7 @@ def situationCheck():
     ReadMem(cfg.h_pro, ad.ANTEN2_STOP_AD + cfg.size_p2, cfg.b_anten_stop_p2, 1, None)
     ReadMem(cfg.h_pro, ad.GAUGE_P2_AD + cfg.size_p2, cfg.b_gauge_p2, 4, None)
     ReadMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, cfg.b_m_gauge_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, cfg.b_m_st_p2, 1, None)
 
     ReadMem(cfg.h_pro, ad.UKEMI2_P2_AD + cfg.size_p2, cfg.b_ukemi1, 2, None)
 
@@ -154,16 +156,18 @@ def situationWrit2():
 
 
 def moon_change():
-    if cfg.moonchange_flag == 0:
-        cfg.moonchange_flag = 1
+
+    if  cfg.b_m_st_p1.raw == b'\x00':
         WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, b'\x01', 1, None)
         WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, b'\x01', 1, None)
 
-    elif cfg.moonchange_flag == 1:
-        cfg.moonchange_flag = 0
+    elif  cfg.b_m_st_p1.raw == b'\x01':
         WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, b'\x00', 1, None)
         WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, b'\x00', 1, None)
 
+
+    WriteMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, b'\x10\x27', 2, None)
+    WriteMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, b'\x10\x27', 2, None)
 
 def MAX_Damage_ini():
 
