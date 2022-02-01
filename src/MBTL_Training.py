@@ -1,7 +1,6 @@
 from ctypes import windll
 from struct import unpack
 import os
-
 import time
 import keyboard
 
@@ -9,12 +8,13 @@ import ad_ml
 import cfg_ml
 import sub_ml
 
-sub = sub_ml
 cfg = cfg_ml
+sub = sub_ml
+
 sub.ex_cmd_enable()
-os.system('mode con: cols=166 lines=9')
+os.system('mode con: cols=166 lines=10')
 os.system('cls')
-os.system('title MBTL_Training 1.3')
+os.system('title MBTL_Training 1.3.1')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 

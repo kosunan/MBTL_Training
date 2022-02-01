@@ -1,6 +1,8 @@
 from ctypes import windll, wintypes, byref
 from struct import unpack, pack
 import psutil
+
+
 import cfg_ml
 import ad_ml
 import save_ml
@@ -88,7 +90,6 @@ def situationCheck():
     ReadMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, cfg.b_m_gauge_p1, 4, None)
     ReadMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
 
-
     ReadMem(cfg.h_pro, ad.X_P2_AD + cfg.size_p2, cfg.b_x_p2, 4, None)
     ReadMem(cfg.h_pro, ad.ATK_P2_AD + cfg.size_p2, cfg.b_atk_p2, 4, None)
     ReadMem(cfg.h_pro, ad.HIT_P2_AD + cfg.size_p2, cfg.b_hit_p2, 2, None)
@@ -114,7 +115,7 @@ def situationCheck():
 
 def situationMem():
     # 状況を記憶
-    #situationWrit
+    # situationWrit
     ReadMem(cfg.h_pro, ad.CAM_AD, cfg.b_cam, 1500, None)
     ReadMem(cfg.h_pro, ad.X_P1_AD, save.x_p1, 4, None)
     ReadMem(cfg.h_pro, ad.X_P2_AD, save.x_p2, 4, None)
@@ -127,7 +128,7 @@ def situationMem():
     ReadMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, save.m_st_p1, 1, None)
     ReadMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, save.m_st_p2, 1, None)
 
-    #situationWrit2
+    # situationWrit2
     ReadMem(cfg.h_pro, ad.SAVE_BASE_AD, save.save_data, save.data_size2, None)
     ReadMem(cfg.h_pro, ad.DAT_P1_AD, save.P1_data1, save.data_size, None)
     ReadMem(cfg.h_pro, ad.DAT_P2_AD, save.P2_data1, save.data_size, None)
@@ -157,17 +158,17 @@ def situationWrit2():
 
 def moon_change():
 
-    if  cfg.b_m_st_p1.raw == b'\x00':
+    if cfg.b_m_st_p1.raw == b'\x00':
         WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, b'\x01', 1, None)
         WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, b'\x01', 1, None)
 
-    elif  cfg.b_m_st_p1.raw == b'\x01':
+    elif cfg.b_m_st_p1.raw == b'\x01':
         WriteMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, b'\x00', 1, None)
         WriteMem(cfg.h_pro, ad.M_ST_P2_AD + cfg.size_p2, b'\x00', 1, None)
 
-
     WriteMem(cfg.h_pro, ad.M_GAUGE_P1_AD + cfg.size_p1, b'\x10\x27', 2, None)
     WriteMem(cfg.h_pro, ad.M_GAUGE_P2_AD + cfg.size_p2, b'\x10\x27', 2, None)
+
 
 def MAX_Damage_ini():
 
@@ -712,19 +713,19 @@ def startposi():
     if x_p1 < x_p2:
         b_ini_posi_flag = b'\x00'
 
-    if x_p1 > x_p2:
+    elif x_p1 > x_p2:
         b_ini_posi_flag = b'\x05'
 
-    if x_p1 == 262144:
+    elif x_p1 == 262144:
         b_ini_posi_flag = b'\x04'
 
-    if x_p1 == -262144:
+    elif x_p1 == -262144:
         b_ini_posi_flag = b'\x03'
 
-    if x_p2 == 262144:
+    elif x_p2 == 262144:
         b_ini_posi_flag = b'\x02'
 
-    if x_p2 == -262144:
+    elif x_p2 == -262144:
         b_ini_posi_flag = b'\x01'
 
     WriteMem(cfg_ml.h_pro, ad_ml.START_POSI_AD, b_ini_posi_flag, 1, None)
