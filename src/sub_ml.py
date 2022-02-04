@@ -702,7 +702,7 @@ def timer_check():
 
 def tr_flag_check():
 
-    ReadMem(cfg.h_pro, ad.TR_FLAG_AD, cfg.b_tr_flag, 1, None)
+    ReadMem(cfg.h_pro, ad.TR_FLAG_AD, cfg.b_tr_flag, 4, None)
 
 
 def startposi():

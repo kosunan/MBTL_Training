@@ -33,6 +33,7 @@ class MODULEENTRY32(ctypes.Structure):
 # ベースアドレス取得
 ###########################################################################
 
+
 dict_pids = {
     p.info["name"]: p.info["pid"]
     for p in psutil.process_iter(attrs=["name", "pid"])
@@ -63,7 +64,7 @@ base_ad = unpack('q', b_baseAddr.raw)[0]
 
 PLR_STRUCT_SIZE = 0xC0C  # 3084
 
-DAT_P1_AD = 0xAFE9F0 + base_ad  # 1Pデータ開始位置
+DAT_P1_AD = 0xAFD990 + base_ad  # 1Pデータ開始位置
 DAT_P2_AD = DAT_P1_AD + PLR_STRUCT_SIZE  # 2Pデータ開始位置
 DAT_P3_AD = DAT_P2_AD + PLR_STRUCT_SIZE
 DAT_P4_AD = DAT_P3_AD + PLR_STRUCT_SIZE
@@ -115,26 +116,29 @@ UKEMI1_P2_AD = UKEMI1_P1_AD + PLR_STRUCT_SIZE
 UKEMI2_P1_AD = DAT_P1_AD + 0x2E4  # 受け身不能時間
 UKEMI2_P2_AD = UKEMI2_P1_AD + PLR_STRUCT_SIZE
 
-START_POSI_AD = 0x6EC8E8 + base_ad
+START_POSI_AD = 0x6EB888 + base_ad
 
-TR_FLAG_AD = 0x69B245 + base_ad
+TR_FLAG_AD = 0x69A1E4 + base_ad
 
-TIMER_AD = 0x6D0720 + base_ad
-HOSEI_AD = 0x6D0934 + base_ad
-UKEMI_AD = 0x6D093C + base_ad  # 始動受け身不能時間補正
-DAMAGE_AD = 0x6D0940 + base_ad
 
-CAM_AD = 0x6D1288 + base_ad
+# DAMAGE_AD = 0x6D0940 + base_ad
+DAMAGE_AD = 0x6CF8F0 + base_ad
+TIMER_AD = 0x6CF6FC + base_ad
+HOSEI_AD = DAMAGE_AD - 12
+UKEMI_AD = DAMAGE_AD - 4 # 始動受け身不能時間補正
+
+
+CAM_AD = DAMAGE_AD + 2376
 # CAM_1_AD = 0x669EC8 + base_ad
 # CAM_2_AD = 0x669EE0 + base_ad
 # CAM_3_AD = 0x669EF8 + base_ad
 
-STOP_AD = 0x6E7F18 + base_ad
+STOP_AD = 0x6E6EB8 + base_ad
 
-MAX_Damage_Pointer_AD = 0x6ECC94 + base_ad
+MAX_Damage_Pointer_AD = 0x6EBC34 + base_ad
 
-DMY_TIMER_AD = 0x154AF9C + base_ad
-DMYEND_TIMER_AD = 0x154AFA0 + base_ad
+# DMY_TIMER_AD = 0x154AF9C + base_ad
+# DMYEND_TIMER_AD = 0x154AFA0 + base_ad
 
 SAVE_BASE_AD = 0x66A0E8 + base_ad
 # SAVE_BASE_AD = 0x5634A0 + base_ad

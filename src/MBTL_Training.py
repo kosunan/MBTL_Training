@@ -14,7 +14,7 @@ sub = sub_ml
 sub.ex_cmd_enable()
 os.system('mode con: cols=166 lines=10')
 os.system('cls')
-os.system('title MBTL_Training 1.3.1')
+os.system('title MBTL_Training 1.4')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
@@ -32,7 +32,7 @@ while 1:
 
     # トレーニングモードチェック
     sub.tr_flag_check()
-    if unpack('b', cfg.b_tr_flag)[0] == 1:
+    if unpack('l', cfg.b_tr_flag)[0] == 300:
     # if 1:
 
         # セーブデータリセット

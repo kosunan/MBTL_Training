@@ -23,7 +23,7 @@ b_mftp_p1 = create_string_buffer(2)
 b_mftp_p2 = create_string_buffer(2)
 b_noguard_p1 = create_string_buffer(1)
 b_noguard_p2 = create_string_buffer(1)
-b_tr_flag = create_string_buffer(1)
+b_tr_flag = create_string_buffer(4)
 
 b_ukemi1 = create_string_buffer(2)
 b_ukemi2 = create_string_buffer(2)
