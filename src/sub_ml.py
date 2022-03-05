@@ -353,7 +353,7 @@ def bar_add():
     # if p2num == '':
     #     p2num = '0'
 
-    if cfg.anten <= 1:
+    if cfg.anten <= 1 and (cfg.hitstop_p1 == 0 or cfg.hitstop_p2 == 0):
         cfg.Bar_num += 1
         if cfg.Bar_num == 80:
             cfg.Bar_num = 0
@@ -362,11 +362,23 @@ def bar_add():
     cfg.p1_barlist[cfg.Bar_num] = P1_b_c + p1num.rjust(2, " ")[-2:]
     cfg.p2_barlist[cfg.Bar_num] = P2_b_c + p2num.rjust(2, " ")[-2:]
 
+    # st_bar_cont = ""
+    if cfg.hitstop_p1 == 0:
+        st_bar_cont = "  "
+        cfg.st_barlist[cfg.Bar_num] = st_bar_cont
+    elif cfg.hitstop_p1 != 0:
+        if cfg.st_barlist[cfg.Bar_num] == "  ":
+
+            st_bar_cont = "\x1b[38;5;243m" + BC_DEF + str(cfg.hitstop_p1).rjust(2, " ")[-2:]
+
+            cfg.st_barlist[cfg.Bar_num] = st_bar_cont
+
 
 def bar_ini():
     cfg.reset_flag = 1
     cfg.P1_Bar = ""
     cfg.P2_Bar = ""
+    cfg.st_Bar = ""
     cfg.Bar_num = 0
     cfg.interval = 0
     cfg.interval2 = 0
@@ -381,6 +393,9 @@ def bar_ini():
 
     for n in range(len(cfg.p2_barlist)):
         cfg.p2_barlist[n] = ""
+
+    for n in range(len(cfg.st_barlist)):
+        cfg.st_barlist[n] = ""
 
 
 def firstActive_calc():
@@ -593,6 +608,7 @@ def view():
 
     cfg.P1_Bar = ""
     cfg.P2_Bar = ""
+    cfg.st_Bar = ""
     temp = cfg.Bar_num
     temp = temp + 1
     for n in cfg.p1_barlist:
@@ -609,6 +625,14 @@ def view():
             temp = 0
 
         cfg.P2_Bar += cfg.p2_barlist[temp]
+        temp += 1
+
+    for n in cfg.st_barlist:
+
+        if temp == 80:
+            temp = 0
+
+        cfg.st_Bar += cfg.st_barlist[temp]
         temp += 1
 
     if kyori < 0:
@@ -639,6 +663,7 @@ def view():
     state_str += '  | 1 2 3 4 5 6 7 8 91011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980' + END
     state_str += '1P|' + cfg.P1_Bar + END
     state_str += '2P|' + cfg.P2_Bar + END
+    # state_str += 'st|' + cfg.st_Bar + END
 
     print(state_str)
     #
@@ -713,19 +738,19 @@ def startposi():
     if x_p1 < x_p2:
         b_ini_posi_flag = b'\x00'
 
-    elif x_p1 > x_p2:
+    if x_p1 > x_p2:
         b_ini_posi_flag = b'\x05'
 
-    elif x_p1 == 262144:
+    if x_p1 == 262144:
         b_ini_posi_flag = b'\x04'
 
-    elif x_p1 == -262144:
+    if x_p1 == -262144:
         b_ini_posi_flag = b'\x03'
 
-    elif x_p2 == 262144:
+    if x_p2 == 262144:
         b_ini_posi_flag = b'\x02'
 
-    elif x_p2 == -262144:
+    if x_p2 == -262144:
         b_ini_posi_flag = b'\x01'
 
     WriteMem(cfg_ml.h_pro, ad_ml.START_POSI_AD, b_ini_posi_flag, 1, None)

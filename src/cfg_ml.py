@@ -72,6 +72,7 @@ P1_Bar = ""
 P1_b_c = ""
 P2_Bar = ""
 P2_b_c = ""
+st_Bar = ""
 act_P1 = 0
 act_P2 = 0
 act_flag_P1 = 0
@@ -139,12 +140,14 @@ old_mftp = 0
 reset_flag = 0
 p1_barlist = list(range(80))
 p2_barlist = list(range(80))
+st_barlist = list(range(80))
 Bar80_flag = 0
 for n in range(len(p1_barlist)):
     p1_barlist[n] = ""
-
 for n in range(len(p2_barlist)):
     p2_barlist[n] = ""
+for n in range(len(st_barlist)):
+    st_barlist[n] = ""
 
 p1_index = 0
 p2_index = 0
