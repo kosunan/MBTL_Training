@@ -12,9 +12,14 @@ cfg = cfg_ml
 sub = sub_ml
 
 sub.ex_cmd_enable()
-os.system('mode con: cols=166 lines=10')
+
+if cfg.debug_flag == 1:
+    os.system('mode con: cols=166 lines=15')
+else:
+    os.system('mode con: cols=166 lines=10')
+
 os.system('cls')
-os.system('title MBTL_Training 1.5')
+os.system('title MBTL_Training 1.6')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
@@ -83,7 +88,6 @@ while 1:
 
             # ゲーム状況の取得
             sub.view_st()
-            sub.view()
 
             if save_flag == 1:
                 # リセット時の開始位置固定化
@@ -95,3 +99,4 @@ while 1:
                 if save_flag == 1:
                     # 状況再現
                     sub.situationWrit()
+        sub.view()

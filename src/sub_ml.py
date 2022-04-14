@@ -1,8 +1,8 @@
 from ctypes import windll, wintypes, byref
 from struct import unpack, pack
 import psutil
-
-
+import os
+import keyboard
 import cfg_ml
 import ad_ml
 import save_ml
@@ -79,7 +79,11 @@ def situationCheck():
     # タッグキャラ対策
     tagCharacterCheck()
     ReadMem(cfg.h_pro, ad.X_P1_AD + cfg.size_p1, cfg.b_x_p1, 4, None)
-    ReadMem(cfg.h_pro, ad.ATK_P1_AD + cfg.size_p1, cfg.b_atk_p1, 4, None)
+    ReadMem(cfg.h_pro, ad.ATK_P1_AD + cfg.size_p1, cfg.b_atk_p1, 1, None)
+    ReadMem(cfg.h_pro, ad.INV_P1_AD + cfg.size_p1, cfg.b_inv_p1, 1, None)
+    ReadMem(cfg.h_pro, ad.SEELD_P1_AD + cfg.size_p1, cfg.b_seeld_p1, 1, None)
+    ReadMem(cfg.h_pro, ad.STEP_INV_P1_AD + cfg.size_p1, cfg.b_step_inv_p1, 1, None)
+
     ReadMem(cfg.h_pro, ad.HITSTOP_P1_AD + cfg.size_p1, cfg.b_hitstop_p1, 4, None)
     ReadMem(cfg.h_pro, ad.HIT_P1_AD + cfg.size_p1, cfg.b_hit_p1, 2, None)
     ReadMem(cfg.h_pro, ad.NOGUARD_P1_AD + cfg.size_p1, cfg.b_noguard_p1, 1, None)
@@ -91,7 +95,11 @@ def situationCheck():
     ReadMem(cfg.h_pro, ad.M_ST_P1_AD + cfg.size_p1, cfg.b_m_st_p1, 1, None)
 
     ReadMem(cfg.h_pro, ad.X_P2_AD + cfg.size_p2, cfg.b_x_p2, 4, None)
-    ReadMem(cfg.h_pro, ad.ATK_P2_AD + cfg.size_p2, cfg.b_atk_p2, 4, None)
+    ReadMem(cfg.h_pro, ad.ATK_P2_AD + cfg.size_p2, cfg.b_atk_p2, 1, None)
+    ReadMem(cfg.h_pro, ad.INV_P2_AD + cfg.size_p1, cfg.b_inv_p2, 1, None)
+    ReadMem(cfg.h_pro, ad.SEELD_P2_AD + cfg.size_p2, cfg.b_seeld_p2, 1, None)
+
+    ReadMem(cfg.h_pro, ad.STEP_INV_P2_AD + cfg.size_p2, cfg.b_step_inv_p2, 1, None)
     ReadMem(cfg.h_pro, ad.HIT_P2_AD + cfg.size_p2, cfg.b_hit_p2, 2, None)
     ReadMem(cfg.h_pro, ad.HITSTOP_P2_AD + cfg.size_p2, cfg.b_hitstop_p2, 4, None)
     ReadMem(cfg.h_pro, ad.NOGUARD_P2_AD + cfg.size_p2, cfg.b_noguard_p2, 1, None)
@@ -265,36 +273,32 @@ def bar_add():
     FC_DEF = '\x1b[39m'
     BC_DEF = '\x1b[49m'
 
-    BC_white = "\x1b[40m"
-    FC_white = "\x1b[30m"
-
-    WHITE = '\x1b[39m'
-    RED = '\x1b[31m'
-
-    atk = "\x1b[41m" + FC_DEF
-    mot = "\x1b[107m" + FC_DEF
-    grd = "\x1b[48;5;08m" + FC_DEF
-    nog = "\x1b[38;5;243m" + BC_DEF
-    fre = "\x1b[38;5;234m" + BC_DEF
+    atk = "\x1b[38;5;255m" + "\x1b[48;5;160m"
+    mot = "\x1b[38;5;255m" + "\x1b[48;5;010m"
+    grd = '\x1b[0m' + "\x1b[48;5;250m"
+    nog = "\x1b[38;5;250m" + "\x1b[48;5;000m"
+    fre = "\x1b[38;5;234m" + "\x1b[48;5;000m"
+    non = "\x1b[38;5;148m" + "\x1b[48;5;201m"
 
     p1num = ""
     p2num = ""
-    P1_b_c = ""
-    P2_b_c = ""
+    P1_b_c = DEF
+    P2_b_c = DEF
     bc = ""
     fc = ""
     fb = ""
     # 1P
-    if cfg.b_atk_p1.raw != b'\x00\x00\x00\x00':  # 攻撃判定を出しているとき
+
+    if cfg.b_atk_p1.raw != b'\x00':  # 攻撃判定を出しているとき
         fb = atk
+
+    elif (cfg.inv_p1 == 0 and cfg.mf_p1 != 0) or (cfg.b_step_inv_p1.raw != b'\x00' and cfg.mftp_p1 == 46):  # 無敵中
+        fb = "\x1b[48;5;015m"
 
     elif cfg.mf_p1 != 0:  # モーション途中
         fb = mot
 
-    # elif cfg.noguard_p1 != 77:  # 硬直中
-    #     fb = mot
-
-    elif cfg.hit_p1 != 0:  # ガード硬直中
+    elif cfg.hit_p1 != 0:  # ガードorヒット硬直中
         fb = grd
 
     elif cfg.mftp_p1 != 0:  # ガードできないとき
@@ -303,11 +307,27 @@ def bar_add():
     elif cfg.mf_p1 == 0:  # 何もしていないとき
         fb = fre
 
-    P1_b_c = fb
+    else:  # いずれにも当てはまらないとき
+        fb = non
+
+    P1_b_c += fb
+
+    # ジャンプ移行中
+    if cfg.mftp_p1 == 34 or cfg.mftp_p1 == 35 or cfg.mftp_p1 == 36 or cfg.mftp_p1 == 37:
+        P1_b_c = P1_b_c + "\x1b[38;5;000m" + "\x1b[48;5;011m"
+
+    # シールド中
+    if cfg.b_seeld_p1.raw == b'\x02':
+        P1_b_c = P1_b_c + "\x1b[38;5;255m" + "\x1b[48;5;006m"
+    if cfg.b_seeld_p1.raw == b'\x03':
+        P1_b_c = P1_b_c + "\x1b[38;5;255m" + "\x1b[48;5;069m"
 
     # 2P
-    if cfg.b_atk_p2.raw != b'\x00\x00\x00\x00':  # 攻撃判定を出しているとき
+    if cfg.b_atk_p2.raw != b'\x00':  # 攻撃判定を出しているとき
         fb = atk
+
+    elif (cfg.inv_p2 == 0 and cfg.mf_p2 != 0) or (cfg.b_step_inv_p2.raw != b'\x00' and cfg.mftp_p2 == 46):  # 無敵中
+        fb = "\x1b[48;5;015m"
 
     elif cfg.mf_p2 != 0:  # モーション途中
         fb = mot
@@ -320,8 +340,20 @@ def bar_add():
 
     elif cfg.mf_p2 == 0:  # 何もしていないとき
         fb = fre
+    else:  # いずれにも当てはまらないとき
+        fb = non
 
-    P2_b_c = fb
+    P2_b_c += fb
+
+    # ジャンプ移行中
+    if cfg.mftp_p2 == 34 or cfg.mftp_p2 == 35 or cfg.mftp_p2 == 36 or cfg.mftp_p2 == 37:
+        P2_b_c = P2_b_c + "\x1b[38;5;000m" + "\x1b[48;5;011m"
+
+    # シールド中
+    if cfg.b_seeld_p2.raw == b'\x02':
+        P2_b_c = P2_b_c + "\x1b[38;5;255m" + "\x1b[48;5;006m"
+    if cfg.b_seeld_p2.raw == b'\x03':
+        P2_b_c = P2_b_c + "\x1b[38;5;255m" + "\x1b[48;5;069m"
 
     if cfg.mf_p1 != 0:
         p1num = str(cfg.mf_p1)
@@ -340,18 +372,12 @@ def bar_add():
         p2num = str(cfg.hit_p2)
 
     if p1num == '0' and cfg.DataFlag1 == 1:
-        P1_b_c = DEF + "\x1b[39m"
+        P1_b_c = DEF + "\x1b[38;5;244m" + "\x1b[48;5;000m"
         p1num = str(abs(cfg.yuuriF))
 
     if p2num == '0' and cfg.DataFlag1 == 1:
-        P2_b_c = DEF + "\x1b[39m"
+        P2_b_c = DEF + "\x1b[38;5;244m" + "\x1b[48;5;000m"
         p2num = str(abs(cfg.yuuriF))
-
-    # if p1num == '':
-    #     p1num = '0'
-    #
-    # if p2num == '':
-    #     p2num = '0'
 
     if cfg.anten <= 1 and (cfg.hitstop_p1 == 0 or cfg.hitstop_p2 == 0):
         cfg.Bar_num += 1
@@ -363,15 +389,15 @@ def bar_add():
     cfg.p2_barlist[cfg.Bar_num] = P2_b_c + p2num.rjust(2, " ")[-2:]
 
     # st_bar_cont = ""
-    if cfg.hitstop_p1 == 0:
-        st_bar_cont = "  "
-        cfg.st_barlist[cfg.Bar_num] = st_bar_cont
-    elif cfg.hitstop_p1 != 0:
-        if cfg.st_barlist[cfg.Bar_num] == "  ":
-
-            st_bar_cont = "\x1b[38;5;243m" + BC_DEF + str(cfg.hitstop_p1).rjust(2, " ")[-2:]
-
-            cfg.st_barlist[cfg.Bar_num] = st_bar_cont
+    # if cfg.hitstop_p1 == 0:
+    #     st_bar_cont = "  "
+    #     cfg.st_barlist[cfg.Bar_num] = st_bar_cont
+    # elif cfg.hitstop_p1 != 0:
+    #     if cfg.st_barlist[cfg.Bar_num] == "  ":
+    #
+    #         st_bar_cont = "\x1b[38;5;235m" + "\x1b[48;5;117m" + BC_DEF + str(cfg.hitstop_p1).rjust(2, " ")[-2:]
+    #
+    #         cfg.st_barlist[cfg.Bar_num] = st_bar_cont
 
 
 def bar_ini():
@@ -425,8 +451,12 @@ def get_values():
     cfg.mftp_debug_p2 = cfg.mftp_p2
     cfg.mf_p1 = 256 - unpack('l', cfg.b_mf_p1.raw)[0]
     cfg.mf_p2 = 256 - unpack('l', cfg.b_mf_p2.raw)[0]
-    cfg.atk_p1 = unpack('l', cfg.b_atk_p1.raw)[0]
-    cfg.atk_p2 = unpack('l', cfg.b_atk_p2.raw)[0]
+    cfg.atk_p1 = unpack('b', cfg.b_atk_p1.raw)[0]
+    cfg.atk_p2 = unpack('b', cfg.b_atk_p2.raw)[0]
+
+    cfg.inv_p1 = unpack('b', cfg.b_inv_p1.raw)[0]
+    cfg.inv_p2 = unpack('b', cfg.b_inv_p2.raw)[0]
+
     cfg.hitstop_p1 = unpack('l', cfg.b_hitstop_p1.raw)[0]
     cfg.hitstop_p2 = unpack('l', cfg.b_hitstop_p2.raw)[0]
     cfg.hit_p1 = unpack('h', cfg.b_hit_p1.raw)[0]
@@ -502,6 +532,14 @@ def get_values():
         cfg.mf_p1 = 0
         cfg.mftp_p1 = 0
 
+    if cfg.noguard_p2 == 77 and cfg.mftp_p2 == 39 and cfg.mftp_p1 != 590:
+        cfg.mf_p2 = 0
+        cfg.mftp_p2 = 0
+
+    if cfg.noguard_p2 == 77 and cfg.mftp_p2 == 38 and cfg.mftp_p1 != 590:
+        cfg.mf_p2 = 0
+        cfg.mftp_p2 = 0
+
     if cfg.noguard_p1 == 77 and cfg.mftp_p1 == 81:
         cfg.mf_p1 = 0
         cfg.mftp_p1 = 0
@@ -547,6 +585,22 @@ def get_values():
         cfg.mftp_p1 = 0
 
     if cfg.noguard_p2 == 77 and cfg.mftp_p2 == 171:
+        cfg.mf_p2 = 0
+        cfg.mftp_p2 = 0
+
+    if cfg.noguard_p1 == 77 and cfg.mftp_p1 == 44:
+        cfg.mf_p1 = 0
+        cfg.mftp_p1 = 0
+
+    if cfg.noguard_p2 == 77 and cfg.mftp_p2 == 44:
+        cfg.mf_p2 = 0
+        cfg.mftp_p2 = 0
+
+    if cfg.noguard_p1 == 77 and cfg.mftp_p1 == 40:
+        cfg.mf_p1 = 0
+        cfg.mftp_p1 = 0
+
+    if cfg.noguard_p2 == 77 and cfg.mftp_p2 == 40:
         cfg.mf_p2 = 0
         cfg.mftp_p2 = 0
 
@@ -647,7 +701,18 @@ def view():
     state_str += ' Overall' + zen_P1
     state_str += ' Circuit' + gauge_p1 + '%'
 
-    state_str += ' Moon' + m_gauge_p1 + '%' + '   [F1]Reset [F2]Save [F3]Moon switch [F4]Max damage ini' + END
+    state_str += ' Moon' + m_gauge_p1 + '%'
+
+    if keyboard.is_pressed("F1"):
+        state_str += '   ' + '\x1b[007m' + '[F1]Reset' + '\x1b[0m' + ' [F2]Save [F3]Moon switch [F4]Max damage ini' + END
+    elif keyboard.is_pressed("F2"):
+        state_str += '   [F1]Reset ' + '\x1b[007m' + '[F2]Save' + '\x1b[0m' + ' [F3]Moon switch [F4]Max damage ini' + END
+    elif keyboard.is_pressed("F3"):
+        state_str += '   [F1]Reset [F2]Save ' + '\x1b[007m' + '[F3]Moon switch' + '\x1b[0m' + ' [F4]Max damage ini' + END
+    elif keyboard.is_pressed("F4"):
+        state_str += '   [F1]Reset [F2]Save [F3]Moon switch ' + '\x1b[007m' + '[F4]Max damage ini' + '\x1b[0m'  + END
+    else:
+        state_str += '   [F1]Reset [F2]Save [F3]Moon switch [F4]Max damage ini' + END
 
     state_str += '2P|Position' + x_p2
     state_str += ' FirstActive' + act_P2
@@ -666,13 +731,20 @@ def view():
     # state_str += 'st|' + cfg.st_Bar + END
 
     print(state_str)
-    #
-    # print("hit_p1 " + str(cfg.hit_p1).rjust(7, " ") + " noguard_p1 " + str(cfg.noguard_debug_p1).rjust(7, " ") + "  mftp_p1 " +
-    #       str(cfg.mftp_debug_p1).rjust(7, " ") + "  mf_p1 " + str(cfg.mf_p1).rjust(7, " "))
-    # print("hit_p2 " + str(cfg.hit_p2).rjust(7, " ") + " noguard_p2 " + str(cfg.noguard_debug_p2).rjust(7, " ") + "  mftp_p2 " +
-    #       str(cfg.mftp_debug_p2).rjust(7, " ") + "  mf_p2 " + str(cfg.mf_p2).rjust(7, " "))
-    # print("f_timer " + str(cfg.f_timer).rjust(7, " "))
 
+
+    if cfg.debug_flag == 1:
+        print("f_timer " + str(cfg.f_timer).rjust(7, " "))
+
+        # print("hit_p1 " + str(cfg.hit_p1).rjust(7, " ") )
+        # print("noguard_p1 " + str(cfg.noguard_debug_p1).rjust(7, " "))
+        print("mftp_p1 " + str(cfg.mftp_debug_p1).rjust(7, " "))
+        # print("mf_p1 " + str(cfg.mf_p1).rjust(7, " "))
+
+        # print("hit_p2 " + str(cfg.hit_p2).rjust(7, " ") )
+        # print("noguard_p2 " + str(cfg.noguard_debug_p2).rjust(7, " "))
+        print("mftp_p2 " + str(cfg.mftp_debug_p2).rjust(7, " "))
+        # print("mf_p2 " + str(cfg.mf_p2).rjust(7, " "))
 
 def determineReset():
     bar_ini_flag = 0

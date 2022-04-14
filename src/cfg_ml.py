@@ -3,8 +3,18 @@ from ctypes import create_string_buffer
 b_anten_stop_p1 = create_string_buffer(1)
 b_anten_stop_p2 = create_string_buffer(1)
 
-b_atk_p1 = create_string_buffer(4)
-b_atk_p2 = create_string_buffer(4)
+b_atk_p1 = create_string_buffer(1)
+b_atk_p2 = create_string_buffer(1)
+b_inv_p1 = create_string_buffer(1)
+b_inv_p2 = create_string_buffer(1)
+
+b_seeld_p1 = create_string_buffer(1)
+b_seeld_p2 = create_string_buffer(1)
+
+b_step_inv_p1 = create_string_buffer(1)
+b_step_inv_p2 = create_string_buffer(1)
+
+
 b_cam = create_string_buffer(1500)
 b_damage = create_string_buffer(4)
 b_timer = create_string_buffer(4)
@@ -82,6 +92,9 @@ anten2_stop = 0
 
 atk_p1 = 0
 atk_p2 = 0
+inv_p1 = 0
+inv_p2 = 0
+
 bar_ini_flag = 0
 bar_ini_flag2 = 0
 damage = 0
@@ -153,3 +166,5 @@ p1_index = 0
 p2_index = 0
 size_p1 = 0
 size_p2 = 0
+
+debug_flag = 0
