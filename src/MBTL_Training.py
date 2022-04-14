@@ -37,6 +37,10 @@ while 1:
 
     # トレーニングモードチェック
     sub.tr_flag_check()
+    if unpack('l', cfg.b_tr_flag)[0] != 300:
+        print("Start training mode")
+        time.sleep(0.2)
+        os.system('cls')
     if unpack('l', cfg.b_tr_flag)[0] == 300:
     # if 1:
 
