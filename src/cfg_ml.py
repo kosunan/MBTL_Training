@@ -1,170 +1,127 @@
 from ctypes import create_string_buffer
-# バイナリデータ変数定義
-b_anten_stop_p1 = create_string_buffer(1)
-b_anten_stop_p2 = create_string_buffer(1)
-
-b_atk_p1 = create_string_buffer(1)
-b_atk_p2 = create_string_buffer(1)
-b_inv_p1 = create_string_buffer(1)
-b_inv_p2 = create_string_buffer(1)
-
-b_seeld_p1 = create_string_buffer(1)
-b_seeld_p2 = create_string_buffer(1)
-
-b_step_inv_p1 = create_string_buffer(1)
-b_step_inv_p2 = create_string_buffer(1)
+Bar80_flag = 0
+bar_range = 80
 
 
+class Character_info:
+    def __init__(self):
+        self.anten_stop_ad = 0x00
+        self.atk_ad = 0x00
+        self.gauge_ad = 0x00
+        self.hit_ad = 0x00
+        self.hitstop_ad = 0x00
+        self.inv_ad = 0x00
+        self.moon_ad = 0x00
+        self.moon_st_ad = 0x00
+        self.motion_ad = 0x00
+        self.motion_type_ad = 0x00
+        self.noguard_ad = 0x00
+        self.seeld_ad = 0x00
+        self.step_inv_ad = 0x00
+        self.tag_flag_ad = 0x00
+        self.ukemi1_ad = 0x00
+        self.ukemi2_ad = 0x00
+        self.x_ad = 0x00
+
+        self.b_anten_stop = create_string_buffer(1)
+        self.b_atk = create_string_buffer(1)
+        self.b_gauge = create_string_buffer(4)
+        self.b_hit = create_string_buffer(2)
+        self.b_hitstop = create_string_buffer(4)
+        self.b_inv = create_string_buffer(1)
+        self.b_moon = create_string_buffer(4)
+        self.b_moon_st = create_string_buffer(1)
+        self.b_motion = create_string_buffer(4)
+        self.b_motion_type = create_string_buffer(2)
+        self.b_noguard = create_string_buffer(1)
+        self.b_seeld = create_string_buffer(1)
+        self.b_step_inv = create_string_buffer(1)
+        self.b_tag_flag = create_string_buffer(1)
+        self.b_ukemi1 = create_string_buffer(2)
+        self.b_ukemi2 = create_string_buffer(2)
+        self.b_x = create_string_buffer(4)
+
+        self.anten_stop = 0
+        self.atk = 0
+        self.gauge = 0
+        self.hit = 0
+        self.hitstop = 0
+        self.inv = 0
+        self.moon = 0
+        self.moon_st = 0
+        self.motion = 0
+        self.motion_type = 0
+        self.noguard = 0
+        self.seeld = 0
+        self.step_inv = 0
+        self.tag_flag = 0
+        self.ukemi1 = 0
+        self.ukemi2 = 0
+        self.x = 0
+        self.act = 0
+        self.zen = 0
+        self.act_flag = 0
+        self.Bar_1 = ''
+        self.Bar_2 = ''
+        self.barlist_1 = list(range(bar_range))
+        self.barlist_2 = list(range(bar_range))
+        self.format = ''
+
+
+P_info = [Character_info(), Character_info(), Character_info(), Character_info()]
+p_info = [Character_info(), Character_info(), Character_info(), Character_info()]
+
+for n1 in P_info:
+    for n2 in range(bar_range):
+        n1.barlist_1[n2] = ""
+
+for n1 in p_info:
+    for n2 in range(bar_range):
+        n1.barlist_1[n2] = ""
+
+P1 = P_info[0]
+P2 = P_info[1]
+P3 = P_info[2]
+P4 = P_info[3]
+#
+p1 = p_info[0]
+p2 = p_info[0]
+p3 = p_info[0]
+p4 = p_info[0]
+
+st_barlist = list(range(bar_range))
+
+for n in range(bar_range):
+    st_barlist[n] = ""
+
+b_timer = create_string_buffer(4)
+b_tr_flag = create_string_buffer(4)
+b_hosei = create_string_buffer(4)
 b_cam = create_string_buffer(1500)
 b_damage = create_string_buffer(4)
-b_timer = create_string_buffer(4)
-b_gauge_p1 = create_string_buffer(4)
-b_gauge_p2 = create_string_buffer(4)
-b_hit_p1 = create_string_buffer(2)
-b_hit_p2 = create_string_buffer(2)
-b_hitstop_p1 = create_string_buffer(4)
-b_hitstop_p2 = create_string_buffer(4)
-b_hosei = create_string_buffer(4)
-b_m_st_p1 = create_string_buffer(1)
-b_m_st_p2 = create_string_buffer(1)
-b_mf_p1 = create_string_buffer(4)
-b_mf_p2 = create_string_buffer(4)
-b_mftp_p1 = create_string_buffer(2)
-b_mftp_p2 = create_string_buffer(2)
-b_noguard_p1 = create_string_buffer(1)
-b_noguard_p2 = create_string_buffer(1)
-b_tr_flag = create_string_buffer(4)
-
-b_ukemi1 = create_string_buffer(2)
-b_ukemi2 = create_string_buffer(2)
-
-b_dat_p1 = create_string_buffer(4)
-b_dat_p2 = create_string_buffer(4)
-b_dat_p3 = create_string_buffer(4)
-b_dat_p4 = create_string_buffer(4)
-
-b_x_p1 = create_string_buffer(4)
-b_x_p2 = create_string_buffer(4)
-b_x_p3 = create_string_buffer(4)
-b_x_p4 = create_string_buffer(4)
-
-b_y_p1 = create_string_buffer(4)
-b_y_p2 = create_string_buffer(4)
-b_y_p3 = create_string_buffer(4)
-b_y_p4 = create_string_buffer(4)
-
-b_s_x_p1 = create_string_buffer(4)
-b_s_x_p2 = create_string_buffer(4)
-b_s_x_p3 = create_string_buffer(4)
-b_s_x_p4 = create_string_buffer(4)
-
-b_s_y_p1 = create_string_buffer(4)
-b_s_y_p2 = create_string_buffer(4)
-b_s_y_p3 = create_string_buffer(4)
-b_s_y_p4 = create_string_buffer(4)
-
-damage = create_string_buffer(4)
-b_m_gauge_p1 = create_string_buffer(4)
-b_m_gauge_p2 = create_string_buffer(4)
-b_dmy_timer = create_string_buffer(4)
-b_dmyend_timer = create_string_buffer(4)
-b_hi_ko_flag_p1 = create_string_buffer(1)
-b_hi_ko_flag_p2 = create_string_buffer(1)
 b_start_posi = create_string_buffer(1)
-
 temp = create_string_buffer(4)
+b_ukemi = create_string_buffer(2)
 
-# 表示するパラメーター類
 Bar_flag = 0
-Bar_num = 1
+Bar_num = 0
 DataFlag1 = 1
-P1_Bar = ""
-P1_b_c = ""
-P2_Bar = ""
-P2_b_c = ""
 st_Bar = ""
-act_P1 = 0
-act_P2 = 0
-act_flag_P1 = 0
-act_flag_P2 = 0
-anten_stop = 0
-anten2_stop = 0
-
-atk_p1 = 0
-atk_p2 = 0
-inv_p1 = 0
-inv_p2 = 0
-
-bar_ini_flag = 0
-bar_ini_flag2 = 0
+hosei = 0
+ukemi = 0
+ukemi2 = 0
 damage = 0
 f_timer2 = 0
 f_timer = 0
-gauge_p1 = 0
-gauge_p2 = 0
-m_gauge_p1 = 0
-m_gauge_p2 = 0
-
+bar_ini_flag = 0
+bar_ini_flag2 = 0
+pid = 0
 h_pro = 0
-hit_p1 = 0
-hit_p2 = 0
-hitstop_p1 = 0
-hitstop_p2 = 0
-hosei = 0
 interval_time = 0
 interval = 41
 interval2 = 80
-
-kaisuu = 0
-lng_flag = 1
-mf_p1 = 0
-mf_p2 = 0
-mf_p1_2 = 0
-mf_p2_2 = 0
-mftp_p1 = 0
-mftp_p2 = 0
-mftp_p1_old = 0
-mftp_p2_old = 0
-
-mftp77_p1 = 0
-mftp77_p2 = 0
-
-flag_77_p1 = 0
-flag_77_p2 = 0
-
-moonchange_flag = 0
-noguard_p1 = 0
-noguard_p2 = 0
-p1num = ""
-p2num = ""
-pid = 0
-save_flag = 0
-ukemi2 = 0
-ukemi1 = 0
-x_p1 = 0
-x_p2 = 0
 yuuriF = 0
-zen_P1 = 0
-zen_P2 = 0
-dmy_timer = 0
-dmyend_timer = 0
 anten = 0
-old_mftp = 0
 reset_flag = 0
-p1_barlist = list(range(80))
-p2_barlist = list(range(80))
-st_barlist = list(range(80))
-Bar80_flag = 0
-for n in range(len(p1_barlist)):
-    p1_barlist[n] = ""
-for n in range(len(p2_barlist)):
-    p2_barlist[n] = ""
-for n in range(len(st_barlist)):
-    st_barlist[n] = ""
-
-p1_index = 0
-p2_index = 0
-size_p1 = 0
-size_p2 = 0
-
-debug_flag = 0
+base_ad = 0
+debug_flag = 1

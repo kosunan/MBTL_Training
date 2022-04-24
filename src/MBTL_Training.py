@@ -32,17 +32,24 @@ start_time = time.time()
 # メイン関数
 ###############################################################
 
+# ベースアドレス取得
+sub.get_base_addres()
+
+# 各アドレス設定
+
 while 1:
     time.sleep(0.003)
 
     # トレーニングモードチェック
     sub.tr_flag_check()
+    # トレーニングモードではない場合
     if unpack('l', cfg.b_tr_flag)[0] != 300:
-        print("Start training mode")
+        print("Waiting for training mode to start ")
         time.sleep(0.2)
         os.system('cls')
-    if unpack('l', cfg.b_tr_flag)[0] == 300:
-    # if 1:
+
+    # トレーニングモードの場合
+    elif unpack('l', cfg.b_tr_flag)[0] == 300:
 
         # セーブデータリセット
         if keyboard.is_pressed("F1"):
