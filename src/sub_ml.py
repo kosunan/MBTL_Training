@@ -324,7 +324,7 @@ def bar_add():
     fre = "\x1b[38;5;234m" + "\x1b[48;5;000m"
     non = "\x1b[38;5;148m" + "\x1b[48;5;201m"
 
-    if cfg.anten == 0 and cfg.hitstop == 0:
+    if cfg.anten == 0 and cfg.hitstop <= 1:
         cfg.Bar_num += 1
         if cfg.Bar_num == cfg.bar_range:
             cfg.Bar_num = 0
