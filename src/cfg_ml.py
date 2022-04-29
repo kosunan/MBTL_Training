@@ -6,6 +6,7 @@ bar_range = 80
 class Character_info:
     def __init__(self):
         self.anten_stop_ad = 0x00
+        self.anten_stop2_ad = 0x00
         self.atk_ad = 0x00
         self.gauge_ad = 0x00
         self.hit_ad = 0x00
@@ -24,10 +25,11 @@ class Character_info:
         self.x_ad = 0x00
 
         self.b_anten_stop = create_string_buffer(1)
+        self.b_anten_stop2 = create_string_buffer(4)
         self.b_atk = create_string_buffer(1)
         self.b_gauge = create_string_buffer(4)
         self.b_hit = create_string_buffer(2)
-        self.b_hitstop = create_string_buffer(4)
+        self.b_hitstop = create_string_buffer(1)
         self.b_inv = create_string_buffer(1)
         self.b_moon = create_string_buffer(4)
         self.b_moon_st = create_string_buffer(1)
@@ -42,15 +44,21 @@ class Character_info:
         self.b_x = create_string_buffer(4)
 
         self.anten_stop = 0
+        self.anten_stop2 = 0
+        self.anten_stop2_old = 0
         self.atk = 0
         self.gauge = 0
         self.hit = 0
         self.hitstop = 0
+        self.hitstop_old = 0
+
         self.inv = 0
         self.moon = 0
         self.moon_st = 0
         self.motion = 0
         self.motion_type = 0
+        self.motion_type_old = 0
+        self.motion_chenge_flag = 0
         self.noguard = 0
         self.seeld = 0
         self.step_inv = 0
@@ -102,6 +110,8 @@ b_damage = create_string_buffer(4)
 b_start_posi = create_string_buffer(1)
 temp = create_string_buffer(4)
 b_ukemi = create_string_buffer(2)
+b_anten = create_string_buffer(1)
+
 
 Bar_flag = 0
 Bar_num = 0
@@ -121,7 +131,10 @@ interval_time = 0
 interval = 41
 interval2 = 80
 yuuriF = 0
+anten_flag = 0
 anten = 0
+
+hitstop=0
 reset_flag = 0
 base_ad = 0
-debug_flag = 1
+debug_flag = 0

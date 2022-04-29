@@ -19,7 +19,7 @@ else:
     os.system('mode con: cols=166 lines=10')
 
 os.system('cls')
-os.system('title MBTL_Training 1.6')
+os.system('title MBTL_Training 1.6.1')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
@@ -76,7 +76,13 @@ while 1:
             if flag1 == 0:
                 flag1 = 1
                 sub.MAX_Damage_ini()
-
+        # デバッグ表示
+        elif (keyboard.is_pressed("9"))and(keyboard.is_pressed("0")):
+            if cfg.debug_flag == 0:
+                cfg.debug_flag = 1
+            elif cfg.debug_flag == 1:
+                cfg.debug_flag = 0
+            time.sleep(0.4)
         elif flag1 == 1:
             flag1 = 0
             sub.play()

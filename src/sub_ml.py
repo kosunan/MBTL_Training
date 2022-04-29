@@ -26,6 +26,7 @@ CreateToolhelp32Snapshot = windll.kernel32.CreateToolhelp32Snapshot
 CloseHandle = windll.kernel32.CloseHandle
 sizeof = ctypes.sizeof
 
+
 class MODULEENTRY32(ctypes.Structure):
     _fields_ = [
         ("dwSize",             wintypes.DWORD),
@@ -39,6 +40,7 @@ class MODULEENTRY32(ctypes.Structure):
         ("szModule",           ctypes.c_byte * 256),
         ("szExePath",          ctypes.c_byte * 260),
     ]
+
 
 def get_base_addres():
     cfg_ml.pid = 0
@@ -157,6 +159,7 @@ def tagCharacterCheck():
 def situationCheck():
     for n in cfg.P_info:
         r_mem(n.anten_stop_ad, n.b_anten_stop)
+        r_mem(n.anten_stop2_ad, n.b_anten_stop2)
         r_mem(n.atk_ad, n.b_atk)
         r_mem(n.gauge_ad, n.b_gauge)
         r_mem(n.hit_ad, n.b_hit)
@@ -174,12 +177,12 @@ def situationCheck():
         r_mem(n.ukemi2_ad, n.b_ukemi2)
         r_mem(n.x_ad, n.b_x)
 
-    # 状況チェック
     r_mem(ad.TIMER_AD, cfg.b_timer)
     r_mem(ad.HOSEI_AD, cfg.b_hosei)
     r_mem(ad.DAMAGE_AD, cfg.b_damage)
     r_mem(ad.START_POSI_AD, cfg.b_start_posi)
     r_mem(ad.UKEMI_AD, cfg.b_ukemi)
+    r_mem(ad.ANTEN_AD, cfg.b_anten)
 
 
 def situationMem():
@@ -258,16 +261,25 @@ def view_st():
         if cfg.Bar80_flag == 0:
             cfg.Bar_flag = 1
 
-    # 暗転判定処理
-    if cfg.p1.anten_stop == 128 or cfg.p2.anten_stop == 128:
+    # ヒットストップ処理
+    if (cfg.p1.hitstop != 0 and cfg.p2.hitstop != 0):
+        cfg.hitstop += 1
+    elif (cfg.p1.hitstop == 0 or cfg.p2.hitstop == 0):
+        cfg.hitstop = 0
+
+    if cfg.anten_flag == 16 and cfg.p1.anten_stop2 == cfg.p1.anten_stop2_old:
+        cfg.anten += 1
+    else:
+        cfg.anten = 0
+
+    if cfg.anten_flag == 16 and cfg.p2.anten_stop2 == cfg.p2.anten_stop2_old:
         cfg.anten += 1
     else:
         cfg.anten = 0
 
     # バー追加処理
     if cfg.Bar_flag == 1:
-        if (cfg.p1.hitstop == 0 or cfg.p2.hitstop == 0):
-            bar_add()
+        bar_add()
 
 
 def advantage_calc():
@@ -312,7 +324,7 @@ def bar_add():
     fre = "\x1b[38;5;234m" + "\x1b[48;5;000m"
     non = "\x1b[38;5;148m" + "\x1b[48;5;201m"
 
-    if cfg.anten <= 1 and (cfg.p1.hitstop == 0 or cfg.p2.hitstop == 0):
+    if cfg.anten == 0 and cfg.hitstop == 0:
         cfg.Bar_num += 1
         if cfg.Bar_num == cfg.bar_range:
             cfg.Bar_num = 0
@@ -356,8 +368,7 @@ def bar_add():
 
         # 起き上がり中
         if n.motion_type == 593:
-            fb = grd
-
+            fb = "\x1b[38;5;255m" + "\x1b[48;5;055m"
         font += fb
 
         if n.motion != 0:
@@ -418,14 +429,22 @@ def firstActive_calc():
 def get_values():
     for n in cfg.P_info:
         n.x = unpack('l', n.b_x.raw)[0]
+        if n.motion_type != 0:
+            n.motion_type_old = n.motion_type
         n.motion_type = unpack('h', n.b_motion_type.raw)[0]
+
         n.motion = 256 - unpack('l', n.b_motion.raw)[0]
         n.atk = unpack('b', n.b_atk.raw)[0]
         n.inv = unpack('b', n.b_inv.raw)[0]
-        n.hitstop = unpack('l', n.b_hitstop.raw)[0]
+
+        n.hitstop_old = n.hitstop
+        n.hitstop = unpack('b', n.b_hitstop.raw)[0]
         n.hit = unpack('h', n.b_hit.raw)[0]
         n.noguard = unpack('b', n.b_noguard.raw)[0]
         n.anten_stop = unpack('B', n.b_anten_stop.raw)[0]
+        n.anten_stop2_old = n.anten_stop2
+        n.anten_stop2 = unpack('l', n.b_anten_stop2.raw)[0]
+
         n.gauge = unpack('l', n.b_gauge.raw)[0]
         n.moon = unpack('l', n.b_moon.raw)[0]
         n.ukemi1 = unpack('h', n.b_ukemi1.raw)[0]
@@ -434,26 +453,48 @@ def get_values():
     cfg.damage = unpack('l', cfg.b_damage.raw)[0]
     cfg.hosei = unpack('l', cfg.b_hosei.raw)[0]
     cfg.ukemi = unpack('h', cfg.b_ukemi.raw)[0]
+    cfg.anten_flag = unpack('B', cfg.b_anten.raw)[0]
 
     tagCharacterCheck()
+    # 初回77だけ無視してmotion_typeを表示
+    for n in cfg.p_info:
+        if n.motion_type_old == n.motion_type:
+            n.motion_chenge_flag += 1
+        else:
+            n.motion_chenge_flag = 0
 
     for n in cfg.p_info:
+        if n.hitstop == 65536:
+            n.hitstop = 0
+
         if n.motion == 256:
             n.motion = 0
-
         if n.noguard == 77:
-            negligible_number = [21, 81, 80, 149, 98, 147, 171, 44, 40, 10, 11, 12, 13, 14, 15, 18, 20, 16, 594, 17, 38,  39,  19]
+            negligible_number = [21, 81, 80, 149,
+                                 98, 171, 44,
+                                 40, 10, 11, 12,
+                                 13, 14, 15, 18,
+                                 20, 16, 594, 17,
+                                 38, 39, 19, 201,
+                                 200]
 
             for m in negligible_number:
 
                 if n.motion > 1:
                     n.motion = 0
+
                 if n.motion_type == m:
                     n.motion = 0
                     n.motion_type = 0
                     break
-        if n.hitstop == 65536:
-            n.hitstop = 0
+
+            if n.motion_chenge_flag != 0:
+                negligible_number = [147]
+                for m in negligible_number:
+                    if n.motion_type == m:
+                        n.motion = 0
+                        n.motion_type = 0
+                        break
 
 
 def view():
@@ -560,16 +601,16 @@ def view():
     state_str += '  | 1 2 3 4 5 6 7 8 91011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980' + END
     state_str += '1P|' + cfg.p1.Bar_1 + END
     state_str += '2P|' + cfg.p2.Bar_1 + END
-    state_str += '3P|' + cfg.p3.Bar_1 + END
-    state_str += '4P|' + cfg.p4.Bar_1 + END
-
+    # state_str += '3P|' + cfg.p3.Bar_1 + END
+    # state_str += '4P|' + cfg.p4.Bar_1 + END判断
     print(state_str)
+    degug_view()
 
+
+def degug_view():
     if cfg.debug_flag == 1:
-        debug_str_p1 = ""
-        debug_str_p2 = ""
-        print("f_timer " + str(cfg.f_timer).rjust(7, " "))
-        print("Bar_num " + str(cfg.Bar_num).rjust(7, " "))
+        debug_str_p1 = "f_timer " + str(cfg.f_timer).rjust(7, " ")
+        debug_str_p2 = "Bar_num " + str(cfg.Bar_num).rjust(7, " ")
 
         debug_str_p1 += "motion_type " + str(cfg.p1.motion_type).rjust(7, " ")
         debug_str_p2 += "motion_type " + str(cfg.p2.motion_type).rjust(7, " ")
@@ -577,12 +618,17 @@ def view():
         debug_str_p2 += " motion " + str(cfg.p2.motion).rjust(7, " ")
         debug_str_p1 += " anten_stop " + str(cfg.p1.anten_stop).rjust(7, " ")
         debug_str_p2 += " anten_stop " + str(cfg.p2.anten_stop).rjust(7, " ")
+        debug_str_p1 += " motion_chenge_flag " + str(cfg.p1.motion_chenge_flag).rjust(7, " ")
+        debug_str_p2 += " motion_chenge_flag " + str(cfg.p2.motion_chenge_flag).rjust(7, " ")
+        debug_str_p1 += " hitstop " + str(cfg.p1.hitstop).rjust(7, " ")
+        debug_str_p2 += " hitstop " + str(cfg.p2.hitstop).rjust(7, " ")
+        debug_str_p1 += " noguard " + str(cfg.p1.noguard).rjust(7, " ")
+        debug_str_p2 += " noguard " + str(cfg.p2.noguard).rjust(7, " ")
+        debug_str_p1 += " hitstop_old " + str(cfg.p1.hitstop_old).rjust(7, " ")
+        debug_str_p2 += " hitstop_old " + str(cfg.p2.hitstop_old).rjust(7, " ")
 
-        # print("noguard_p1 " + str(cfg.noguard_debug_p1).rjust(7, " "))
-        # print("mf_p1 " + str(cfg.p1.motion).rjust(7, " "))
+        debug_str_p1 += " anten " + str(cfg.anten).rjust(7, " ")
 
-        # print("hit_p2 " + str(cfg.p2.hit).rjust(7, " ") )
-        # print("noguard_p2 " + str(cfg.noguard_debug_p2).rjust(7, " "))/
         print(debug_str_p1)
         print(debug_str_p2)
 
