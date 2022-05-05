@@ -79,13 +79,12 @@ class Character_info:
 P_info = [Character_info(), Character_info(), Character_info(), Character_info()]
 p_info = [Character_info(), Character_info(), Character_info(), Character_info()]
 
-for n1 in P_info:
-    for n2 in range(bar_range):
-        n1.barlist_1[n2] = ""
+for info1, info2 in zip(P_info, p_info):
+    for n in range(bar_range):
+        info1.barlist_1[n] = ""
+        info2.barlist_1[n] = ""
 
-for n1 in p_info:
-    for n2 in range(bar_range):
-        n1.barlist_1[n2] = ""
+
 
 P1 = P_info[0]
 P2 = P_info[1]
@@ -133,8 +132,8 @@ interval2 = 80
 yuuriF = 0
 anten_flag = 0
 anten = 0
-
-hitstop=0
+b_obj = create_string_buffer(24)
+hitstop = 0
 reset_flag = 0
 base_ad = 0
 debug_flag = 0

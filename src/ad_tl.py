@@ -1,5 +1,5 @@
-import cfg_ml
-cfg = cfg_ml
+import cfg_tl
+cfg = cfg_tl
 P_info = cfg.P_info
 
 ###########################################################################
@@ -24,11 +24,6 @@ DAT_P1_AD = 0xB43EC0   # 1Pデータ開始位置
 DAT_P2_AD = DAT_P1_AD + PLR_STRUCT_SIZE  # 2Pデータ開始位置
 DAT_P3_AD = DAT_P2_AD + PLR_STRUCT_SIZE
 DAT_P4_AD = DAT_P3_AD + PLR_STRUCT_SIZE
-
-X_P1_AD = DAT_P1_AD + 0x64
-X_P2_AD = X_P1_AD + PLR_STRUCT_SIZE
-X_P3_AD = X_P2_AD + PLR_STRUCT_SIZE
-X_P4_AD = X_P3_AD + PLR_STRUCT_SIZE
 
 P_info[0].motion_type_ad = DAT_P1_AD + 0x40
 P_info[1].motion_type_ad = DAT_P1_AD + 0x40 + PLR_STRUCT_SIZE

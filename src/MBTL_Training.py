@@ -4,12 +4,12 @@ import os
 import time
 import keyboard
 
-import ad_ml
-import cfg_ml
-import sub_ml
+import ad_tl
+import cfg_tl
+import sub_tl
 
-cfg = cfg_ml
-sub = sub_ml
+cfg = cfg_tl
+sub = sub_tl
 
 sub.ex_cmd_enable()
 
@@ -28,6 +28,47 @@ save_flag = 0
 flag1 = 0
 start_time = time.time()
 
+def function_key():
+    global flag1
+    global save_flag
+
+    # セーブデータリセット
+    if keyboard.is_pressed("F1"):
+        if flag1 == 0:
+            flag1 = 1
+            save_flag = 0
+
+    # 状況記憶
+    elif keyboard.is_pressed("F2"):
+        if flag1 == 0:
+            sub.pause()
+            sub.situationMem()
+            save_flag = 1
+            flag1 = 1
+
+    # 月切り替え
+    elif keyboard.is_pressed("F3"):
+        if flag1 == 0:
+            flag1 = 1
+            sub.moon_change()
+
+    # 最大ダメージ初期化
+    elif keyboard.is_pressed("F4"):
+        if flag1 == 0:
+            flag1 = 1
+        sub.MAX_Damage_ini()
+
+    # デバッグ表示
+    elif (keyboard.is_pressed("9"))and(keyboard.is_pressed("0")):
+        if cfg.debug_flag == 0:
+            cfg.debug_flag = 1
+        elif cfg.debug_flag == 1:
+            cfg.debug_flag = 0
+        time.sleep(0.3)
+
+    elif flag1 == 1:
+        flag1 = 0
+        sub.play()
 ###############################################################
 # メイン関数
 ###############################################################
@@ -50,42 +91,7 @@ while 1:
 
     # トレーニングモードの場合
     elif unpack('l', cfg.b_tr_flag)[0] == 300:
-
-        # セーブデータリセット
-        if keyboard.is_pressed("F1"):
-            if flag1 == 0:
-                flag1 = 1
-                save_flag = 0
-
-        # 状況記憶
-        elif keyboard.is_pressed("F2"):
-            if flag1 == 0:
-                sub.pause()
-                sub.situationMem()
-                save_flag = 1
-                flag1 = 1
-
-        # 月切り替え
-        elif keyboard.is_pressed("F3"):
-            if flag1 == 0:
-                flag1 = 1
-                sub.moon_change()
-
-        # 最大ダメージ初期化
-        elif keyboard.is_pressed("F4"):
-            if flag1 == 0:
-                flag1 = 1
-                sub.MAX_Damage_ini()
-        # デバッグ表示
-        elif (keyboard.is_pressed("9"))and(keyboard.is_pressed("0")):
-            if cfg.debug_flag == 0:
-                cfg.debug_flag = 1
-            elif cfg.debug_flag == 1:
-                cfg.debug_flag = 0
-            time.sleep(0.4)
-        elif flag1 == 1:
-            flag1 = 0
-            sub.play()
+        function_key()
 
         # タイマーチェック
         sub.timer_check()
@@ -110,7 +116,7 @@ while 1:
                 # リセット時の開始位置固定化
                 sub.startposi()
 
-            if cfg_ml.f_timer <= 1:
+            if cfg_tl.f_timer <= 1:
                 sub.bar_ini()
 
                 if save_flag == 1:

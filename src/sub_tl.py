@@ -1,17 +1,18 @@
 from ctypes import windll, wintypes, byref
 from struct import unpack
 from struct import unpack, pack
-import ad_ml
-import cfg_ml
+import time
+import ad_tl
+import cfg_tl
 import copy
 import ctypes
 import keyboard
 import os
 import psutil
-import save_ml
-ad = ad_ml
-cfg = cfg_ml
-save = save_ml
+import save_tl
+ad = ad_tl
+cfg = cfg_tl
+save = save_tl
 
 wintypes = ctypes.wintypes
 windll = ctypes.windll
@@ -42,9 +43,20 @@ class MODULEENTRY32(ctypes.Structure):
     ]
 
 
+def pidget():
+    # 実行中のすべてのＩＤ＋プロセス名取得
+    dict_pids = {
+        p.info["name"]: p.info["pid"]
+        for p in psutil.process_iter(attrs=["name", "pid"])
+    }
+
+    cfg.pid = dict_pids["MBTL.exe"]
+    cfg.h_pro = OpenProcess(0x1F0FFF, False, cfg.pid)
+
+
 def get_base_addres():
-    cfg_ml.pid = 0
-    while cfg_ml.pid == 0:
+    cfg_tl.pid = 0
+    while cfg_tl.pid == 0:
 
         dict_pids = {
             p.info["name"]: p.info["pid"]
@@ -53,23 +65,23 @@ def get_base_addres():
 
         for n in dict_pids:
             if n == "MBTL.exe":
-                cfg_ml.pid = dict_pids["MBTL.exe"]
+                cfg_tl.pid = dict_pids["MBTL.exe"]
 
-        if cfg_ml.pid == 0:
+        if cfg_tl.pid == 0:
             os.system('cls')
             print("Waiting for MBTL to start")
 
-    cfg_ml.h_pro = OpenProcess(0x1F0FFF, False, cfg_ml.pid)
+    cfg_tl.h_pro = OpenProcess(0x1F0FFF, False, cfg_tl.pid)
 
     # MODULEENTRY32を取得
-    snapshot = CreateToolhelp32Snapshot(0x00000008, cfg_ml.pid)
+    snapshot = CreateToolhelp32Snapshot(0x00000008, cfg_tl.pid)
 
     lpme = MODULEENTRY32()
     lpme.dwSize = sizeof(lpme)
 
     res = Module32First(snapshot, byref(lpme))
 
-    while cfg_ml.pid != lpme.th32ProcessID:
+    while cfg_tl.pid != lpme.th32ProcessID:
         res = Module32Next(snapshot, byref(lpme))
 
     b_baseAddr = create_string_buffer(8)
@@ -105,17 +117,6 @@ def ex_cmd_enable():
     if windll.kernel32.SetConsoleMode(hOut, dwMode) == 0:
         return False
     return True
-
-
-def pidget():
-    # 実行中のすべてのＩＤ＋プロセス名取得
-    dict_pids = {
-        p.info["name"]: p.info["pid"]
-        for p in psutil.process_iter(attrs=["name", "pid"])
-    }
-
-    cfg.pid = dict_pids["MBTL.exe"]
-    cfg.h_pro = OpenProcess(0x1F0FFF, False, cfg.pid)
 
 
 def pause():
@@ -218,13 +219,12 @@ def moon_change():
 
 def MAX_Damage_ini():
 
-    r_mem(ad.MAX_Damage_Pointer_AD, cfg.temp)
+    r_mem(ad.MAX_Damage_Pointer_AD , cfg.temp)
 
     addres = unpack('l', cfg.temp.raw)[0]
-    addres = addres + 0x1c
-    w_mem(addres, b'\x00\x00\x00\x00')
-    w_mem(addres + 4, b'\x00\x00\x00\x00')
+    addres = addres + 0x34
 
+    WriteMem(cfg.h_pro, addres, b'\x01', 1, None)
 
 def view_st():
 
@@ -469,9 +469,10 @@ def get_values():
 
         if n.motion == 256:
             n.motion = 0
+
         if n.noguard == 77:
             negligible_number = [21, 81, 80, 149,
-                                 98, 171, 44,
+                                 98, 171, 44, 87,
                                  40, 10, 11, 12,
                                  13, 14, 15, 18,
                                  20, 16, 594, 17,
@@ -558,12 +559,11 @@ def view():
 
     state_str = '\x1b[1;1H' + '\x1b[?25l'
 
-    state_str += '1P|Position' + x_p1
-    state_str += ' FirstActive' + act_P1
-    state_str += ' Overall' + zen_P1
-    state_str += ' Circuit' + gauge_p1 + '%'
-
-    state_str += ' Moon' + m_gauge_p1 + '%'
+    state_str += f'1P|Position{x_p1}'
+    state_str += f' FirstActive{act_P1}'
+    state_str += f' Overall{zen_P1}'
+    state_str += f' Circuit{gauge_p1}%'
+    state_str += f' Moon{m_gauge_p1}%'
 
     if keyboard.is_pressed("F1"):
         f1 = '  \x1b[007m' + '[F1]Reset' + '\x1b[0m'
@@ -587,11 +587,11 @@ def view():
 
     state_str += '   ' + f1 + f2 + f3 + f4 + END
 
-    state_str += '2P|Position' + x_p2
-    state_str += ' FirstActive' + act_P2
-    state_str += ' Overall' + zen_P2
-    state_str += ' Circuit' + gauge_p2 + '%'
-    state_str += ' Moon' + m_gauge_p2 + '%' + END
+    state_str += f'2P|Position{x_p2}'
+    state_str += f' FirstActive{act_P2}'
+    state_str += f' Overall{zen_P2}'
+    state_str += f' Circuit{gauge_p2}%'
+    state_str += f' Moon{m_gauge_p2}%' + END
 
     state_str += '  |Advantage' + yuuriF
     state_str += ' Proration' + hosei + "%"
