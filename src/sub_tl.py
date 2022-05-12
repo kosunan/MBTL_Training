@@ -1,15 +1,15 @@
 from ctypes import windll, wintypes, byref
-from struct import unpack
 from struct import unpack, pack
+import os
 import time
-import ad_tl
-import cfg_tl
 import copy
 import ctypes
 import keyboard
-import os
 import psutil
+
 import save_tl
+import ad_tl
+import cfg_tl
 ad = ad_tl
 cfg = cfg_tl
 save = save_tl
@@ -44,30 +44,20 @@ class MODULEENTRY32(ctypes.Structure):
 
 
 def pidget():
-    # 実行中のすべてのＩＤ＋プロセス名取得
     dict_pids = {
         p.info["name"]: p.info["pid"]
         for p in psutil.process_iter(attrs=["name", "pid"])
     }
-
-    cfg.pid = dict_pids["MBTL.exe"]
-    cfg.h_pro = OpenProcess(0x1F0FFF, False, cfg.pid)
+    return dict_pids
 
 
 def get_base_addres():
     cfg_tl.pid = 0
     while cfg_tl.pid == 0:
-
-        dict_pids = {
-            p.info["name"]: p.info["pid"]
-            for p in psutil.process_iter(attrs=["name", "pid"])
-        }
-
-        for n in dict_pids:
-            if n == "MBTL.exe":
-                cfg_tl.pid = dict_pids["MBTL.exe"]
-
-        if cfg_tl.pid == 0:
+        dict_pids = pidget()
+        try:
+            cfg_tl.pid = dict_pids["MBTL.exe"]
+        except:
             os.system('cls')
             print("Waiting for MBTL to start")
 
@@ -219,12 +209,13 @@ def moon_change():
 
 def MAX_Damage_ini():
 
-    r_mem(ad.MAX_Damage_Pointer_AD , cfg.temp)
+    r_mem(ad.MAX_Damage_Pointer_AD, cfg.temp)
 
     addres = unpack('l', cfg.temp.raw)[0]
     addres = addres + 0x34
 
     WriteMem(cfg.h_pro, addres, b'\x01', 1, None)
+
 
 def view_st():
 
@@ -332,44 +323,41 @@ def bar_add():
 
     for n in cfg.p_info:
         num = ""
-        fb = ""
-        font = DEF
 
         if n.b_atk.raw != b'\x00':  # 攻撃判定を出しているとき
-            fb = atk
+            font = atk
 
         elif (n.inv == 0 and n.motion != 0) or (n.b_step_inv.raw != b'\x00' and n.motion_type == 46):  # 無敵中
-            fb = "\x1b[48;5;015m"
+            font = "\x1b[48;5;015m"
 
         elif n.motion != 0:  # モーション途中
-            fb = mot
+            font = mot
 
         elif n.hit != 0:  # ガードorヒット硬直中
-            fb = grd
+            font = grd
 
         elif n.motion_type != 0:  # ガードできないとき
-            fb = nog
+            font = nog
 
         elif n.motion == 0:  # 何もしていないとき
-            fb = fre
+            font = fre
 
         else:  # いずれにも当てはまらないとき
-            fb = non
+            font = non
 
         # ジャンプ移行中
         if n.motion_type == 34 or n.motion_type == 35 or n.motion_type == 36 or n.motion_type == 37:
-            fb = "\x1b[38;5;000m" + "\x1b[48;5;011m"
+            font = "\x1b[38;5;000m" + "\x1b[48;5;011m"
 
         # シールド中
         if n.b_seeld.raw == b'\x02':
-            fb = "\x1b[38;5;255m" + "\x1b[48;5;006m"
+            font = "\x1b[38;5;255m" + "\x1b[48;5;006m"
         if n.b_seeld.raw == b'\x03':
-            fb = "\x1b[38;5;255m" + "\x1b[48;5;004m"
+            font = "\x1b[38;5;255m" + "\x1b[48;5;004m"
 
         # 起き上がり中
         if n.motion_type == 593:
-            fb = "\x1b[38;5;255m" + "\x1b[48;5;055m"
-        font += fb
+            font = "\x1b[38;5;255m" + "\x1b[48;5;055m"
 
         if n.motion != 0:
             num = str(n.motion)
@@ -381,10 +369,10 @@ def bar_add():
 
         if num == '0' and cfg.DataFlag1 == 1:
             if n == cfg.p_info[0] or n == cfg.p_info[1]:
-                font = DEF + "\x1b[38;5;244m" + "\x1b[48;5;000m"
+                font = "\x1b[38;5;244m" + "\x1b[48;5;000m"
                 num = str(abs(cfg.yuuriF))
 
-        n.barlist_1[cfg.Bar_num] = font + num.rjust(2, " ")[-2:]
+        n.barlist_1[cfg.Bar_num] = font + num.rjust(2, " ")[-2:] + DEF
 
 
 def bar_ini():
@@ -609,6 +597,7 @@ def view():
 
 def degug_view():
     if cfg.debug_flag == 1:
+        # os.system('mode con: cols=166 lines=15')
         debug_str_p1 = "f_timer " + str(cfg.f_timer).rjust(7, " ")
         debug_str_p2 = "Bar_num " + str(cfg.Bar_num).rjust(7, " ")
 
