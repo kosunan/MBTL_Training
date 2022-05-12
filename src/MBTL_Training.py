@@ -10,16 +10,12 @@ import sub_tl
 
 cfg = cfg_tl
 sub = sub_tl
-
 sub.ex_cmd_enable()
 
-if cfg.debug_flag == 1:
-    os.system('mode con: cols=166 lines=15')
-else:
-    os.system('mode con: cols=166 lines=10')
+os.system('mode con: cols=166 lines=10')
 
 os.system('cls')
-os.system('title MBTL_Training 1.6.1')
+os.system('title MBTL_Training 1.6.2')
 print('\x1b[1;1H' + '\x1b[?25l')
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 
@@ -72,11 +68,8 @@ def function_key():
 ###############################################################
 # メイン関数
 ###############################################################
-
 # ベースアドレス取得
 sub.get_base_addres()
-
-# 各アドレス設定
 
 while 1:
     time.sleep(0.003)
@@ -92,7 +85,6 @@ while 1:
     # トレーニングモードの場合
     elif unpack('l', cfg.b_tr_flag)[0] == 300:
         function_key()
-
         # タイマーチェック
         sub.timer_check()
 
@@ -100,12 +92,10 @@ while 1:
         if (cfg.f_timer != cfg.f_timer2):
 
             cfg.f_timer2 = cfg.f_timer
-
             time.sleep(0.001)
 
             # 各種数値の取得
             sub.situationCheck()
-
             # 各種数値の取得
             sub.get_values()
 
