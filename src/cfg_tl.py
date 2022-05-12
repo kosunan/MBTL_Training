@@ -92,9 +92,9 @@ P3 = P_info[2]
 P4 = P_info[3]
 #
 p1 = p_info[0]
-p2 = p_info[0]
-p3 = p_info[0]
-p4 = p_info[0]
+p2 = p_info[1]
+p3 = p_info[2]
+p4 = p_info[3]
 
 st_barlist = list(range(bar_range))
 

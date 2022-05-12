@@ -6,11 +6,13 @@ P_info = cfg.P_info
 # 各種アドレス
 ###########################################################################
 TIMER_AD = 0x59CAD4
+CAM_AD = 0x715D80
+
 TR_FLAG_AD = 0x6DFD3C
 DAMAGE_AD = 0x7154A0
 HOSEI_AD = DAMAGE_AD - 12
 UKEMI_AD = DAMAGE_AD - 4  # 受け身不能時間補正
-CAM_AD = 0x715D80
+
 ANTEN_AD = 0xB45202
 
 
