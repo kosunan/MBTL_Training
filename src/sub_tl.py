@@ -173,7 +173,6 @@ def situationCheck():
     r_mem(ad.DAMAGE_AD, cfg.b_damage)
     r_mem(ad.START_POSI_AD, cfg.b_start_posi)
     r_mem(ad.UKEMI_AD, cfg.b_ukemi)
-    r_mem(ad.ANTEN_AD, cfg.b_anten)
 
 
 def situationMem():
@@ -258,13 +257,9 @@ def view_st():
     elif (cfg.p1.hitstop == 0 or cfg.p2.hitstop == 0):
         cfg.hitstop = 0
 
-    if cfg.anten_flag == 16 and cfg.p1.anten_stop2 == cfg.p1.anten_stop2_old:
-        cfg.anten += 1
-    else:
-        cfg.anten = 0
-
-    if cfg.anten_flag == 16 and cfg.p2.anten_stop2 == cfg.p2.anten_stop2_old:
-        cfg.anten += 1
+    if cfg.p1.anten_stop == 16 or cfg.p2.anten_stop == 128:
+        if (cfg.p1.anten_stop2 == cfg.p1.anten_stop2_old) or (cfg.p2.anten_stop2 == cfg.p2.anten_stop2_old):
+            cfg.anten += 1
     else:
         cfg.anten = 0
 
@@ -607,6 +602,9 @@ def degug_view():
         debug_str_p2 += " motion " + str(cfg.p2.motion).rjust(7, " ")
         debug_str_p1 += " anten_stop " + str(cfg.p1.anten_stop).rjust(7, " ")
         debug_str_p2 += " anten_stop " + str(cfg.p2.anten_stop).rjust(7, " ")
+        debug_str_p1 += " anten_stop2 " + str(cfg.p1.anten_stop2).rjust(7, " ")
+        debug_str_p2 += " anten_stop2 " + str(cfg.p2.anten_stop2).rjust(7, " ")
+
         debug_str_p1 += " motion_chenge_flag " + str(cfg.p1.motion_chenge_flag).rjust(7, " ")
         debug_str_p2 += " motion_chenge_flag " + str(cfg.p2.motion_chenge_flag).rjust(7, " ")
         debug_str_p1 += " hitstop " + str(cfg.p1.hitstop).rjust(7, " ")
