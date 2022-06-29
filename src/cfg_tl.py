@@ -12,10 +12,10 @@ bar_ini_flag = 0
 bar_ini_flag2 = 0
 
 
-STOP_AD = 0x72DA68
+STOP_AD = 0x72DA78
 MAX_Damage_Pointer_AD = 0x72DC64
 PLR_STRUCT_SIZE = 0xC14  # 3084
-DAT_P1_AD = 0xB44EC0   # 1Pデータ開始位置
+DAT_P1_AD = 0xB44ED0   # 1Pデータ開始位置
 
 
 class para:
@@ -25,15 +25,15 @@ class para:
         self.b_dat = create_string_buffer(byte_len)
 
 
-timer = para(4, 0x59DA24)
+timer = para(4, 0x59DAE4)
 timer_old = 0
-tr_flag = para(4, 0x6E0D3C)
-damage = para(4, 0x7164A0)
+tr_flag = para(4, 0x6E0D4C)
+damage = para(4, 0x7164B0)
 hosei = para(4, damage.ad - 12)
 ukemi = para(2, damage.ad - 4)  # 受け身不能時間補正
-cam = para(1500, 0x716D80)
-start_posi = para(1, 0x732DB8)
-max_damage_pointer = para(4, 0x72DC64)
+cam = para(1500, 0x716D90)
+start_posi = para(1, 0x732DC8)
+max_damage_pointer = para(4, 0x72DC74)
 
 
 class Character_info:
@@ -65,9 +65,9 @@ class Character_info:
         self.noguard = para(1, DAT_P1_AD + 0xB7C + size)
 
         if size == 0 or size == PLR_STRUCT_SIZE * 2:
-            self.anten_stop = para(1, 0xB46202)
+            self.anten_stop = para(1, 0xB46212)
         else:
-            self.anten_stop = para(1, 0xB46205)
+            self.anten_stop = para(1, 0xB46215)
 
         # 処理用変数
         self.c_timer_old = 0

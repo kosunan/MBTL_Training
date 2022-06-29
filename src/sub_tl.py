@@ -340,6 +340,8 @@ def bar_add():
             num = ""
         if n.hit.num != 0:
             num = str(n.hit.num)
+        elif n.action_flag == 0:
+            num = str("")
         elif n.motion.num != 0:
             num = str(n.motion.num)
         elif n.motion_type.num != 0:
@@ -600,7 +602,7 @@ def view():
 
     if kyori < 0:
         kyori = kyori * -1
-    kyori = kyori / (18724 * 2)
+    # kyori = kyori / (18724 * 2)
     kyori = str(kyori)[:5]
 
     state_str = '\x1b[1;1H' + '\x1b[?25l'
@@ -642,7 +644,7 @@ def view():
     state_str += '  |Advantage' + advantage_f
     state_str += ' Proration' + hosei + "%"
     state_str += ' Untec' + ukemi2 + ',' + ukemi
-    state_str += '  Range ' + kyori + 'M' + END
+    state_str += '  Range ' + kyori + ' ' + END
 
     state_str += '  | 1 2 3 4 5 6 7 8 91011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980' + END
     state_str += '1P|' + cfg.p1.bar_1 + END
