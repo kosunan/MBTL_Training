@@ -303,6 +303,7 @@ def bar_add():
     air = util_sub.get_font((125, 127, 168), (125, 127, 168))
 
     jmp_number = [34, 35, 36, 37]
+    jmp2_number = [39, 38, 40]
 
     ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 20, 44, 98, 149, 171, 594]
 
@@ -324,6 +325,10 @@ def bar_add():
 
         elif n.action_flag == 1:
             font = mot
+            for list_a in jmp2_number:  # ジャンプ２
+                if n.motion_type.num == list_a:
+                    font = jmp
+                    break
 
         elif n.action_flag == 0:
             font = fre
@@ -332,6 +337,7 @@ def bar_add():
             if n.motion_type.num == list_a:
                 font = jmp
                 break
+
 
         # 起き上がり中
         if n.motion_type.num == 593:
