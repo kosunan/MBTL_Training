@@ -1,6 +1,7 @@
 from struct import unpack, pack
 from ctypes import windll, wintypes, byref
 import os
+import time
 import ctypes
 import psutil
 import cfg_tl
@@ -19,6 +20,7 @@ CreateToolhelp32Snapshot = windll.kernel32.CreateToolhelp32Snapshot
 CloseHandle = windll.kernel32.CloseHandle
 sizeof = ctypes.sizeof
 
+
 class MODULEENTRY32(ctypes.Structure):
     _fields_ = [
         ("dwSize",             wintypes.DWORD),
@@ -34,41 +36,55 @@ class MODULEENTRY32(ctypes.Structure):
     ]
 
 
-def pidget():
+def get_connection(process_name):
+    res = False
+
+    while res == False:
+        res = pidget(process_name)
+        if res == False:
+            os.system('cls')
+            print("Waiting for " + process_name + " to start")
+            time.sleep(0.5)
+    pid = res
+    h_pro = OpenProcess(0x1F0FFF, False, pid)
+    base_ad = get_base_addres(pid)
+
+    return pid, h_pro, base_ad
+
+
+def pidget(process_name):
     dict_pids = {
         p.info["name"]: p.info["pid"]
         for p in psutil.process_iter(attrs=["name", "pid"])
     }
-    return dict_pids
+
+    try:
+        pid = dict_pids[process_name]
+    except:
+        pid = False
+
+    return pid
 
 
-def get_base_addres():
-    cfg_tl.pid = 0
-    while cfg_tl.pid == 0:
-        dict_pids = pidget()
-        try:
-            cfg_tl.pid = dict_pids["MBTL.exe"]
-        except:
-            os.system('cls')
-            print("Waiting for MBTL to start")
-
-    cfg_tl.h_pro = OpenProcess(0x1F0FFF, False, cfg_tl.pid)
+def get_base_addres(pid):
 
     # MODULEENTRY32を取得
-    snapshot = CreateToolhelp32Snapshot(0x00000008, cfg_tl.pid)
+    snapshot = CreateToolhelp32Snapshot(0x00000008, pid)
 
     lpme = MODULEENTRY32()
     lpme.dwSize = sizeof(lpme)
 
     res = Module32First(snapshot, byref(lpme))
 
-    while cfg_tl.pid != lpme.th32ProcessID:
+    while pid != lpme.th32ProcessID:
         res = Module32Next(snapshot, byref(lpme))
 
     b_baseAddr = create_string_buffer(8)
     b_baseAddr.raw = lpme.modBaseAddr
 
-    cfg.base_ad = unpack('q', b_baseAddr.raw)[0]
+    base_ad = unpack('q', b_baseAddr.raw)[0]
+
+    return base_ad
 
 
 def b_unpack(d_obj):

@@ -73,7 +73,11 @@ def function_key():
 # メイン関数
 ###############################################################
 # ベースアドレス取得
-util_sub.get_base_addres()
+res = util_sub.get_connection("MBTL.exe")
+cfg.pid = res[0]
+cfg.h_pro = res[1]
+cfg.base_ad = res[2]
+
 
 while 1:
     time.sleep(0.003)

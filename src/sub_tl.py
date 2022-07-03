@@ -131,6 +131,7 @@ def situationCheck():
             if n.motion_type_old == 19:
                 n.action_flag = 0
 
+
     util_sub.para_read(cfg.timer)
     util_sub.para_read(cfg.hosei)
     util_sub.para_read(cfg.damage)
@@ -311,7 +312,7 @@ def bar_add():
         # バー１段目
         font = ""
         num = ""
-        if (n.inv.num == 0 and n.motion.num != 0) or (n.step_inv.num != 0 and n.motion_type.num == 46):  # 無敵中
+        if (n.inv.num == 0 and n.motion.num != 0) or (n.step_inv.num != 0 and n.motion_type.num == 46) or (n.motion_type.num == 147):  # 無敵中
             font = inv
 
         elif n.seeld.num == 2 or n.seeld.num == 3:  # シールド中
