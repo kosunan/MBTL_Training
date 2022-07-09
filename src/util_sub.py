@@ -138,6 +138,97 @@ def get_font(text_rgb, bg_rgb):
     return text_font(text_rgb) + bg_font(bg_rgb)
 
 
+G_atk = get_font((255, 255, 255), (255, 0, 0))
+G_mot = get_font((255, 255, 255), (65, 200, 0))
+G_mot2 = get_font((255, 255, 255), (35, 158, 0))
+
+G_grd_stun = get_font((255, 255, 255), (170, 170, 170))
+G_hit_stun = get_font((255, 255, 255), (170, 170, 170))
+G_fre = get_font((92, 92, 92), (25, 25, 25))
+G_jmp = get_font((177, 177, 177), (241, 224, 132))
+G_seeld = get_font((255, 255, 255), (145, 194, 255))
+G_inv = get_font((200, 200, 200), (255, 255, 255))
+G_adv = get_font((255, 255, 255), (25, 25, 25))
+G_bunker = get_font((255, 255, 255), (225, 184, 0))
+G_air = get_font((255, 255, 255), (25, 25, 25))
+G_hit_stop = get_font((255, 255, 255), (228, 94, 155))
+
+
+def bar_coloring(flame_status):
+    atk_flag = flame_status[0]
+    action_flag = flame_status[1]
+    inv_flag = flame_status[2]
+    grd_stun_flag = flame_status[3]
+    hit_stun_flag = flame_status[4]
+    jmp_flag = flame_status[5]
+    air_flag = flame_status[6]
+    seeld_flag = flame_status[7]
+    bunker_flag = flame_status[8]
+    motion_type = flame_status[9]
+    motion_num = flame_status[10]
+    advantage_f = flame_status[11]
+    active = flame_status[12]
+
+    font_1 = G_fre
+    font_2 = G_fre
+
+    if inv_flag == 1:  # 無敵中
+        font_1 = G_inv
+
+    elif jmp_flag == 1:  # ジャンプ
+        font_1 = G_jmp
+
+    elif seeld_flag == 1:  # シールド中
+        font_1 = G_seeld
+
+    elif grd_stun_flag == 1:  # ガード
+        font_1 = G_grd_stun
+
+    elif hit_stun_flag == 1:  # ヒット硬直中
+        font_1 = G_hit_stun
+
+    elif action_flag == 1:  # モーション途中
+        font_1 = G_mot
+        if motion_num == 0:
+            font_1 = G_mot2
+
+    elif action_flag == 0:  #
+        font_1 = G_fre
+
+    if air_flag == 1:  # 空中にいる場合
+        font_2 = G_air
+
+    if atk_flag == 1:  # 攻撃判定を出している場合
+        font_2 = G_atk
+        if air_flag == 1:  # 空中にいる場合
+            font_2 += "\x1b[4m"
+
+    num_1 = ""
+    num_2 = ""
+
+    num_1 = str(motion_num)
+    if num_1 == "0":
+        num_1 = str(motion_type)
+
+    if action_flag == 0:
+        num_1 = ""
+
+    if advantage_f != 0 and num_1 == "":
+        font_1 = G_adv
+        num_1 = str(abs(advantage_f))
+
+    if air_flag == 1:  # 空中にいる場合
+        num_2 = "^"
+
+    if atk_flag == 1:
+        num_2 = str(active)
+
+    ret_1 = font_1 + num_1.rjust(2, " ")[-2:]
+    ret_2 = font_2 + num_2.rjust(2, " ")[-2:]
+
+    return ret_1,  ret_2
+
+
 def ex_cmd_enable():
     INVALID_HANDLE_VALUE = -1
     STD_INPUT_HANDLE = -10
