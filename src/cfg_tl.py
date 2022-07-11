@@ -11,11 +11,26 @@ bar_num = 0
 bar_ini_flag = 0
 bar_ini_flag2 = 0
 
+advantage_calc_flag = 0
+interval_time = 0
+interval = 0
+interval2 = 0
+advantage_f = 0
+anten = 0
+hitstop = 0
+anten_flag = 0
+reset_flag = 0
+debug_flag = 0
+
+temp = create_string_buffer(4)
+b_obj = create_string_buffer(24)
+
 
 STOP_AD = 0x72DA78
 MAX_Damage_Pointer_AD = 0x72DC64
 PLR_STRUCT_SIZE = 0xC14  # 3084
 DAT_P1_AD = 0xB44ED0   # 1Pデータ開始位置
+
 
 class Flame_info:
     def __init__(self):
@@ -28,6 +43,7 @@ class Flame_info:
         self.air_flag = 0
         self.seeld_flag = 0
         self.bunker_flag = 0
+
 
 class Para:
     def __init__(self, byte_len, address):
@@ -54,7 +70,7 @@ class Character_info:
         self.seeld = Para(1, DAT_P1_AD + 0x2A0 + size)
         self.tag_flag = Para(1, DAT_P1_AD + 0x2A4 + size)
         self.step_inv = Para(1, DAT_P1_AD + 0x2B8 + size)
-        
+
         self.air_ukemi_1 = Para(1, DAT_P1_AD + 0x2c2 + size)
         self.air_ukemi_2 = Para(1, DAT_P1_AD + 0x230 + size)
 
@@ -67,7 +83,6 @@ class Character_info:
         self.moon_st = Para(1, DAT_P1_AD + 0x924 + size)
 
         self.noguard = Para(1, DAT_P1_AD + 0xB7C + size)
-
 
         if size == 0 or size == PLR_STRUCT_SIZE * 2:
             self.anten_stop = Para(1, 0xB46212)
@@ -96,7 +111,7 @@ class Character_info:
         self.motion_chenge_flag = 0
         self.first_active = 0
         self.active = 0
-        self.zen = 0
+        self.overall = 0
         self.act_flag = 0
         self.bar_1 = ''
         self.bar_2 = ''
@@ -108,6 +123,7 @@ class Character_info:
         self.barlist_6 = list(range(bar_range))
         self.barlist_7 = list(range(bar_range))
 
+
 timer = Para(4, 0x59DAE4)
 timer_old = 0
 tr_flag = Para(4, 0x6E0D4C)
@@ -118,19 +134,19 @@ cam = Para(1500, 0x716D90)
 start_posi = Para(1, 0x732DC8)
 max_damage_pointer = Para(4, 0x72DC74)
 
-P_info = [
+P_info_1 = [
     Character_info(0),
     Character_info(PLR_STRUCT_SIZE),
     Character_info(PLR_STRUCT_SIZE * 2),
     Character_info(PLR_STRUCT_SIZE * 3)]
 
-p_info = [
+P_info_2 = [
     Character_info(0),
     Character_info(PLR_STRUCT_SIZE),
     Character_info(PLR_STRUCT_SIZE * 2),
     Character_info(PLR_STRUCT_SIZE * 3)]
 
-for info1, info2 in zip(P_info, p_info):
+for info1, info2 in zip(P_info_1, P_info_2):
     for n in range(bar_range):
         info1.barlist_1[n] = ""
         info1.barlist_2[n] = ""
@@ -149,37 +165,12 @@ for info1, info2 in zip(P_info, p_info):
         info2.barlist_7[n] = ""
 
 
-P1 = P_info[0]
-P2 = P_info[1]
-P3 = P_info[2]
-P4 = P_info[3]
+P1 = P_info_1[0]
+P2 = P_info_1[1]
+P3 = P_info_1[2]
+P4 = P_info_1[3]
 
-p1 = p_info[0]
-p2 = p_info[1]
-p3 = p_info[2]
-p4 = p_info[3]
-
-st_barlist = list(range(bar_range))
-
-for n in range(bar_range):
-    st_barlist[n] = ""
-st_bar = ""
-
-temp = create_string_buffer(4)
-b_obj = create_string_buffer(24)
-
-
-advantage_calc_flag = 1
-
-
-interval_time = 0
-interval = 41
-interval2 = 80
-
-advantage_f = 0
-anten = 0
-anten_flag = 0
-hitstop = 0
-reset_flag = 0
-
-debug_flag = 0
+p1 = P_info_2[0]
+p2 = P_info_2[1]
+p3 = P_info_2[2]
+p4 = P_info_2[3]

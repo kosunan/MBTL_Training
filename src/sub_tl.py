@@ -35,20 +35,20 @@ def play():
 
 def tagCharacterCheck():
     if cfg.P1.tag_flag.num == 0:
-        cfg.p_info[0] = cfg.p1 = cfg.P1
-        cfg.p_info[2] = cfg.p3 = cfg.P3
+        cfg.P_info_2[0] = cfg.p1 = cfg.P1
+        cfg.P_info_2[2] = cfg.p3 = cfg.P3
 
     elif cfg.P1.tag_flag.num == 1:
-        cfg.p_info[0] = cfg.p1 = cfg.P3
-        cfg.p_info[2] = cfg.p3 = cfg.P1
+        cfg.P_info_2[0] = cfg.p1 = cfg.P3
+        cfg.P_info_2[2] = cfg.p3 = cfg.P1
 
     if cfg.P2.tag_flag.num == 0:
-        cfg.p_info[1] = cfg.p2 = cfg.P2
-        cfg.p_info[3] = cfg.p4 = cfg.P4
+        cfg.P_info_2[1] = cfg.p2 = cfg.P2
+        cfg.P_info_2[3] = cfg.p4 = cfg.P4
 
     elif cfg.P2.tag_flag.num == 1:
-        cfg.p_info[3] = cfg.p2 = cfg.P4
-        cfg.p_info[1] = cfg.p4 = cfg.P2
+        cfg.P_info_2[3] = cfg.p2 = cfg.P4
+        cfg.P_info_2[1] = cfg.p4 = cfg.P2
 
 
 def situationCheck():
@@ -59,11 +59,10 @@ def situationCheck():
     util_sub.para_read(cfg.start_posi)
     util_sub.para_read(cfg.ukemi)
 
-    for n in cfg.P_info:
-        if n.motion_type.num != 0:
-            n.motion_type_old = n.motion_type.num
-        n.motion_type_old2 = n.motion_type_old
+    for n in cfg.P_info_1:
 
+        n.motion_type_old = n.motion_type.num
+        n.motion_type_old2 = n.motion_type_old
         n.motion_num_old = n.motion.num
         n.hitstop_old = n.hitstop.num
         n.anten_stop2_old = n.anten_stop2.num
@@ -108,14 +107,14 @@ def situationCheck():
 def situationMem():
     # 状況を記憶
     util_sub.para_read(cfg.cam)
-    save.P_info = copy.deepcopy(cfg.P_info)
+    save.P_info_1 = copy.deepcopy(cfg.P_info_1)
 
 
 def situationWrit():
     # 状況を再現
     util_sub.para_write(cfg.cam)
 
-    for n in save.P_info:
+    for n in save.P_info_1:
         util_sub.para_write(n.gauge)
         util_sub.para_write(n.moon)
         util_sub.para_write(n.moon_st)
@@ -124,15 +123,15 @@ def situationWrit():
 
 def moon_change():
 
-    if cfg.P_info[0].moon_st.num == 0:
-        for n in cfg.P_info:
+    if cfg.P_info_1[0].moon_st.num == 0:
+        for n in cfg.P_info_1:
             util_sub.w_mem(n.moon_st.ad, b'\x01')
 
-    elif cfg.P_info[0].moon_st.num == 1:
-        for n in cfg.P_info:
+    elif cfg.P_info_1[0].moon_st.num == 1:
+        for n in cfg.P_info_1:
             util_sub.w_mem(n.moon_st.ad, b'\00')
 
-    for n in cfg.P_info:
+    for n in cfg.P_info_1:
         util_sub.w_mem(n.moon.ad, b'\x10\x27')
 
 
@@ -212,7 +211,7 @@ def view_st():
                 cfg.anten = 0
 
     # 攻撃判定持続計算
-    for n in cfg.p_info:
+    for n in cfg.P_info_2:
         if n.atk.num != 0 and cfg.anten == 0 and cfg.hitstop == 0:  # 攻撃判定を出しているとき
             n.active += 1
         elif n.atk.num == 0 and cfg.anten == 0 and cfg.hitstop <= 1:  # 攻撃判定を出してないとき
@@ -253,10 +252,10 @@ def advantage_calc():
 def overall_calc():
     # 全体フレームの取得
     if cfg.p1.motion.num != 0:
-        cfg.p1.zen = cfg.p1.motion.num
+        cfg.p1.overall = cfg.p1.motion.num
 
     if cfg.p2.motion.num != 0:
-        cfg.p2.zen = cfg.p2.motion.num
+        cfg.p2.overall = cfg.p2.motion.num
 
 
 def get_flame_status(info):
@@ -376,7 +375,7 @@ def bar_add():
 
     DEF = '\x1b[0m'
 
-    for n in cfg.p_info:
+    for n in cfg.P_info_2:
         font = ""
         font_1 = ""
         font_2 = ""
@@ -428,7 +427,7 @@ def bar_add():
 def bar_ini():
     cfg.reset_flag = 1
 
-    for n in cfg.p_info:
+    for n in cfg.P_info_2:
         n.bar_1 = ""
         n.bar_2 = ""
         n.bar_3 = ""
@@ -438,7 +437,7 @@ def bar_ini():
         n.bar_7 = ""
 
     for n in range(cfg.bar_range):
-        for m in cfg.p_info:
+        for m in cfg.P_info_2:
             m.barlist_1[n] = ""
             m.barlist_2[n] = ""
             m.barlist_3[n] = ""
@@ -447,9 +446,6 @@ def bar_ini():
             m.barlist_6[n] = ""
             m.barlist_7[n] = ""
 
-        cfg.st_barlist[n] = ""
-
-    cfg.st_bar = ""
     cfg.bar_num = 0
     cfg.interval = 0
     cfg.interval2 = 0
@@ -461,11 +457,11 @@ def bar_ini():
 def firstActive_calc():
     # 計測開始の確認
     if cfg.p2.hitstop.num != 0 and cfg.p1.act_flag == 0 and cfg.p1.hit.num == 0:
-        cfg.p1.first_active = cfg.p1.zen
+        cfg.p1.first_active = cfg.p1.overall
         cfg.p1.act_flag = 1
 
     if cfg.p1.hitstop.num != 0 and cfg.p2.act_flag == 0 and cfg.p2.hit.num == 0:
-        cfg.p2.first_active = cfg.p2.zen
+        cfg.p2.first_active = cfg.p2.overall
         cfg.p2.act_flag = 1
 
     if cfg.p1.motion.num == 0 and cfg.p1.atk.num == 0:
@@ -482,8 +478,8 @@ def view():
     x_p2 = str(cfg.p2.x_posi.num).rjust(8, " ")
     act_P1 = str(cfg.p1.first_active).rjust(3, " ")
     act_P2 = str(cfg.p2.first_active).rjust(3, " ")
-    zen_P1 = str(cfg.p1.zen).rjust(3, " ")
-    zen_P2 = str(cfg.p2.zen).rjust(3, " ")
+    overall_P1 = str(cfg.p1.overall).rjust(3, " ")
+    overall_P2 = str(cfg.p2.overall).rjust(3, " ")
     gauge_p1 = str('{:.02f}'.format(cfg.p1.gauge.num / 100)).rjust(7, " ")
     gauge_p2 = str('{:.02f}'.format(cfg.p2.gauge.num / 100)).rjust(7, " ")
     m_gauge_p1 = str('{:.02f}'.format(cfg.p1.moon.num / 100)).rjust(7, " ")
@@ -510,7 +506,7 @@ def view():
     # # if damage != 0:
     # #     kouritu = damage / (100 - cfg.hosei)
     # #     kouritu = str('{:.02f}'.format(kouritu)).rjust(8, " ")
-    for n in cfg.p_info:
+    for n in cfg.P_info_2:
         n.bar_1 = ""
         n.bar_2 = ""
         n.bar_3 = ""
@@ -519,8 +515,6 @@ def view():
         n.bar_6 = ""
         n.bar_7 = ""
 
-    cfg.st_bar = ""
-
     temp = cfg.bar_num
 
     for n in range(cfg.bar_range):
@@ -528,7 +522,7 @@ def view():
         if temp == cfg.bar_range:
             temp = 0
 
-        for n in cfg.p_info:
+        for n in cfg.P_info_2:
             n.bar_1 += n.barlist_1[temp]
             n.bar_2 += n.barlist_2[temp]
             n.bar_3 += n.barlist_3[temp]
@@ -537,13 +531,11 @@ def view():
             n.bar_6 += n.barlist_6[temp]
             n.bar_7 += n.barlist_7[temp]
 
-        cfg.st_bar += cfg.st_barlist[temp]
-
     state_str = '\x1b[1;1H' + '\x1b[?25l'
 
     state_str += f'1P|Position{x_p1}'
     state_str += f' FirstActive{act_P1}'
-    state_str += f' Overall{zen_P1}'
+    state_str += f' Overall{overall_P1}'
     state_str += f' Circuit{gauge_p1}%'
     state_str += f' Moon{m_gauge_p1}%'
 
@@ -571,7 +563,7 @@ def view():
 
     state_str += f'2P|Position{x_p2}'
     state_str += f' FirstActive{act_P2}'
-    state_str += f' Overall{zen_P2}'
+    state_str += f' Overall{overall_P2}'
     state_str += f' Circuit{gauge_p2}%'
     state_str += f' Moon{m_gauge_p2}%'
     state_str += '   ' + ' '
