@@ -1,176 +1,148 @@
-from ctypes import create_string_buffer
-
-pid = 0
-h_pro = 0
-base_ad = 0
-
-bar80_flag = 0
-bar_range = 80
-bar_flag = 0
-bar_num = 0
-bar_ini_flag = 0
-bar_ini_flag2 = 0
-
-advantage_calc_flag = 0
-interval_time = 0
-interval = 0
-interval2 = 0
+from mem_access_util import mem_util
+import time
+PLR_STRUCT_SIZE = 0xC14  # 3084
+DAT_P1_AD = 0xB44ED0     # 1Pデータ開始位置
 advantage_f = 0
+advantage_calc_flag = 0
+on_flag = 0
+save_flag = 0
+game_data = 0
+characters_data = 0
+characters_data_list = []
 anten = 0
 hitstop = 0
-anten_flag = 0
-reset_flag = 0
+stop_flag = 0
 debug_flag = 0
+mem_index = 0
 
-temp = create_string_buffer(4)
-b_obj = create_string_buffer(24)
-
-
-STOP_AD = 0x72DA78
-MAX_Damage_Pointer_AD = 0x72DC64
-PLR_STRUCT_SIZE = 0xC14  # 3084
-DAT_P1_AD = 0xB44ED0   # 1Pデータ開始位置
-
-
-class Flame_info:
+class Characters_Data_Class:
     def __init__(self):
-        self.atk_flag = 0
-        self.action_flag = 0
-        self.inv_flag = 0
-        self.grd_stun_flag = 0
-        self.hit_stun_flag = 0
-        self.jmp_flag = 0
-        self.air_flag = 0
-        self.seeld_flag = 0
-        self.bunker_flag = 0
+        self.characters_data = [Character_Data_Class(0),
+                                Character_Data_Class(1),
+                                Character_Data_Class(2),
+                                Character_Data_Class(3)]
+
+        self.characters_elements = [self.characters_data[0].elements,
+                                    self.characters_data[1].elements,
+                                    self.characters_data[2].elements,
+                                    self.characters_data[3].elements]
 
 
-class Para:
-    def __init__(self, byte_len, address):
-        self.ad = address
-        self.num = 0
-        self.b_dat = create_string_buffer(byte_len)
+class Game_Data_Class:
+    def __init__(self):
+        self.cont_list = list = []
+        self.timer = pack(list, 0x59DAE4, 4)
+        self.tr_flag = pack(list, 0x6E0D4C, 4)
+        self.damage = pack(list, 0x7164B0, 4)
+        self.hosei = pack(list, self.damage.ad - 12, 4)
+        self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
+        self.cam = pack(list, 0x716D90, 1500)
+        self.start_posi = pack(list, 0x732DC8, 1)
+        self.max_damage_pointer = pack(list, 0x72DC74, 4)
+        self.pause = pack(list, 0x72DA78, 1)
 
 
-class Character_info:
-    def __init__(self, size):
-        # メモリ変数
-        self.motion_type = Para(2, DAT_P1_AD + 0x1C + size)
-        self.c_timer = Para(2, DAT_P1_AD + 0x4C + size)
+class Character_Data_Class:
+    def __init__(self, p_num):
 
-        self.motion = Para(4, DAT_P1_AD + 0x548 + size)
-        self.atk = Para(1, DAT_P1_AD + 0x60 + size)
-        self.inv = Para(1, DAT_P1_AD + 0x61 + size)
-        self.x_posi = Para(4, DAT_P1_AD + 0x64 + size)
-        self.y_posi = Para(4, self.x_posi.ad + 4 + size)
-        self.air = Para(2, DAT_P1_AD + 0x6B + size)
+        size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
+        self.cont_list = list = []
+        self.motion_type = pack(list, 0x1C + size, 2)
+        self.c_timer = pack(list, 0x4C + size, 2)
+        self.motion = pack(list, 0x548 + size, 4)
+        self.atk = pack(list, 0x60 + size, 1)
+        self.inv = pack(list, 0x61 + size, 1)
+        self.x_posi = pack(list, 0x64 + size, 4)
+        self.y_posi = pack(list, self.x_posi.ad + 4 + size, 4)
+        self.air = pack(list, 0x6B + size, 2)
+        self.gauge = pack(list, 0xA0 + size, 4)
+        self.hitstop = pack(list, 0x298 + size, 1)
+        self.seeld = pack(list, 0x2A0 + size, 1)
+        self.tag_flag = pack(list, 0x2A4 + size, 1)
+        self.step_inv = pack(list, 0x2B8 + size, 1)
+        self.air_ukemi_1 = pack(list, 0x2c2 + size, 1)
+        self.air_ukemi_2 = pack(list, 0x230 + size, 1)
+        self.hit = pack(list, 0x2D8 + size, 2)
+        self.ukemi1 = pack(list, 0x2DC + size, 2)
+        self.ukemi2 = pack(list, 0x2E4 + size, 2)
+        self.anten_stop2 = pack(list, 0x6f0 + size, 4)
+        self.moon = pack(list, 0x928 + size, 4)
+        self.moon_st = pack(list, 0x924 + size, 1)
+        self.noguard = pack(list, 0xB7C + size, 1)
 
-        self.gauge = Para(4, DAT_P1_AD + 0xA0 + size)
-        self.hitstop = Para(1, DAT_P1_AD + 0x298 + size)
-        self.seeld = Para(1, DAT_P1_AD + 0x2A0 + size)
-        self.tag_flag = Para(1, DAT_P1_AD + 0x2A4 + size)
-        self.step_inv = Para(1, DAT_P1_AD + 0x2B8 + size)
+        if size == DAT_P1_AD or size == DAT_P1_AD + (PLR_STRUCT_SIZE * 2):
+            self.anten_stop = pack(list, 0xB46212, 1)
 
-        self.air_ukemi_1 = Para(1, DAT_P1_AD + 0x2c2 + size)
-        self.air_ukemi_2 = Para(1, DAT_P1_AD + 0x230 + size)
-
-        self.hit = Para(2, DAT_P1_AD + 0x2D8 + size)
-        self.ukemi1 = Para(2, DAT_P1_AD + 0x2DC + size)
-        self.ukemi2 = Para(2, DAT_P1_AD + 0x2E4 + size)
-        self.anten_stop2 = Para(4, DAT_P1_AD + 0x6f0 + size)
-
-        self.moon = Para(4, DAT_P1_AD + 0x928 + size)
-        self.moon_st = Para(1, DAT_P1_AD + 0x924 + size)
-
-        self.noguard = Para(1, DAT_P1_AD + 0xB7C + size)
-
-        if size == 0 or size == PLR_STRUCT_SIZE * 2:
-            self.anten_stop = Para(1, 0xB46212)
-        else:
-            self.anten_stop = Para(1, 0xB46215)
+        elif size == DAT_P1_AD + (PLR_STRUCT_SIZE * 1) or size == DAT_P1_AD + (PLR_STRUCT_SIZE * 3):
+            self.anten_stop = pack(list, 0xB46215, 1)
 
         # 処理用変数
-        self.c_timer_old = 0
-        self.anten_stop2_old = 0
-        self.hitstop_old = 0
-        self.motion_type_old = 0
-        self.motion_type_old2 = 0
+        self.elements = list = []
+        self.adv_element = element_cre(list, 0, G_adv)
+        self.action_element = element_cre(list, 0, G_mot)
+        self.inv_element = element_cre(list, 0, G_inv)
+        self.grd_stun_element = element_cre(list, 0, G_grd_stun)
+        self.hit_stun_element = element_cre(list, 0, G_hit_stun)
+        self.jmp_element = element_cre(list, 0, G_jmp)
+        self.seeld_element = element_cre(list, 0, G_seeld)
+        self.bunker_element = element_cre(list, 0, G_bunker)
 
-        self.motion_num_old = 0
+        self.air_element = element_cre(list, 1, G_air)
+        self.atk_element = element_cre(list, 1, G_atk)
+
         self.ignore_flag = 0
-        self.action_flag = 0
-        self.atk_flag = 0
-        self.inv_flag = 0
-        self.grd_stun_flag = 0
-        self.hit_stun_flag = 0
-        self.jmp_flag = 0
-        self.air_flag = 0
-        self.seeld_flag = 0
-        self.bunker_flag = 0
-
         self.motion_chenge_flag = 0
+        self.act_flag = 0
         self.first_active = 0
         self.active = 0
         self.overall = 0
-        self.act_flag = 0
-        self.bar_1 = ''
-        self.bar_2 = ''
-        self.barlist_1 = list(range(bar_range))
-        self.barlist_2 = list(range(bar_range))
-        self.barlist_3 = list(range(bar_range))
-        self.barlist_4 = list(range(bar_range))
-        self.barlist_5 = list(range(bar_range))
-        self.barlist_6 = list(range(bar_range))
-        self.barlist_7 = list(range(bar_range))
 
 
-timer = Para(4, 0x59DAE4)
-timer_old = 0
-tr_flag = Para(4, 0x6E0D4C)
-damage = Para(4, 0x7164B0)
-hosei = Para(4, damage.ad - 12)
-ukemi = Para(2, damage.ad - 4)  # 受け身不能時間補正
-cam = Para(1500, 0x716D90)
-start_posi = Para(1, 0x732DC8)
-max_damage_pointer = Para(4, 0x72DC74)
-
-P_info_1 = [
-    Character_info(0),
-    Character_info(PLR_STRUCT_SIZE),
-    Character_info(PLR_STRUCT_SIZE * 2),
-    Character_info(PLR_STRUCT_SIZE * 3)]
-
-P_info_2 = [
-    Character_info(0),
-    Character_info(PLR_STRUCT_SIZE),
-    Character_info(PLR_STRUCT_SIZE * 2),
-    Character_info(PLR_STRUCT_SIZE * 3)]
-
-for info1, info2 in zip(P_info_1, P_info_2):
-    for n in range(bar_range):
-        info1.barlist_1[n] = ""
-        info1.barlist_2[n] = ""
-        info1.barlist_3[n] = ""
-        info1.barlist_4[n] = ""
-        info1.barlist_5[n] = ""
-        info1.barlist_6[n] = ""
-        info1.barlist_7[n] = ""
-
-        info2.barlist_1[n] = ""
-        info2.barlist_2[n] = ""
-        info2.barlist_3[n] = ""
-        info2.barlist_4[n] = ""
-        info2.barlist_5[n] = ""
-        info2.barlist_6[n] = ""
-        info2.barlist_7[n] = ""
+class Element_Class:
+    def __init__(self, line, coler):
+        self.val = 0
+        self.num = "  "
+        self.line = line
+        self.font_coler = coler
 
 
-P1 = P_info_1[0]
-P2 = P_info_1[1]
-P3 = P_info_1[2]
-P4 = P_info_1[3]
+def pack(list, addres, len):
+    temp = mem_util.Mem_Data_Class(len, addres)
+    list.append(temp)
+    return temp
 
-p1 = P_info_2[0]
-p2 = P_info_2[1]
-p3 = P_info_2[2]
-p4 = P_info_2[3]
+
+def element_cre(list, line, coler):
+    temp = Element_Class(line, coler)
+    list.append(temp)
+    return temp
+
+
+def text_font(rgb):
+    Text_font_str = "\x1b[38;2;" + str(rgb[0]) + ";" + str(rgb[1]) + ";" + str(rgb[2]) + "m"
+    return Text_font_str
+
+
+def bg_font(rgb):
+    bg_font_str = "\x1b[48;2;" + str(rgb[0]) + ";" + str(rgb[1]) + ";" + str(rgb[2]) + "m"
+    return bg_font_str
+
+
+def get_font(text_rgb, bg_rgb):
+    return text_font(text_rgb) + bg_font(bg_rgb)
+
+
+G_atk = get_font((255, 255, 255), (255, 0, 0))
+G_mot = get_font((255, 255, 255), (65, 200, 0))
+G_mot2 = get_font((255, 255, 255), (35, 158, 0))
+
+G_grd_stun = get_font((255, 255, 255), (170, 170, 170))
+G_hit_stun = get_font((255, 255, 255), (170, 170, 170))
+G_fre = get_font((92, 92, 92), (25, 25, 25))
+G_jmp = get_font((177, 177, 177), (241, 224, 132))
+G_seeld = get_font((255, 255, 255), (145, 194, 255))
+G_inv = get_font((200, 200, 200), (255, 255, 255))
+G_adv = get_font((255, 255, 255), (25, 25, 25))
+G_bunker = get_font((255, 255, 255), (225, 184, 0))
+G_air = get_font((255, 255, 255), (25, 25, 25))
+G_hit_stop = get_font((255, 255, 255), (228, 94, 155))
