@@ -50,12 +50,12 @@ def tagCharacterCheck(index):
     e_p4 = e1[3]
 
     if p1.tag_flag.val == 1:
-        cfg.characters_data_list[index].characters_data = [p3,p2,p1,p4]
-        cfg.characters_data_list[index].characters_elements = [e_p3,e_p2,e_p1,e_p4]
+        cfg.characters_data_list[index].characters_data = [p3, p2, p1, p4]
+        cfg.characters_data_list[index].characters_elements = [e_p3, e_p2, e_p1, e_p4]
 
     if p2.tag_flag.val == 1:
-        cfg.characters_data_list[index].characters_data = [p1,p4,p3,p2]
-        cfg.characters_data_list[index].characters_elements = [e_p1,e_p4,e_p3,e_p2]
+        cfg.characters_data_list[index].characters_data = [p1, p4, p3, p2]
+        cfg.characters_data_list[index].characters_elements = [e_p1, e_p4, e_p3, e_p2]
 
 
 def situationCheck(index):
@@ -155,6 +155,8 @@ def content_creation(current_index):
 
     p1 = d1[0]
     p2 = d1[1]
+    p3 = d1[2]
+    p4 = d1[3]
 
     p1_old = d2[0]
     p2_old = d2[1]
@@ -351,6 +353,9 @@ def content_creation(current_index):
         p2.adv_element.num = 0
 
 
+    p3.adv_element.num = ""
+    p4.adv_element.num = ""
+
 
 def advantage_calc(p1, p2):
 
@@ -398,17 +403,12 @@ def firstActive_calc(p1, p2):
         p2.act_flag = 0
 
 
-def view(list, current_index):
+def view(view_data, current_index):
 
     data = cfg.game_data
     d1 = cfg.characters_data_list[current_index].characters_data
     p1 = d1[0]
     p2 = d1[1]
-    bar_p1_1 = list[0][0]
-    bar_p1_2 = list[0][1]
-    bar_p2_1 = list[1][0]
-    bar_p2_2 = list[1][1]
-
 
     DEF = '\x1b[0m'
     END = '\x1b[0m' + '\x1b[49m' + '\x1b[K' + '\x1b[1E'
@@ -490,12 +490,7 @@ def view(list, current_index):
     state_str += ' Proration' + hosei + "%"
     state_str += ' Untec' + ukemi2 + ',' + ukemi
     state_str += '  Range ' + Range + ' ' + END
-
-    state_str += '  | 1 2 3 4 5 6 7 8 91011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980' + END
-    state_str += '1P|' + bar_p1_1 + END
-    state_str += '  |' + bar_p1_2 + END
-    state_str += '2P|' + bar_p2_1 + END
-    state_str += '  |' + bar_p2_2 + END
+    state_str += view_data
 
     # if cfg.debug_flag == 1:
     #     state_str = degug_view(state_str)

@@ -7,7 +7,7 @@ advantage_calc_flag = 0
 on_flag = 0
 save_flag = 0
 game_data = 0
-characters_data = 0
+
 characters_data_list = []
 anten = 0
 hitstop = 0

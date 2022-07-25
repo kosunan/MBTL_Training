@@ -34,7 +34,7 @@ list_len = len(cfg.characters_data_list)
 timer = 0
 timer_old = 0
 tr_flag = 0
-circulat_data = [[""] * 10 for i in range(10)]
+
 while 1:
     time.sleep(0.001)
 
@@ -64,16 +64,16 @@ while 1:
             sub.content_creation(data_index)  # 各種データ作成
             characters_elements = cfg.characters_data_list[data_index].characters_elements
 
-            circulat_data = indicator.frame_circulation_indicator(characters_elements, cfg.stop_flag, circulat_data)
+            view_data = indicator.frame_circulation_indicator(characters_elements, cfg.stop_flag)
 
-            sub.view(circulat_data, data_index)
-
+            sub.view(view_data, data_index)
+            # print('\x1b[1;1H' + '\x1b[?25l'+view_data)
             if cfg.save_flag == 1:
                 # リセット時の開始位置固定化
                 sub.startposi(data_index)
 
             if timer <= 1:
-                circulat_data = indicator.bar_ini()
+                indicator.bar_ini()
                 if cfg.save_flag == 1:
                     sub.situationWrit()  # 状況再現
 
