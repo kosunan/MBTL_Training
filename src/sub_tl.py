@@ -1,16 +1,14 @@
 import os
 import time
 import ctypes
-import psutil
-from ctypes import windll,  byref
-from struct import unpack, pack
-
 import copy
 import keyboard
+from Fighting_Game_Indicator import indicator
+
+from mem_access_util import mem_util
 
 import save_tl
 import cfg_tl
-from mem_access_util import mem_util
 
 cfg = cfg_tl
 save = save_tl
@@ -139,7 +137,7 @@ def content_creation(current_index):
     tagCharacterCheck(current_index)
     check_data_list = cfg.characters_data_list
 
-    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19,  20, 44, 98, 594]
+    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44, 98, 594]
     stun_number = [620, 621, 624]
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
@@ -147,7 +145,6 @@ def content_creation(current_index):
 
     old_index_1 = old_index_get(current_index, list_len)
     old_index_2 = old_index_get(old_index_1, list_len)
-    old_index_3 = old_index_get(old_index_2, list_len)
 
     d1 = check_data_list[current_index].characters_data
     d2 = check_data_list[old_index_1].characters_data
@@ -174,30 +171,33 @@ def content_creation(current_index):
     if p1.anten_stop.val == 16:  # 暗転しているとき
         cfg.anten += 1
 
-    elif p2.anten_stop.val == 128:  # 暗転しているとき
+    elif abs(p2.anten_stop.val) == 128:  # 暗転しているとき
         cfg.anten += 1
+
     elif p1_old.c_timer.val == p1.c_timer.val and p1.hit.val == 0 and p2.hit.val == 0 and p1.motion_type.val != 621 and p2.motion_type.val != 621:
         cfg.anten += 1
-    elif p2_old.c_timer.val == p2.c_timer.val and p1.hit.val == 0 and p2.hit.val == 0 and p1.motion_type.val != 621 and p2.motion_type.val != 621:
+
+    elif p2_old.c_timer.val == p2.c_timer.val and p2.hit.val == 0 and p1.hit.val == 0 and p1.motion_type.val != 621 and p2.motion_type.val != 621:
         cfg.anten += 1
     else:
         cfg.anten = 0
 
-    if p1.anten_stop.val == 16 and p1.noguard.val == 77:  # ムーンドライブ対策
-        cfg.anten = 0
+    if cfg.anten >= 1:
+        if p1.anten_stop.val == 16 and p1.noguard.val == 77:  # ムーンドライブ対策
+            cfg.anten = 0
 
-    if p1_old2.motion_type.val == 147 or p1_old2.motion_type.val == 148:  # ムーンドライブ対策
-        if p2.hit.val != 0:
-            if p1_old2.motion_type.val != p1.motion_type.val:
-                cfg.anten = 0
+        if p1_old2.motion_type.val == 147 or p1_old2.motion_type.val == 148:  # ムーンドライブ対策
+            if p2.hit.val != 0:
+                if p1_old2.motion_type.val != p1.motion_type.val:
+                    cfg.anten = 0
 
-    if p2.anten_stop.val == 128 and p2.noguard.val == 77:  # ムーンドライブ対策
-        cfg.anten = 0
+        if abs(p2.anten_stop.val) == 128 and p2.noguard.val == 77:  # ムーンドライブ対策
+            cfg.anten = 0
 
-    if p2_old2.motion_type.val == 147 or p2_old2.motion_type.val == 148:  # ムーンドライブ対策
-        if p1.hit.val != 0:
-            if p2_old2.motion_type.val != p2.motion_type.val:
-                cfg.anten = 0
+        if p2_old2.motion_type.val == 147 or p2_old2.motion_type.val == 148:  # ムーンドライブ対策
+            if p1.hit.val != 0:
+                if p2_old2.motion_type.val != p2.motion_type.val:
+                    cfg.anten = 0
 
     if cfg.anten >= 2 or cfg.hitstop >= 2:
         cfg.stop_flag = 1
@@ -210,6 +210,7 @@ def content_creation(current_index):
         n1.first_active = n2.first_active
         n1.active = n2.active
         n1.act_flag = n2.act_flag
+        n1.koutyoku = n2.koutyoku
 
         n1.motion.val = 256 - n1.motion.val
         if n1.motion.val == 256:
@@ -330,6 +331,30 @@ def content_creation(current_index):
         # bunker_element作成
         n1.bunker_element.val = 0
 
+        for n in n1.elements:
+            n.val
+
+        if n1.action_element.val == 1 and n1.motion.val == 0:
+            if n1.inv_element.val == 0:
+                if n1.jmp_element.val == 0:
+                    if n1.seeld_element.val == 0:
+                        n1.koutyoku_element.val = 1
+                        n1.koutyoku += 1
+                        n1.koutyoku_element.num = n1.koutyoku
+        else:
+            n1.koutyoku_element.val = 0
+            n1.koutyoku_element.num = 0
+            n1.koutyoku = 0
+
+        n1.line_3_element.num = n1.motion_type.val
+        n1.line_4_element.num = n1.motion.val
+        n1.line_5_element.num = n1.noguard.val
+        n1.line_6_element.num = n1.action_element.val
+        n1.line_7_element.num = n1.c_timer.val
+        n1.line_8_element.num = n1.ignore_flag
+        n1.line_9_element.num = n1.anten_stop.val
+        n1.line_10_element.num = cfg.anten
+
     # 技の発生フレームの取得
     firstActive_calc(p1, p2)
 
@@ -351,7 +376,6 @@ def content_creation(current_index):
 
         p2.adv_element.val = 0
         p2.adv_element.num = 0
-
 
     p3.adv_element.num = ""
     p4.adv_element.num = ""
@@ -393,7 +417,7 @@ def firstActive_calc(p1, p2):
         p1.act_flag = 1
 
     if p1.hitstop.val != 0 and p2.act_flag == 0 and p2.hit.val == 0:
-        p2.first_active = p2.overall
+        p1.first_active = p2.overall
         p2.act_flag = 1
 
     if p1.motion.val == 0 and p1.atk.val == 0 and p2.grd_stun_element.val == 0:
@@ -403,141 +427,82 @@ def firstActive_calc(p1, p2):
         p2.act_flag = 0
 
 
-def view(view_data, current_index):
+def cursor_move(line, index):
+    return "\x1b[" + str(line) + ";" + str(index) + "H"
 
-    data = cfg.game_data
-    d1 = cfg.characters_data_list[current_index].characters_data
-    p1 = d1[0]
-    p2 = d1[1]
 
+def template_view():
+    state_str = ""
+    if cfg.template_view_flag == 0:
+        cfg.template_view_flag = 1
+
+        fini = '\x1b[0m'
+
+        #                                        10        20        30        40        50        60        70        80        90
+        #                               1234567891123456789212345678931234567894123456789512345678961234567897123456789812345678991
+        state_str += cursor_move(1, 3) + '|FirstAct|Adv|Proration|  Untec|  Range|Position -000000|Circuit 000.00%|Moon 000.00%|'
+        state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|'
+
+        state_str += cursor_move(1, 90) + '[F1]Reset  [F2]Save  [F3]Moon_switch  [F4]Max_damage_ini  [F5]light mode'
+        state_str += cursor_move(2, 90)
+        state_str += 'motion ' + cfg.G_mot + '  ' + fini + '  atk ' + cfg.G_atk + '  ' + fini
+        state_str += '  stun ' + cfg.G_grd_stun + '  ' + fini + '  jmp ' + cfg.G_jmp + '  ' + fini
+        state_str += '  inv ' + cfg.G_inv + '  ' + fini + '  seeld ' + cfg.G_seeld + '  ' + fini
+        state_str += '  air ' + '^'
+
+    return state_str
+
+
+
+def view(view_data, debug_data, current_index):
     DEF = '\x1b[0m'
     END = '\x1b[0m' + '\x1b[49m' + '\x1b[K' + '\x1b[1E'
-    x_p1 = str(p1.motion.val).rjust(8, " ")
-    x_p2 = str(p2.x_posi.val).rjust(8, " ")
-    act_P1 = str(p1.first_active).rjust(3, " ")
-    act_P2 = str(p2.first_active).rjust(3, " ")
-    overall_P1 = str(p1.overall).rjust(3, " ")
-    overall_P2 = str(p2.overall).rjust(3, " ")
-    gauge_p1 = str('{:.02f}'.format(p1.gauge.val / 100)).rjust(7, " ")
-    gauge_p2 = str('{:.02f}'.format(p2.gauge.val / 100)).rjust(7, " ")
-    m_gauge_p1 = str('{:.02f}'.format(p1.moon.val / 100)).rjust(7, " ")
-    m_gauge_p2 = str('{:.02f}'.format(p2.moon.val / 100)).rjust(7, " ")
-
-    ukemi = str(data.ukemi.val).rjust(3, " ")
-    ukemi2 = str(0).rjust(3, " ")
-
-    if p2.ukemi2.val != 0:
-        ukemi2 = str(p2.ukemi2.val + 1).rjust(3, " ")
-
-    advantage_f = str(cfg.advantage_f).rjust(7, " ")
-
-    hosei = str(data.hosei.val).rjust(4, " ")
-
-    Range = p1.x_posi.val - p2.x_posi.val
-
-    if Range < 0:
-        Range = Range * -1
-    Range = str(Range)[:5]
-
     state_str = '\x1b[1;1H' + '\x1b[?25l'
 
-    state_str += f'1P|Position{x_p1}'
-    state_str += f' FirstActive{act_P1}'
-    state_str += f' Overall{overall_P1}'
-    state_str += f' Circuit{gauge_p1}%'
-    state_str += f' Moon{m_gauge_p1}%'
+    if cfg.light_mode_flag == 0:
+        state_str += template_view()
 
-    if keyboard.is_pressed("F1"):
-        f1 = '  \x1b[007m' + '[F1]Reset' + '\x1b[0m'
-    else:
-        f1 = '  [F1]Reset'
+        data = cfg.game_data
+        d1 = cfg.characters_data_list[current_index].characters_data
+        p1 = d1[0]
+        p2 = d1[1]
 
-    if keyboard.is_pressed("F2"):
-        f2 = '  \x1b[007m' + '[F2]Save' + '\x1b[0m'
-    else:
-        f2 = '  [F2]Save'
 
-    if keyboard.is_pressed("F3"):
-        f3 = '  \x1b[007m' + '[F3]Moon switch' + '\x1b[0m'
-    else:
-        f3 = '  [F3]Moon switch'
+        state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ")
+        state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ")
+        state_str += cursor_move(2, 22) + str(data.hosei.val).rjust(3, " ")
 
-    if keyboard.is_pressed("F4"):
-        f4 = '  \x1b[007m' + '[F4]Max damage ini' + '\x1b[0m'
-    else:
-        f4 = '  [F4]Max damage ini'
+        state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ")
 
-    state_str += '   ' + f1 + f2 + f3 + f4 + END
+        if p2.ukemi2.val != 0:
+            state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ")
+        Range = p1.x_posi.val - p2.x_posi.val
 
-    state_str += f'2P|Position{x_p2}'
-    state_str += f' FirstActive{act_P2}'
-    state_str += f' Overall{overall_P2}'
-    state_str += f' Circuit{gauge_p2}%'
-    state_str += f' Moon{m_gauge_p2}%'
-    state_str += '   ' + ' '
-    state_str += DEF + ' motion ' + cfg.G_mot + '   '
-    state_str += DEF + ' attack ' + cfg.G_atk + '   '
-    state_str += DEF + '   stun ' + cfg.G_grd_stun + '   '
+        if Range < 0:
+            Range = Range * -1
 
-    state_str += DEF + '    jmp ' + cfg.G_jmp + '   '
-    state_str += DEF + '    inv ' + cfg.G_inv + '   '
-    state_str += DEF + '  seeld ' + cfg.G_seeld + '   '
-    state_str += DEF + '  air' + ' ^'
+        state_str += cursor_move(2, 36) + str(Range).rjust(6, " ")
+        state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ")
+        state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ")
+        state_str += cursor_move(1, 68) + str('{:.02f}'.format(p1.gauge.val / 100)).rjust(6, " ")
+        state_str += cursor_move(2, 68) + str('{:.02f}'.format(p2.gauge.val / 100)).rjust(6, " ")
+        state_str += cursor_move(1, 81) + str('{:.02f}'.format(p1.moon.val / 100)).rjust(6, " ")
+        state_str += cursor_move(2, 81) + str('{:.02f}'.format(p2.moon.val / 100)).rjust(6, " ")
 
-    state_str += END
+        state_str += cursor_move(3, 1) + view_data
+    elif cfg.light_mode_flag == 1:
+        cfg.template_view_flag = 0
+        state_str += cursor_move(1, 1) + view_data
 
-    state_str += '  |Advantage' + advantage_f
-    state_str += ' Proration' + hosei + "%"
-    state_str += ' Untec' + ukemi2 + ',' + ukemi
-    state_str += '  Range ' + Range + ' ' + END
-    state_str += view_data
+    if cfg.debug_flag == 1:
+        state_str += debug_data
 
-    # if cfg.debug_flag == 1:
-    #     state_str = degug_view(state_str)
-
+    state_str += "\x1b[1;1H"
     print(state_str)
 
 
-def degug_view(state_str):
-    END = '\x1b[0m' + '\x1b[49m' + '\x1b[K' + '\x1b[1E'
-    debug_str_p1 = ""
-    debug_str_p2 = ""
-
-    debug_str_p1 = "timer   " + str(timer.val).rjust(6, " ")
-    debug_str_p2 = "bar_num " + str(bar_num).rjust(6, " ")
-
-    debug_str_p1 += "motion_type " + str(p1.motion_type.val).rjust(6, " ")
-    debug_str_p2 += "motion_type " + str(p2.motion_type.val).rjust(6, " ")
-    debug_str_p1 += "motion " + str(p1.motion.val).rjust(6, " ")
-    debug_str_p2 += "motion " + str(p2.motion.val).rjust(6, " ")
-    debug_str_p1 += "noguard " + str(p1.noguard.val).rjust(6, " ")
-    debug_str_p2 += "noguard " + str(p2.noguard.val).rjust(6, " ")
-    debug_str_p1 += "motion_chenge_flag " + str(p1.motion_chenge_flag).rjust(6, " ")
-    debug_str_p2 += "motion_chenge_flag " + str(p2.motion_chenge_flag).rjust(6, " ")
-    debug_str_p1 += "ignore_flag " + str(p1.ignore_flag).rjust(6, " ")
-    debug_str_p2 += "ignore_flag " + str(p2.ignore_flag).rjust(6, " ")
-    debug_str_p1 += "action_flag " + str(p1.action_flag).rjust(6, " ")
-    debug_str_p2 += "action_flag " + str(p2.action_flag).rjust(6, " ")
-    debug_str_p1 += "hit " + str(p1.hit.val).rjust(6, " ")
-    debug_str_p2 += "hit " + str(p2.hit.val).rjust(6, " ")
-    debug_str_p1 += "advantage_calc_flag " + str(advantage_calc_flag).rjust(6, " ")
-
-    state_str += 'mt|' + p1.bar_3 + END
-    state_str += 'ct|' + p1.bar_4 + END
-    state_str += 'mn|' + p1.bar_5 + END
-    state_str += 'hs|' + p1.bar_6 + END
-    state_str += 'an|' + p1.bar_7 + END
-    state_str += '  |' + END
-    state_str += 'mt|' + p2.bar_3 + END
-    state_str += 'ct|' + p2.bar_4 + END
-    state_str += 'mn|' + p2.bar_5 + END
-    state_str += 'ac|' + p2.bar_6 + END
-    state_str += 'mc|' + p2.bar_7 + END
-
-    state_str += debug_str_p1 + END
-    state_str += debug_str_p2 + END
-
-    return state_str
+def degug_view(debug_data):
+    print(debug_data)
 
 
 def moon_change():
@@ -600,16 +565,30 @@ def function_key(data_index):
             cfg.on_flag = 1
             max_damage_ini()
 
+    # 簡易表示切り替え
+    elif keyboard.is_pressed("F5"):
+        if cfg.on_flag == 0:
+            cfg.on_flag = 1
+
+            if cfg.light_mode_flag == 0:
+                cfg.light_mode_flag = 1
+                os.system('cls')
+                os.system('mode con: cols=164 lines=5')
+
+            elif cfg.light_mode_flag == 1:
+                cfg.light_mode_flag = 0
+                os.system('cls')
+                os.system('mode con: cols=164 lines=7')
+
     # デバッグ表示
     elif (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):
         if cfg.debug_flag == 0:
             cfg.debug_flag = 1
-            os.system('mode con: cols=180 lines=23')
+            os.system('mode con: cols=180 lines=30')
 
         elif cfg.debug_flag == 1:
             cfg.debug_flag = 0
-            os.system('mode con: cols=166 lines=10')
-
+            os.system('mode con: cols=165 lines=8')
         time.sleep(0.3)
 
     elif cfg.on_flag == 1:

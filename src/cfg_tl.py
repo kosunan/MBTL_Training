@@ -13,7 +13,10 @@ anten = 0
 hitstop = 0
 stop_flag = 0
 debug_flag = 0
+light_mode_flag = 0
 mem_index = 0
+template_view_flag = 0
+
 
 class Characters_Data_Class:
     def __init__(self):
@@ -26,6 +29,11 @@ class Characters_Data_Class:
                                     self.characters_data[1].elements,
                                     self.characters_data[2].elements,
                                     self.characters_data[3].elements]
+
+        self.characters_debug_elements = [self.characters_data[0].debug_elements,
+                                          self.characters_data[1].debug_elements,
+                                          self.characters_data[2].debug_elements,
+                                          self.characters_data[3].debug_elements]
 
 
 class Game_Data_Class:
@@ -69,17 +77,17 @@ class Character_Data_Class:
         self.moon = pack(list, 0x928 + size, 4)
         self.moon_st = pack(list, 0x924 + size, 1)
         self.noguard = pack(list, 0xB7C + size, 1)
-
-        if size == DAT_P1_AD or size == DAT_P1_AD + (PLR_STRUCT_SIZE * 2):
+        if p_num == 0 or p_num == 2:
             self.anten_stop = pack(list, 0xB46212, 1)
-
-        elif size == DAT_P1_AD + (PLR_STRUCT_SIZE * 1) or size == DAT_P1_AD + (PLR_STRUCT_SIZE * 3):
+        elif p_num == 1 or p_num == 3:
             self.anten_stop = pack(list, 0xB46215, 1)
 
         # 処理用変数
         self.elements = list = []
         self.adv_element = element_cre(list, 0, G_adv)
         self.action_element = element_cre(list, 0, G_mot)
+        self.koutyoku_element = element_cre(list, 0, G_mot2)
+
         self.inv_element = element_cre(list, 0, G_inv)
         self.grd_stun_element = element_cre(list, 0, G_grd_stun)
         self.hit_stun_element = element_cre(list, 0, G_hit_stun)
@@ -90,11 +98,22 @@ class Character_Data_Class:
         self.air_element = element_cre(list, 1, G_air)
         self.atk_element = element_cre(list, 1, G_atk)
 
+        self.debug_elements = list = []
+        self.line_3_element = element_cre(list, 2, G_adv)
+        self.line_4_element = element_cre(list, 3, G_adv)
+        self.line_5_element = element_cre(list, 4, G_adv)
+        self.line_6_element = element_cre(list, 5, G_adv)
+        self.line_7_element = element_cre(list, 6, G_adv)
+        self.line_8_element = element_cre(list, 7, G_adv)
+        self.line_9_element = element_cre(list, 8, G_adv)
+        self.line_10_element = element_cre(list, 9, G_adv)
+
         self.ignore_flag = 0
         self.motion_chenge_flag = 0
         self.act_flag = 0
         self.first_active = 0
         self.active = 0
+        self.koutyoku = 0
         self.overall = 0
 
 
@@ -119,12 +138,12 @@ def element_cre(list, line, coler):
 
 
 def text_font(rgb):
-    Text_font_str = "\x1b[38;2;" + str(rgb[0]) + ";" + str(rgb[1]) + ";" + str(rgb[2]) + "m"
+    Text_font_str = "\x1b[38;2;" + str(rgb[0]).rjust(3, "0")[-3:] + ";" + str(rgb[1]).rjust(3, "0")[-3:] + ";" + str(rgb[2]).rjust(3, "0")[-3:] + "m"
     return Text_font_str
 
 
 def bg_font(rgb):
-    bg_font_str = "\x1b[48;2;" + str(rgb[0]) + ";" + str(rgb[1]) + ";" + str(rgb[2]) + "m"
+    bg_font_str = "\x1b[48;2;" + str(rgb[0]).rjust(3, "0")[-3:] + ";" + str(rgb[1]).rjust(3, "0")[-3:] + ";" + str(rgb[2]).rjust(3, "0")[-3:] + "m"
     return bg_font_str
 
 
@@ -135,6 +154,7 @@ def get_font(text_rgb, bg_rgb):
 G_atk = get_font((255, 255, 255), (255, 0, 0))
 G_mot = get_font((255, 255, 255), (65, 200, 0))
 G_mot2 = get_font((255, 255, 255), (35, 158, 0))
+G_mot3 = get_font((255, 255, 255), (123, 184, 193))
 
 G_grd_stun = get_font((255, 255, 255), (170, 170, 170))
 G_hit_stun = get_font((255, 255, 255), (170, 170, 170))
