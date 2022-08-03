@@ -443,8 +443,8 @@ def template_view():
         state_str += cursor_move(1, 3) + '|FirstAct|Adv|Proration|  Untec|  Range|Position -000000|Circuit 000.00%|Moon 000.00%|'
         state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|'
 
-        state_str += cursor_move(1, 90) + '[F1]Reset  [F2]Save  [F3]Moon_switch  [F4]Max_damage_ini  [F5]light mode'
-        state_str += cursor_move(2, 90)
+        # state_str += cursor_move(1, 90) + '[F1]Save_ini [F2]Save  [F3]Moon_switch  [F4]Max_damage_ini  [F5]light mode'
+        state_str += cursor_move(1, 90)
         state_str += 'motion ' + cfg.G_mot + '  ' + fini + '  atk ' + cfg.G_atk + '  ' + fini
         state_str += '  stun ' + cfg.G_grd_stun + '  ' + fini + '  jmp ' + cfg.G_jmp + '  ' + fini
         state_str += '  inv ' + cfg.G_inv + '  ' + fini + '  seeld ' + cfg.G_seeld + '  ' + fini
@@ -511,6 +511,10 @@ def moon_change():
     p1 = characters_data[0]
     p2 = characters_data[1]
 
+    for n in characters_data:
+        n.moon.b_dat = b'\x10\x27'
+        n.moon.w_mem()
+
     if p1.moon_st.val == 0:
         p1.moon_st.b_dat = b'\x01'
         p1.moon_st.w_mem()
@@ -524,10 +528,6 @@ def moon_change():
 
         p2.moon_st.b_dat = b'\x00'
         p2.moon_st.w_mem()
-
-    for n in characters_data:
-        n.moon.b_dat = b'\x10\x27'
-        n.moon.w_mem()
 
 
 def max_damage_ini():
@@ -569,7 +569,7 @@ def function_key(data_index):
     elif keyboard.is_pressed("F5"):
         if cfg.on_flag == 0:
             cfg.on_flag = 1
-
+            cfg.debug_flag = 0
             if cfg.light_mode_flag == 0:
                 cfg.light_mode_flag = 1
                 os.system('cls')

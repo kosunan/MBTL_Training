@@ -15,7 +15,8 @@ windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 indicator.ex_cmd_enable()
 os.system('mode con: cols=164 lines=7')
 os.system('cls')
-os.system('title MBTL_Training 1.8.2')
+os.system('title MBTL_Training 1.8.2｜[F1]Save_data_ini｜[F2]Save｜[F3]Moon_switch｜[F4]Max_damage_ini｜[F5]light mode｜')
+
 print('\x1b[1;1H' + '\x1b[?25l')
 
 # ベースアドレス取得
