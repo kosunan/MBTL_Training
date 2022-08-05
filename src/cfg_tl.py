@@ -2,7 +2,9 @@ from mem_access_util import mem_util
 import time
 PLR_STRUCT_SIZE = 0xC14  # 3084
 DAT_P1_AD = 0xB44ED0     # 1Pデータ開始位置
+
 advantage_f = 0
+
 advantage_calc_flag = 0
 on_flag = 0
 save_flag = 0
@@ -62,6 +64,9 @@ class Character_Data_Class:
         self.inv = pack(list, 0x61 + size, 1)
         self.x_posi = pack(list, 0x64 + size, 4)
         self.y_posi = pack(list, self.x_posi.ad + 4 + size, 4)
+        self.x_speed = pack(list, 0x1E0 + size, 4)
+        self.y_speed = pack(list, 0x1E4 + size , 4)
+
         self.air = pack(list, 0x6B + size, 2)
         self.gauge = pack(list, 0xA0 + size, 4)
         self.hitstop = pack(list, 0x298 + size, 1)
@@ -94,6 +99,7 @@ class Character_Data_Class:
         self.jmp_element = element_cre(list, 0, G_jmp)
         self.seeld_element = element_cre(list, 0, G_seeld)
         self.bunker_element = element_cre(list, 0, G_bunker)
+        self.hitstop_element = element_cre(list, 0, G_hit_stop)
 
         self.air_element = element_cre(list, 1, G_air)
         self.atk_element = element_cre(list, 1, G_atk)
@@ -113,7 +119,11 @@ class Character_Data_Class:
         self.act_flag = 0
         self.first_active = 0
         self.active = 0
-        self.koutyoku = 0
+        self.koutyoku_f = 0
+        self.stun_f = 0
+        self.jmp_f = 0
+        self.inv_f = 0
+        self.hitstop_f = 0
         self.overall = 0
 
 
@@ -151,18 +161,20 @@ def get_font(text_rgb, bg_rgb):
     return text_font(text_rgb) + bg_font(bg_rgb)
 
 
-G_atk = get_font((255, 255, 255), (255, 0, 0))
+G_atk = get_font((255, 255, 255), (240, 0, 0))
 G_mot = get_font((255, 255, 255), (65, 200, 0))
+# G_mot2 = get_font((35, 158, 0), (34, 40, 49))
+
 G_mot2 = get_font((255, 255, 255), (35, 158, 0))
 G_mot3 = get_font((255, 255, 255), (123, 184, 193))
 
 G_grd_stun = get_font((255, 255, 255), (170, 170, 170))
 G_hit_stun = get_font((255, 255, 255), (170, 170, 170))
 G_fre = get_font((92, 92, 92), (25, 25, 25))
-G_jmp = get_font((177, 177, 177), (241, 224, 132))
+G_jmp = get_font((255, 255, 255),(241, 224, 132))
 G_seeld = get_font((255, 255, 255), (145, 194, 255))
 G_inv = get_font((200, 200, 200), (255, 255, 255))
 G_adv = get_font((255, 255, 255), (25, 25, 25))
 G_bunker = get_font((255, 255, 255), (225, 184, 0))
 G_air = get_font((255, 255, 255), (25, 25, 25))
-G_hit_stop = get_font((255, 255, 255), (228, 94, 155))
+G_hit_stop = get_font((255, 255, 255), (59, 69, 129))

@@ -137,7 +137,7 @@ def content_creation(current_index):
     tagCharacterCheck(current_index)
     check_data_list = cfg.characters_data_list
 
-    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44, 98, 594]
+    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44,  594]
     stun_number = [620, 621, 624]
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
@@ -210,7 +210,11 @@ def content_creation(current_index):
         n1.first_active = n2.first_active
         n1.active = n2.active
         n1.act_flag = n2.act_flag
-        n1.koutyoku = n2.koutyoku
+        n1.koutyoku_f = n2.koutyoku_f
+        n1.stun_f = n2.stun_f
+        n1.jmp_f = n2.jmp_f
+        n1.inv_f = n2.inv_f
+        n1.hitstop_f = n2.hitstop_f
 
         n1.motion.val = 256 - n1.motion.val
         if n1.motion.val == 256:
@@ -224,6 +228,15 @@ def content_creation(current_index):
                 m.num = n1.motion.val
             else:
                 m.num = n1.motion_type.val
+
+        if n1.hitstop.val != 0:
+            n1.hitstop_element.val = 1
+            n1.hitstop_f += 1
+            n1.hitstop_element.num = n1.hitstop_f
+        else:
+            n1.hitstop_element.val = 0
+            n1.hitstop_element.num = 0
+            n1.hitstop_f = 0
 
         # motion_chenge_flag作成
         n1.motion_chenge_flag = 0
@@ -268,6 +281,13 @@ def content_creation(current_index):
                 if n1.motion_type.val == list_a:
                     n1.jmp_element.val = 1
 
+        if n1.jmp_element.val == 1:
+            n1.jmp_f += 1
+            n1.jmp_element.num = n1.jmp_f
+        else:
+            n1.jmp_f = 0
+            n1.jmp_element.num = 0
+
         # atk_element作成
         n1.atk_element.val = 0
         if n1.atk.val != 0:  # 攻撃判定を出しているとき
@@ -275,7 +295,8 @@ def content_creation(current_index):
 
         # 攻撃判定持続計算
         if n1.atk_element.val == 1 and cfg.anten == 0 and cfg.hitstop == 0:  # 攻撃判定を出しているとき
-            n1.active += 1
+            if n1.hitstop_element.val == 0:
+                n1.active += 1
 
         elif n1.atk_element.val == 0:  # 攻撃判定を出してないとき
             n1.active = 0
@@ -292,6 +313,15 @@ def content_creation(current_index):
         if n1.hit.val != 0:  # ガードorヒット硬直中
             n1.grd_stun_element.val = 1
             n1.hit_stun_element.val = 1
+            if cfg.stop_flag == 0:
+                n1.stun_f += 1
+            else:
+                n1.stun_f += 0
+            n1.hit_stun_element.num = n1.stun_f
+
+        else:
+            n1.hit_stun_element.num = 0
+            n1.stun_f = 0
 
         for list_a in stun_number:  # ガードorヒット硬直中
             if n1.motion_type.val == list_a:
@@ -317,6 +347,17 @@ def content_creation(current_index):
             if n1.action_element.val == 1:
                 n1.inv_element.val = 1
 
+        if n1.inv_element.val == 1:
+            if cfg.stop_flag == 0:
+                n1.inv_f += 1
+                n1.inv_element.num = n1.inv_f
+            else:
+                n1.inv_f += 0
+                n1.inv_element.num = n1.inv_f
+        else:
+            n1.inv_f = 0
+            n1.inv_element.num = 0
+
         # air_element作成
         n1.air_element.val = 0
         if n1.air.val == 255:  # 空中にいる場合:
@@ -339,12 +380,12 @@ def content_creation(current_index):
                 if n1.jmp_element.val == 0:
                     if n1.seeld_element.val == 0:
                         n1.koutyoku_element.val = 1
-                        n1.koutyoku += 1
-                        n1.koutyoku_element.num = n1.koutyoku
+                        n1.koutyoku_f += 1
+                        n1.koutyoku_element.num = n1.koutyoku_f
         else:
             n1.koutyoku_element.val = 0
             n1.koutyoku_element.num = 0
-            n1.koutyoku = 0
+            n1.koutyoku_f = 0
 
         n1.line_3_element.num = n1.motion_type.val
         n1.line_4_element.num = n1.motion.val
@@ -438,20 +479,27 @@ def template_view():
 
         fini = '\x1b[0m'
 
-        #                                        10        20        30        40        50        60        70        80        90
-        #                               1234567891123456789212345678931234567894123456789512345678961234567897123456789812345678991
-        state_str += cursor_move(1, 3) + '|FirstAct|Adv|Proration|  Untec|  Range|Position -000000|Circuit 000.00%|Moon 000.00%|'
-        state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|'
+        #                                        10        20        30        40        50        60        70        80        90       100
+        #                               123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789912345678991
+        state_str += cursor_move(1, 3) + '|FirstAct|Adv|Proration|  Untec|  Range|Position -000000|Circuit 000.00%|Moon 000.00%|speed x 0000|y 0000|'
+        state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|'
 
-        # state_str += cursor_move(1, 90) + '[F1]Save_ini [F2]Save  [F3]Moon_switch  [F4]Max_damage_ini  [F5]light mode'
-        state_str += cursor_move(1, 90)
-        state_str += 'motion ' + cfg.G_mot + '  ' + fini + '  atk ' + cfg.G_atk + '  ' + fini
-        state_str += '  stun ' + cfg.G_grd_stun + '  ' + fini + '  jmp ' + cfg.G_jmp + '  ' + fini
-        state_str += '  inv ' + cfg.G_inv + '  ' + fini + '  seeld ' + cfg.G_seeld + '  ' + fini
-        state_str += '  air ' + '^'
+        state_str += cursor_move(1, 110)
+        state_str += 'motion ' + cfg.G_mot + '01' + fini
+        state_str += '  atk ' + cfg.G_atk + '01' + fini
+        state_str += '  stun ' + cfg.G_grd_stun + '01' + fini
+        state_str += '  jmp ' + cfg.G_jmp + '01' + fini
+        state_str += '   air '+ '01' + fini
+
+        state_str += cursor_move(2, 110)
+        state_str += ' seeld ' + cfg.G_seeld + '01' + fini
+        state_str += '  inv ' + cfg.G_inv + '01' + fini
+        state_str += '  hit_stop ' + cfg.G_hit_stop + '01' + fini
+
+        state_str += '            ^'
+
 
     return state_str
-
 
 
 def view(view_data, debug_data, current_index):
@@ -466,7 +514,6 @@ def view(view_data, debug_data, current_index):
         d1 = cfg.characters_data_list[current_index].characters_data
         p1 = d1[0]
         p2 = d1[1]
-
 
         state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ")
         state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ")
@@ -488,6 +535,11 @@ def view(view_data, debug_data, current_index):
         state_str += cursor_move(2, 68) + str('{:.02f}'.format(p2.gauge.val / 100)).rjust(6, " ")
         state_str += cursor_move(1, 81) + str('{:.02f}'.format(p1.moon.val / 100)).rjust(6, " ")
         state_str += cursor_move(2, 81) + str('{:.02f}'.format(p2.moon.val / 100)).rjust(6, " ")
+
+        state_str += cursor_move(1, 96) + str(abs(p1.x_speed.val)).rjust(5, " ")
+        state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ")
+        state_str += cursor_move(1, 103) + str(p1.y_speed.val).rjust(5, " ")
+        state_str += cursor_move(2, 103) + str(p2.y_speed.val).rjust(5, " ")
 
         state_str += cursor_move(3, 1) + view_data
     elif cfg.light_mode_flag == 1:
