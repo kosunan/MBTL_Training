@@ -66,7 +66,7 @@ class Character_Data_Class:
         self.y_posi = pack(list, self.x_posi.ad + 4 + size, 4)
         self.x_speed = pack(list, 0x1E0 + size, 4)
         self.y_speed = pack(list, 0x1E4 + size , 4)
-
+        self.health = pack(list, 0x8C + size , 4)
         self.air = pack(list, 0x6B + size, 2)
         self.gauge = pack(list, 0xA0 + size, 4)
         self.hitstop = pack(list, 0x298 + size, 1)
@@ -99,10 +99,12 @@ class Character_Data_Class:
         self.jmp_element = element_cre(list, 0, G_jmp)
         self.seeld_element = element_cre(list, 0, G_seeld)
         self.bunker_element = element_cre(list, 0, G_bunker)
-        self.hitstop_element = element_cre(list, 0, G_hit_stop)
+
+        self.wake_up_element = element_cre(list, 0, G_wake_up)
 
         self.air_element = element_cre(list, 1, G_air)
         self.atk_element = element_cre(list, 1, G_atk)
+        self.hitstop_element = element_cre(list, 1, G_hit_stop)
 
         self.debug_elements = list = []
         self.line_3_element = element_cre(list, 2, G_adv)
@@ -178,3 +180,4 @@ G_adv = get_font((255, 255, 255), (25, 25, 25))
 G_bunker = get_font((255, 255, 255), (225, 184, 0))
 G_air = get_font((255, 255, 255), (25, 25, 25))
 G_hit_stop = get_font((255, 255, 255), (59, 69, 129))
+G_wake_up = get_font((255, 255, 255), (85, 33, 79))

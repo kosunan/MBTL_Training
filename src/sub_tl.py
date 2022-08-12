@@ -229,7 +229,7 @@ def content_creation(current_index):
             else:
                 m.num = n1.motion_type.val
 
-        if n1.hitstop.val != 0:
+        if cfg.stop_flag != 0:
             n1.hitstop_element.val = 1
             n1.hitstop_f += 1
             n1.hitstop_element.num = n1.hitstop_f
@@ -313,20 +313,24 @@ def content_creation(current_index):
         if n1.hit.val != 0:  # ガードorヒット硬直中
             n1.grd_stun_element.val = 1
             n1.hit_stun_element.val = 1
-            if cfg.stop_flag == 0:
-                n1.stun_f += 1
-            else:
-                n1.stun_f += 0
-            n1.hit_stun_element.num = n1.stun_f
-
         else:
             n1.hit_stun_element.num = 0
-            n1.stun_f = 0
+            n1.grd_stun_element.val = 0
 
         for list_a in stun_number:  # ガードorヒット硬直中
             if n1.motion_type.val == list_a:
                 n1.grd_stun_element.val = 1
                 n1.hit_stun_element.val = 1
+
+        if n1.hit_stun_element.val == 1:
+            if cfg.stop_flag == 0:
+                n1.stun_f += 1
+            else:
+                n1.stun_f += 0
+            n1.hit_stun_element.num = n1.stun_f
+        else:
+            n1.stun_f = 0
+
 
         # inv_element作成
         n1.inv_element.val = 0
@@ -338,9 +342,6 @@ def content_creation(current_index):
             n1.inv_element.val = 1
 
         if n1.air_ukemi_1.val != 0 and n1.air_ukemi_2.val != 0 and n1.hit_stun_element.val == 0:
-            n1.inv_element.val = 1
-
-        if n1.motion_type.val == 593:
             n1.inv_element.val = 1
 
         if n1.motion_type.val == 147 or n1.motion_type.val == 148:
@@ -358,6 +359,12 @@ def content_creation(current_index):
             n1.inv_f = 0
             n1.inv_element.num = 0
 
+        # wake_up_element作成
+        n1.wake_up_element.val = 0
+
+        if n1.motion_type.val == 593:
+            n1.wake_up_element.val = 1
+            n1.wake_up_element.num = 0
         # air_element作成
         n1.air_element.val = 0
         if n1.air.val == 255:  # 空中にいる場合:
@@ -397,7 +404,7 @@ def content_creation(current_index):
         n1.line_10_element.num = cfg.anten
 
     # 技の発生フレームの取得
-    firstActive_calc(p1, p2)
+    firstActive_calc(p1, p2, p1_old, p2_old)
 
     # 全体フレームの取得
     overall_calc(p1, p2)
@@ -451,14 +458,14 @@ def overall_calc(p1, p2):
         p2.overall = p2.motion.val
 
 
-def firstActive_calc(p1, p2):
+def firstActive_calc(p1, p2, p1_old, p2_old):
     # 計測開始の確認
     if p2.hitstop.val != 0 and p1.act_flag == 0 and p1.hit.val == 0:
-        p1.first_active = p1.overall
+        p1.first_active = p1_old.overall
         p1.act_flag = 1
 
     if p1.hitstop.val != 0 and p2.act_flag == 0 and p2.hit.val == 0:
-        p1.first_active = p2.overall
+        p1.first_active = p2_old.overall
         p2.act_flag = 1
 
     if p1.motion.val == 0 and p1.atk.val == 0 and p2.grd_stun_element.val == 0:
@@ -481,23 +488,22 @@ def template_view():
 
         #                                        10        20        30        40        50        60        70        80        90       100
         #                               123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789912345678991
-        state_str += cursor_move(1, 3) + '|FirstAct|Adv|Proration|  Untec|  Range|Position -000000|Circuit 000.00%|Moon 000.00%|speed x 0000|y 0000|'
-        state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|'
+        state_str += cursor_move(1, 3) + '|firstAct|adv|proration|  untec|  range|position -000000|circuit 000.00%|moon 000.00%|speed x 0000|y 0000|health 00000|'
+        state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|       00000|'
 
-        state_str += cursor_move(1, 110)
+        state_str += cursor_move(1, 122)
         state_str += 'motion ' + cfg.G_mot + '01' + fini
         state_str += '  atk ' + cfg.G_atk + '01' + fini
         state_str += '  stun ' + cfg.G_grd_stun + '01' + fini
         state_str += '  jmp ' + cfg.G_jmp + '01' + fini
-        state_str += '   air '+ '01' + fini
+        state_str += ' air ' + '01' + fini
 
-        state_str += cursor_move(2, 110)
+        state_str += cursor_move(2, 122)
         state_str += ' seeld ' + cfg.G_seeld + '01' + fini
         state_str += '  inv ' + cfg.G_inv + '01' + fini
-        state_str += '  hit_stop ' + cfg.G_hit_stop + '01' + fini
+        state_str += '  stop ' + cfg.G_hit_stop + '01' + fini
 
-        state_str += '            ^'
-
+        state_str += '          ^'
 
     return state_str
 
@@ -540,6 +546,8 @@ def view(view_data, debug_data, current_index):
         state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ")
         state_str += cursor_move(1, 103) + str(p1.y_speed.val).rjust(5, " ")
         state_str += cursor_move(2, 103) + str(p2.y_speed.val).rjust(5, " ")
+        state_str += cursor_move(1, 116) + str(p1.health.val).rjust(5, " ")
+        state_str += cursor_move(2, 116) + str(p2.health.val).rjust(5, " ")
 
         state_str += cursor_move(3, 1) + view_data
     elif cfg.light_mode_flag == 1:
@@ -605,20 +613,14 @@ def function_key(data_index):
             pause()
             situationMem(data_index)
 
-    # 月切り替え
-    elif keyboard.is_pressed("F3"):
-        if cfg.on_flag == 0:
-            cfg.on_flag = 1
-            moon_change()
-
-    # 最大ダメージ初期化
-    elif keyboard.is_pressed("F4"):
-        if cfg.on_flag == 0:
-            cfg.on_flag = 1
-            max_damage_ini()
+    # # 月切り替え
+    # elif keyboard.is_pressed("F12"):
+    #     if cfg.on_flag == 0:
+    #         cfg.on_flag = 1
+    #         moon_change()
 
     # 簡易表示切り替え
-    elif keyboard.is_pressed("F5"):
+    elif keyboard.is_pressed("F3"):
         if cfg.on_flag == 0:
             cfg.on_flag = 1
             cfg.debug_flag = 0
@@ -631,6 +633,12 @@ def function_key(data_index):
                 cfg.light_mode_flag = 0
                 os.system('cls')
                 os.system('mode con: cols=164 lines=7')
+
+    # 最大ダメージ初期化
+    elif keyboard.is_pressed("F4"):
+        if cfg.on_flag == 0:
+            cfg.on_flag = 1
+            max_damage_ini()
 
     # デバッグ表示
     elif (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):
