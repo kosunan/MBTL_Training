@@ -503,7 +503,7 @@ def template_view():
         state_str += '  inv ' + cfg.G_inv + '01' + fini
         state_str += '  stop ' + cfg.G_hit_stop + '01' + fini
 
-        state_str += '          ^'
+        state_str += '              ^'
 
     return state_str
 
