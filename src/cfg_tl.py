@@ -1,7 +1,5 @@
 from mem_access_util import mem_util
 import time
-PLR_STRUCT_SIZE = 0xC14  # 3084
-DAT_P1_AD = 0xB44ED0     # 1Pデータ開始位置
 
 advantage_f = 0
 
@@ -37,29 +35,30 @@ class Characters_Data_Class:
                                           self.characters_data[2].debug_elements,
                                           self.characters_data[3].debug_elements]
 
-
+# 14 6A28
 class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
-        self.timer = pack(list, 0x59DAE4, 4)
-        self.tr_flag = pack(list, 0x6E0D4C, 4)
-        self.damage = pack(list, 0x7164B0, 4)
+        self.timer = pack(list, 0x5E2CA8, 4)
+        self.tr_flag = pack(list, 0x827774, 4)
+        self.damage = pack(list, 0x85CED0, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
         self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
-        self.cam = pack(list, 0x716D90, 1500)
-        self.start_posi = pack(list, 0x732DC8, 1)
-        self.max_damage_pointer = pack(list, 0x72DC74, 4)
-        self.pause = pack(list, 0x72DA78, 1)
-
+        self.cam = pack(list, 0x85D8C0, 1500)
+        self.start_posi = pack(list, 0x87BEA4, 1)
+        self.max_damage_pointer = pack(list, 0x87C34C, 4)
+        self.pause = pack(list, 0x875D28, 1)
 
 class Character_Data_Class:
     def __init__(self, p_num):
+        PLR_STRUCT_SIZE = 0xC3C  #
+        DAT_P1_AD = 0xCA25F0     # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
         self.cont_list = list = []
         self.motion_type = pack(list, 0x1C + size, 2)
         self.c_timer = pack(list, 0x4C + size, 2)
-        self.motion = pack(list, 0x548 + size, 4)
+        self.motion = pack(list, 0x570 + size, 4)
         self.atk = pack(list, 0x60 + size, 1)
         self.inv = pack(list, 0x61 + size, 1)
         self.x_posi = pack(list, 0x64 + size, 4)
@@ -79,13 +78,13 @@ class Character_Data_Class:
         self.ukemi1 = pack(list, 0x2DC + size, 2)
         self.ukemi2 = pack(list, 0x2E4 + size, 2)
         self.anten_stop2 = pack(list, 0x6f0 + size, 4)
-        self.moon = pack(list, 0x928 + size, 4)
-        self.moon_st = pack(list, 0x924 + size, 1)
-        self.noguard = pack(list, 0xB7C + size, 1)
+        self.moon = pack(list, 0x950 + size, 4)
+        self.moon_st = pack(list, 0x94C + size, 1)
+        self.noguard = pack(list, 0xBA4 + size, 1)
         if p_num == 0 or p_num == 2:
-            self.anten_stop = pack(list, 0xB46212, 1)
+            self.anten_stop = pack(list, 0xCA3982, 1)
         elif p_num == 1 or p_num == 3:
-            self.anten_stop = pack(list, 0xB46215, 1)
+            self.anten_stop = pack(list, 0xCA3985, 1)
 
         # 処理用変数
         self.elements = list = []

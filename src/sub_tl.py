@@ -137,7 +137,7 @@ def content_creation(current_index):
     tagCharacterCheck(current_index)
     check_data_list = cfg.characters_data_list
 
-    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44,  594]
+    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44, 594, 596]
     stun_number = [620, 621, 624]
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
@@ -179,6 +179,13 @@ def content_creation(current_index):
 
     elif p2_old.c_timer.val == p2.c_timer.val and p2.hit.val == 0 and p1.hit.val == 0 and p1.motion_type.val != 621 and p2.motion_type.val != 621:
         cfg.anten += 1
+
+    elif p1_old.c_timer.val == p1.c_timer.val and p2_old.c_timer.val == p2.c_timer.val and p1.motion_type.val != 621 and p2.motion_type.val != 621:
+        cfg.anten += 1
+
+    # elif p2_old.c_timer.val == p2.c_timer.val and p1.motion_type.val != 621 and p2.motion_type.val != 621:
+    #     cfg.anten += 1
+
     else:
         cfg.anten = 0
 
@@ -294,7 +301,7 @@ def content_creation(current_index):
             n1.atk_element.val = 1
 
         # 攻撃判定持続計算
-        if n1.atk_element.val == 1 and cfg.anten == 0 and cfg.hitstop == 0:  # 攻撃判定を出しているとき
+        if n1.atk_element.val == 1 and cfg.anten == 0 and cfg.hitstop == 0 and n1.c_timer.val != n2.c_timer.val:  # 攻撃判定を出しているとき
             if n1.hitstop_element.val == 0:
                 n1.active += 1
 
@@ -325,17 +332,18 @@ def content_creation(current_index):
         if n1.hit_stun_element.val == 1:
             if cfg.stop_flag == 0:
                 n1.stun_f += 1
+            elif cfg.stop_flag == 1:
+                n1.stun_f = 0
             else:
                 n1.stun_f += 0
             n1.hit_stun_element.num = n1.stun_f
         else:
             n1.stun_f = 0
 
-
         # inv_element作成
         n1.inv_element.val = 0
 
-        if n1.inv.val == 0 and n1.motion.val != 0:  # 無敵中 # バックステップ無敵中# ムーンドライブ無敵#起き上がり中
+        if n1.inv.val == 0 and n1.motion.val != 0:  # 無敵中 # バックステップ無敵中# ムーンドライブ無敵
             n1.inv_element.val = 1
 
         if n1.step_inv.val != 0 and n1.motion_type.val == 46:
@@ -382,13 +390,15 @@ def content_creation(current_index):
         for n in n1.elements:
             n.val
 
-        if n1.action_element.val == 1 and n1.motion.val == 0:
-            if n1.inv_element.val == 0:
-                if n1.jmp_element.val == 0:
-                    if n1.seeld_element.val == 0:
-                        n1.koutyoku_element.val = 1
-                        n1.koutyoku_f += 1
-                        n1.koutyoku_element.num = n1.koutyoku_f
+        if (n1.action_element.val == 1 and
+            n1.motion.val == 0 and
+            n1.inv_element.val == 0 and
+            n1.jmp_element.val == 0 and
+                n1.seeld_element.val == 0):
+
+            n1.koutyoku_element.val = 1
+            n1.koutyoku_f += 1
+            n1.koutyoku_element.num = n1.koutyoku_f
         else:
             n1.koutyoku_element.val = 0
             n1.koutyoku_element.num = 0
@@ -400,8 +410,8 @@ def content_creation(current_index):
         n1.line_6_element.num = n1.action_element.val
         n1.line_7_element.num = n1.c_timer.val
         n1.line_8_element.num = n1.ignore_flag
-        n1.line_9_element.num = n1.anten_stop.val
-        n1.line_10_element.num = cfg.anten
+        n1.line_9_element.num = n1.hit.val
+        n1.line_10_element.num = n1.motion_chenge_flag
 
     # 技の発生フレームの取得
     firstActive_calc(p1, p2, p1_old, p2_old)
@@ -531,10 +541,7 @@ def view(view_data, debug_data, current_index):
             state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ")
         Range = p1.x_posi.val - p2.x_posi.val
 
-        if Range < 0:
-            Range = Range * -1
-
-        state_str += cursor_move(2, 36) + str(Range).rjust(6, " ")
+        state_str += cursor_move(2, 36) + str(abs(Range)).rjust(6, " ")
         state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ")
         state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ")
         state_str += cursor_move(1, 68) + str('{:.02f}'.format(p1.gauge.val / 100)).rjust(6, " ")
@@ -592,7 +599,7 @@ def moon_change():
 
 def max_damage_ini():
 
-    addres = cfg.game_data.max_damage_pointer.val + 0x34
+    addres = cfg.game_data.max_damage_pointer.val + 0x1C + 0x24
 
     mem_util.w_mem_abs_addres(addres, b'\x01')
 
