@@ -387,9 +387,6 @@ def content_creation(current_index):
         # bunker_element作成
         n1.bunker_element.val = 0
 
-        for n in n1.elements:
-            n.val
-
         if (n1.action_element.val == 1 and
             n1.motion.val == 0 and
             n1.inv_element.val == 0 and

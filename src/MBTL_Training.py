@@ -48,7 +48,7 @@ while 1:
         cfg.save_flag = 0
 
     # トレーニングモードの場合
-    elif tr_flag == 300 or tr_flag == 103:
+    elif tr_flag == 300 or tr_flag == 103 :
         sub.function_key(data_index)
 
         # タイマーチェック
