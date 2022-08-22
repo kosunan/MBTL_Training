@@ -401,14 +401,15 @@ def content_creation(current_index):
             n1.koutyoku_element.num = 0
             n1.koutyoku_f = 0
 
-        n1.line_3_element.num = n1.motion_type.val
-        n1.line_4_element.num = n1.motion.val
-        n1.line_5_element.num = n1.noguard.val
-        n1.line_6_element.num = n1.action_element.val
-        n1.line_7_element.num = n1.c_timer.val
-        n1.line_8_element.num = n1.ignore_flag
-        n1.line_9_element.num = n1.hit.val
-        n1.line_10_element.num = n1.motion_chenge_flag
+        if cfg.debug_flag == 1:
+            n1.line_3_element.num = n1.motion_type.val
+            n1.line_4_element.num = n1.motion.val
+            n1.line_5_element.num = n1.noguard.val
+            n1.line_6_element.num = n1.action_element.val
+            n1.line_7_element.num = n1.c_timer.val
+            n1.line_8_element.num = n1.ignore_flag
+            n1.line_9_element.num = n1.hit.val
+            n1.line_10_element.num = n1.motion_chenge_flag
 
     # 技の発生フレームの取得
     firstActive_calc(p1, p2, p1_old, p2_old)
@@ -553,6 +554,8 @@ def view(view_data, debug_data, current_index):
         state_str += cursor_move(1, 116) + str(p1.health.val).rjust(5, " ")
         state_str += cursor_move(2, 116) + str(p2.health.val).rjust(5, " ")
 
+        # state_str += cursor_move(2, 4) + str(cfg.loop_num).rjust(4, " ")
+
         state_str += cursor_move(3, 1) + view_data
     elif cfg.light_mode_flag == 1:
         cfg.template_view_flag = 0
@@ -648,10 +651,12 @@ def function_key(data_index):
     elif (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):
         if cfg.debug_flag == 0:
             cfg.debug_flag = 1
+            cfg.template_view_flag = 0
             os.system('mode con: cols=180 lines=30')
 
         elif cfg.debug_flag == 1:
             cfg.debug_flag = 0
+            cfg.template_view_flag = 0
             os.system('mode con: cols=165 lines=8')
         time.sleep(0.3)
 

@@ -16,7 +16,7 @@ debug_flag = 0
 light_mode_flag = 0
 mem_index = 0
 template_view_flag = 0
-
+loop_num = 0
 
 class Characters_Data_Class:
     def __init__(self):

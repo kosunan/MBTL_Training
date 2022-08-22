@@ -21,7 +21,7 @@ print('\x1b[1;1H' + '\x1b[?25l')
 
 # ベースアドレス取得
 mem_util.get_connection("MBTL.exe")
-mem_util.changeFontSize(7,14)
+mem_util.changeFontSize(7, 14)
 
 data_index = 0
 # check_data格納用オブジェクト作成
@@ -48,14 +48,16 @@ while 1:
         cfg.save_flag = 0
 
     # トレーニングモードの場合
-    elif tr_flag == 300 or tr_flag == 103 :
+    elif tr_flag == 300 or tr_flag == 103:
         sub.function_key(data_index)
 
         # タイマーチェック
         timer = cfg.game_data.timer.r_mem()
+        # cfg.loop_num += 1
 
         # フレームの切り替わりを監視
         if timer != timer_old:
+
             timer_old = timer
             time.sleep(0.004)  # データが安定するまで待機
 
@@ -65,11 +67,10 @@ while 1:
             characters_elements = cfg.characters_data_list[data_index].characters_elements
             characters_debug_elements = cfg.characters_data_list[data_index].characters_debug_elements
 
-            view_data, debug_data = indicator.frame_circulation_indicator(characters_elements, characters_debug_elements, cfg.stop_flag)
-
+            view_data, debug_data = indicator.frame_circulation_indicator(characters_elements, characters_debug_elements, cfg.stop_flag, cfg.debug_flag)
 
             sub.view(view_data, debug_data, data_index)
-
+            # cfg.loop_num = 0
             if cfg.save_flag == 1:
                 # リセット時の開始位置固定化
                 sub.startposi(data_index)
