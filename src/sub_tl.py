@@ -34,6 +34,8 @@ def play():
 
 
 def tagCharacterCheck(index):
+
+
     d1 = cfg.characters_data_list[index].characters_data
     e1 = cfg.characters_data_list[index].characters_elements
 
@@ -64,6 +66,7 @@ def situationCheck(index):
 
     for n in data.cont_list:
         n.r_mem()
+
 
     for character_data in characters_data:
         for n in character_data.cont_list:
@@ -152,8 +155,8 @@ def content_creation(current_index):
 
     p1 = d1[0]
     p2 = d1[1]
-    p3 = d1[2]
-    p4 = d1[3]
+    # p3 = d1[2]
+    # p4 = d1[3]
 
     p1_old = d2[0]
     p2_old = d2[1]
@@ -433,8 +436,8 @@ def content_creation(current_index):
         p2.adv_element.val = 0
         p2.adv_element.num = 0
 
-    p3.adv_element.num = ""
-    p4.adv_element.num = ""
+    # p3.adv_element.num = ""
+    # p4.adv_element.num = ""
 
 
 def advantage_calc(p1, p2):

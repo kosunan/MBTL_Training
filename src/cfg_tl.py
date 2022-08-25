@@ -35,24 +35,24 @@ class Characters_Data_Class:
                                           self.characters_data[2].debug_elements,
                                           self.characters_data[3].debug_elements]
 
-# 14 6A28
+
 class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
-        self.timer = pack(list, 0x5E2CA8, 4)
-        self.tr_flag = pack(list, 0x827774, 4)
-        self.damage = pack(list, 0x85CED0, 4)
+        self.timer = pack(list, 0x5E2CC8, 4)
+        self.tr_flag = pack(list, 0x82775C, 4)
+        self.damage = pack(list, 0x85CEF0, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
         self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
-        self.cam = pack(list, 0x85D8C0, 1500)
-        self.start_posi = pack(list, 0x87BEA4, 1)
-        self.max_damage_pointer = pack(list, 0x87C34C, 4)
-        self.pause = pack(list, 0x875D28, 1)
+        self.cam = pack(list, 0x85D8E0, 1500)
+        self.start_posi = pack(list, 0x87BEC4, 1)
+        self.max_damage_pointer = pack(list, 0x87C36C, 4)
+        self.pause = pack(list, 0x875D48, 1)
 
 class Character_Data_Class:
     def __init__(self, p_num):
         PLR_STRUCT_SIZE = 0xC3C  #
-        DAT_P1_AD = 0xCA25F0     # 1Pデータ開始位置
+        DAT_P1_AD = 0xCA2610     # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
         self.cont_list = list = []
@@ -82,9 +82,9 @@ class Character_Data_Class:
         self.moon_st = pack(list, 0x94C + size, 1)
         self.noguard = pack(list, 0xBA4 + size, 1)
         if p_num == 0 or p_num == 2:
-            self.anten_stop = pack(list, 0xCA3982, 1)
+            self.anten_stop = pack(list, 0xCA39A2, 1)
         elif p_num == 1 or p_num == 3:
-            self.anten_stop = pack(list, 0xCA3985, 1)
+            self.anten_stop = pack(list, 0xCA39A5, 1)
 
         # 処理用変数
         self.elements = list = []
