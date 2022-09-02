@@ -39,7 +39,7 @@ class Characters_Data_Class:
 class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
-        self.timer = pack(list, 0x5E2CC8, 4)
+        self.timer = pack(list, 0x5E2CD8, 4)
         self.tr_flag = pack(list, 0x82775C, 4)
         self.damage = pack(list, 0x85CEF0, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
@@ -126,6 +126,7 @@ class Character_Data_Class:
         self.inv_f = 0
         self.hitstop_f = 0
         self.overall = 0
+        self.seeld_f = 0
 
 
 class Element_Class:

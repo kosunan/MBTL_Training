@@ -225,6 +225,8 @@ def content_creation(current_index):
         n1.jmp_f = n2.jmp_f
         n1.inv_f = n2.inv_f
         n1.hitstop_f = n2.hitstop_f
+        n1.seeld_f = n2.seeld_f
+
 
         n1.motion.val = 256 - n1.motion.val
         if n1.motion.val == 256:
@@ -383,9 +385,16 @@ def content_creation(current_index):
             n1.air_element.num = "^"
 
         # seeld_element作成
-        n1.seeld_element.val = 0
+
         if n1.seeld.val == 2 or n1.seeld.val == 3:  # シールド中
             n1.seeld_element.val = 1
+            n1.seeld_f += 1
+
+        else:
+            n1.seeld_element.val = 0
+            n1.seeld_f = 0
+
+        n1.seeld_element.num = n1.seeld_f
 
         # bunker_element作成
         n1.bunker_element.val = 0
