@@ -18,6 +18,7 @@ mem_index = 0
 template_view_flag = 0
 loop_num = 0
 
+
 class Characters_Data_Class:
     def __init__(self):
         self.characters_data = [Character_Data_Class(0),
@@ -49,6 +50,7 @@ class Game_Data_Class:
         self.max_damage_pointer = pack(list, 0x87C36C, 4)
         self.pause = pack(list, 0x875D48, 1)
 
+
 class Character_Data_Class:
     def __init__(self, p_num):
         PLR_STRUCT_SIZE = 0xC3C  #
@@ -64,8 +66,8 @@ class Character_Data_Class:
         self.x_posi = pack(list, 0x64 + size, 4)
         self.y_posi = pack(list, self.x_posi.ad + 4 + size, 4)
         self.x_speed = pack(list, 0x1E0 + size, 4)
-        self.y_speed = pack(list, 0x1E4 + size , 4)
-        self.health = pack(list, 0x8C + size , 4)
+        self.y_speed = pack(list, 0x1E4 + size, 4)
+        self.health = pack(list, 0x8C + size, 4)
         self.air = pack(list, 0x6B + size, 2)
         self.gauge = pack(list, 0xA0 + size, 4)
         self.hitstop = pack(list, 0x298 + size, 1)
@@ -77,12 +79,19 @@ class Character_Data_Class:
         self.hit = pack(list, 0x2D8 + size, 2)
         self.ukemi1 = pack(list, 0x2DC + size, 2)
         self.ukemi2 = pack(list, 0x2E4 + size, 2)
+        self.heat_inv = pack(list, 0x5E4 + size, 1)
+        self.armor_1 = pack(list, 0x614 + size, 1)
+        self.armor_2 = pack(list, 0xC0 + size, 1)
+
         self.anten_stop2 = pack(list, 0x6f0 + size, 4)
         self.moon = pack(list, 0x950 + size, 4)
         self.moon_st = pack(list, 0x94C + size, 1)
         self.noguard = pack(list, 0xBA4 + size, 1)
+        self.bunker = pack(list, 0x1D4 + size, 4)
+
         if p_num == 0 or p_num == 2:
             self.anten_stop = pack(list, 0xCA39A2, 1)
+
         elif p_num == 1 or p_num == 3:
             self.anten_stop = pack(list, 0xCA39A5, 1)
 
@@ -98,6 +107,7 @@ class Character_Data_Class:
         self.jmp_element = element_cre(list, 0, G_jmp)
         self.seeld_element = element_cre(list, 0, G_seeld)
         self.bunker_element = element_cre(list, 0, G_bunker)
+        self.armor_element = element_cre(list, 0, G_armor)
 
         self.wake_up_element = element_cre(list, 0, G_wake_up)
 
@@ -127,6 +137,8 @@ class Character_Data_Class:
         self.hitstop_f = 0
         self.overall = 0
         self.seeld_f = 0
+        self.armor_f = 0
+        self.bunker_f = 0
 
 
 class Element_Class:
@@ -173,11 +185,13 @@ G_mot3 = get_font((255, 255, 255), (123, 184, 193))
 G_grd_stun = get_font((255, 255, 255), (170, 170, 170))
 G_hit_stun = get_font((255, 255, 255), (170, 170, 170))
 G_fre = get_font((92, 92, 92), (25, 25, 25))
-G_jmp = get_font((255, 255, 255),(241, 224, 132))
+G_jmp = get_font((255, 255, 255), (241, 224, 132))
 G_seeld = get_font((255, 255, 255), (145, 194, 255))
 G_inv = get_font((200, 200, 200), (255, 255, 255))
 G_adv = get_font((255, 255, 255), (25, 25, 25))
-G_bunker = get_font((255, 255, 255), (225, 184, 0))
+G_bunker = get_font((255, 255, 255), (255, 122, 33))
+G_armor = get_font((255, 255, 255), (255, 122, 33))
+
 G_air = get_font((255, 255, 255), (25, 25, 25))
 G_hit_stop = get_font((255, 255, 255), (59, 69, 129))
 G_wake_up = get_font((255, 255, 255), (85, 33, 79))

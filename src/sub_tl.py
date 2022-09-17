@@ -35,7 +35,6 @@ def play():
 
 def tagCharacterCheck(index):
 
-
     d1 = cfg.characters_data_list[index].characters_data
     e1 = cfg.characters_data_list[index].characters_elements
 
@@ -66,7 +65,6 @@ def situationCheck(index):
 
     for n in data.cont_list:
         n.r_mem()
-
 
     for character_data in characters_data:
         for n in character_data.cont_list:
@@ -226,7 +224,8 @@ def content_creation(current_index):
         n1.inv_f = n2.inv_f
         n1.hitstop_f = n2.hitstop_f
         n1.seeld_f = n2.seeld_f
-
+        n1.armor_f = n2.armor_f
+        n1.bunker_f = n2.bunker_f
 
         n1.motion.val = 256 - n1.motion.val
         if n1.motion.val == 256:
@@ -361,6 +360,9 @@ def content_creation(current_index):
             if n1.action_element.val == 1:
                 n1.inv_element.val = 1
 
+        # if n1.heat_inv.val == 1:
+        #     n1.inv_element.val = 1
+
         if n1.inv_element.val == 1:
             if cfg.stop_flag == 0:
                 n1.inv_f += 1
@@ -397,7 +399,26 @@ def content_creation(current_index):
         n1.seeld_element.num = n1.seeld_f
 
         # bunker_element作成
-        n1.bunker_element.val = 0
+
+
+        if n1.bunker.val < 0 and n1.bunker.val == 0:  # bunker中
+            n1.bunker_element.val = 1
+            n1.bunker_f += 1
+        else:
+            n1.bunker_element.val = 0
+            n1.bunker_f = 0
+
+        n1.bunker_element.num = n1.bunker_f
+
+        # armor_1作成
+        if n1.armor_1.val == 1 or n1.armor_2.val == 15:  # アーマー中
+            n1.armor_element.val = 1
+            n1.armor_f += 1
+        else:
+            n1.armor_element.val = 0
+            n1.armor_f = 0
+
+        n1.armor_element.num = n1.armor_f
 
         if (n1.action_element.val == 1 and
             n1.motion.val == 0 and
@@ -522,6 +543,7 @@ def template_view():
         state_str += ' seeld ' + cfg.G_seeld + '01' + fini
         state_str += '  inv ' + cfg.G_inv + '01' + fini
         state_str += '  stop ' + cfg.G_hit_stop + '01' + fini
+        state_str += ' armor' + cfg.G_armor + '01' + fini
 
         state_str += '              ^'
 
