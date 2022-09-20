@@ -32,6 +32,13 @@ def play():
     cfg.game_data.pause.b_dat = b'\x00'
     cfg.game_data.pause.w_mem()
 
+def bunker_ad_cal(c_dat):
+
+
+    addres = c_dat.bunker_pointer.val + 0xB6
+    b_dat = c_dat.bunker.b_dat
+    # mem_util.w_mem_abs_addres(addres,b'\xC0')
+    return mem_util.r_mem_abs_addres(addres,b_dat)
 
 def tagCharacterCheck(index):
 
@@ -399,9 +406,9 @@ def content_creation(current_index):
         n1.seeld_element.num = n1.seeld_f
 
         # bunker_element作成
+        n1.bunker.val = bunker_ad_cal(n1)
 
-
-        if n1.bunker.val < 0 and n1.bunker.val == 0:  # bunker中
+        if n1.bunker.val == 12 and n1.motion_type.val < 110:  # bunker中
             n1.bunker_element.val = 1
             n1.bunker_f += 1
         else:
@@ -440,7 +447,7 @@ def content_creation(current_index):
             n1.line_5_element.num = n1.noguard.val
             n1.line_6_element.num = n1.action_element.val
             n1.line_7_element.num = n1.c_timer.val
-            n1.line_8_element.num = n1.ignore_flag
+            n1.line_8_element.num = n1.bunker.val
             n1.line_9_element.num = n1.hit.val
             n1.line_10_element.num = n1.motion_chenge_flag
 
