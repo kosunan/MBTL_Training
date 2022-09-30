@@ -12,6 +12,7 @@ characters_data_list = []
 anten = 0
 hitstop = 0
 stop_flag = 0
+stop_view_flag = 0
 debug_flag = 0
 light_mode_flag = 0
 mem_index = 0
@@ -36,24 +37,25 @@ class Characters_Data_Class:
                                           self.characters_data[2].debug_elements,
                                           self.characters_data[3].debug_elements]
 
-
 class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
-        self.timer = pack(list, 0x5E333C, 4)
-        self.tr_flag = pack(list, 0x82875C, 4)
-        self.damage = pack(list, 0x85DEE0, 4)
+        self.timer = pack(list, 0x5E3CD4, 4)
+        self.tr_flag = pack(list, 0x82876C, 4)
+        self.damage = pack(list, 0x85DF00, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
         self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
-        self.cam = pack(list, 0x85E8D0, 1500)
-        self.start_posi = pack(list, 0x87CEB4, 1)
-        self.max_damage_pointer = pack(list, 0x87D35C, 4)
-        self.pause = pack(list, 0x876D38, 1)
+        self.cam = pack(list, 0x85E8F0, 1500)
+        self.cam_1 = pack(list, 0x85E9B8, 4)
+
+        self.start_posi = pack(list, 0x87CED4, 1)
+        self.max_damage_pointer = pack(list, 0x87D37C, 4)
+        self.pause = pack(list, 0x876D58, 1)
 
 class Character_Data_Class:
     def __init__(self, p_num):
         PLR_STRUCT_SIZE = 0xC3C  #
-        DAT_P1_AD = 0xCA3600     # 1Pデータ開始位置
+        DAT_P1_AD = 0xCA3680     # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
         self.cont_list = list = []
@@ -90,32 +92,35 @@ class Character_Data_Class:
         self.bunker_pointer = pack(list, 0x6EC + size, 4)
 
         if p_num == 0 or p_num == 2:
-            self.anten_stop = pack(list, 0xCA4992, 1)
+            self.anten_stop = pack(list, 0xCA4A12, 1)
 
         elif p_num == 1 or p_num == 3:
-            self.anten_stop = pack(list, 0xCA4995, 1)
+            self.anten_stop = pack(list, 0xCA4A15, 1)
 
         # 処理用変数
         self.elements = list = []
         self.adv_element = element_cre(list, 0, G_adv)
+
         self.action_element = element_cre(list, 0, G_mot)
         self.koutyoku_element = element_cre(list, 0, G_mot2)
 
         self.inv_element = element_cre(list, 0, G_inv)
         self.grd_stun_element = element_cre(list, 0, G_grd_stun)
+
         self.hit_stun_element = element_cre(list, 0, G_hit_stun)
         self.jmp_element = element_cre(list, 0, G_jmp)
         self.seeld_element = element_cre(list, 0, G_seeld)
         self.bunker_element = element_cre(list, 0, G_bunker)
         self.armor_element = element_cre(list, 0, G_armor)
+        self.hitstop_element = element_cre(list, 0, G_hit_stop)
 
         self.wake_up_element = element_cre(list, 0, G_wake_up)
 
         self.air_element = element_cre(list, 1, G_air)
         self.atk_element = element_cre(list, 1, G_atk)
-        self.hitstop_element = element_cre(list, 1, G_hit_stop)
 
         self.debug_elements = list = []
+
         self.line_3_element = element_cre(list, 2, G_adv)
         self.line_4_element = element_cre(list, 3, G_adv)
         self.line_5_element = element_cre(list, 4, G_adv)
@@ -139,6 +144,7 @@ class Character_Data_Class:
         self.seeld_f = 0
         self.armor_f = 0
         self.bunker_f = 0
+        self.stop_flag = 0
 
 
 class Element_Class:

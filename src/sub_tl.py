@@ -3,6 +3,8 @@ import time
 import ctypes
 import copy
 import keyboard
+from struct import unpack, pack
+
 from Fighting_Game_Indicator import indicator
 
 from mem_access_util import mem_util
@@ -32,13 +34,14 @@ def play():
     cfg.game_data.pause.b_dat = b'\x00'
     cfg.game_data.pause.w_mem()
 
+
 def bunker_ad_cal(c_dat):
 
-
-    addres = c_dat.bunker_pointer.val + 0xB6
+    addres = c_dat.bunker_pointer.val + 0xb6
     b_dat = c_dat.bunker.b_dat
     # mem_util.w_mem_abs_addres(addres,b'\xC0')
-    return mem_util.r_mem_abs_addres(addres,b_dat)
+    return mem_util.r_mem_abs_addres(addres, b_dat)
+
 
 def tagCharacterCheck(index):
 
@@ -169,12 +172,6 @@ def content_creation(current_index):
     p1_old2 = d3[0]
     p2_old2 = d3[1]
 
-    # hitstop作成
-    if p1.hitstop.val != 0 and p2.hitstop.val != 0:
-        cfg.hitstop += 1
-    elif p1.hitstop.val == 0 or p2.hitstop.val == 0:
-        cfg.hitstop = 0
-
     # anten作成
     if p1.anten_stop.val == 16:  # 暗転しているとき
         cfg.anten += 1
@@ -182,43 +179,8 @@ def content_creation(current_index):
     elif abs(p2.anten_stop.val) == 128:  # 暗転しているとき
         cfg.anten += 1
 
-    elif p1_old.c_timer.val == p1.c_timer.val and p1.hit.val == 0 and p2.hit.val == 0 and p1.motion_type.val != 621 and p2.motion_type.val != 621:
-        cfg.anten += 1
-
-    elif p2_old.c_timer.val == p2.c_timer.val and p2.hit.val == 0 and p1.hit.val == 0 and p1.motion_type.val != 621 and p2.motion_type.val != 621:
-        cfg.anten += 1
-
-    elif p1_old.c_timer.val == p1.c_timer.val and p2_old.c_timer.val == p2.c_timer.val and p1.motion_type.val != 621 and p2.motion_type.val != 621:
-        cfg.anten += 1
-
-    # elif p2_old.c_timer.val == p2.c_timer.val and p1.motion_type.val != 621 and p2.motion_type.val != 621:
-    #     cfg.anten += 1
-
     else:
         cfg.anten = 0
-
-    if cfg.anten >= 1:
-        if p1.anten_stop.val == 16 and p1.noguard.val == 77:  # ムーンドライブ対策
-            cfg.anten = 0
-
-        if p1_old2.motion_type.val == 147 or p1_old2.motion_type.val == 148:  # ムーンドライブ対策
-            if p2.hit.val != 0:
-                if p1_old2.motion_type.val != p1.motion_type.val:
-                    cfg.anten = 0
-
-        if abs(p2.anten_stop.val) == 128 and p2.noguard.val == 77:  # ムーンドライブ対策
-            cfg.anten = 0
-
-        if p2_old2.motion_type.val == 147 or p2_old2.motion_type.val == 148:  # ムーンドライブ対策
-            if p1.hit.val != 0:
-                if p2_old2.motion_type.val != p2.motion_type.val:
-                    cfg.anten = 0
-
-    if cfg.anten >= 2 or cfg.hitstop >= 2:
-        cfg.stop_flag = 1
-
-    else:
-        cfg.stop_flag = 0
 
     for n1, n2, n3 in zip(d1, d2, d3):
         n1.overall = n2.overall
@@ -247,7 +209,15 @@ def content_creation(current_index):
             else:
                 m.num = n1.motion_type.val
 
-        if cfg.stop_flag != 0:
+        if n1.c_timer.val == n2.c_timer.val:
+            n1.stop_flag = 1
+
+        elif n1.hitstop.val != 0:
+            n1.stop_flag = 1
+        else:
+            n1.stop_flag = 0
+
+        if n1.stop_flag != 0:
             n1.hitstop_element.val = 1
             n1.hitstop_f += 1
             n1.hitstop_element.num = n1.hitstop_f
@@ -341,9 +311,9 @@ def content_creation(current_index):
                 n1.hit_stun_element.val = 1
 
         if n1.hit_stun_element.val == 1:
-            if cfg.stop_flag == 0:
+            if n1.stop_flag == 0:
                 n1.stun_f += 1
-            elif cfg.stop_flag == 1:
+            elif n1.stop_flag == 1:
                 n1.stun_f = 0
             else:
                 n1.stun_f += 0
@@ -371,7 +341,7 @@ def content_creation(current_index):
         #     n1.inv_element.val = 1
 
         if n1.inv_element.val == 1:
-            if cfg.stop_flag == 0:
+            if n1.stop_flag == 0:
                 n1.inv_f += 1
                 n1.inv_element.num = n1.inv_f
             else:
@@ -448,8 +418,19 @@ def content_creation(current_index):
             n1.line_6_element.num = n1.action_element.val
             n1.line_7_element.num = n1.c_timer.val
             n1.line_8_element.num = n1.bunker.val
-            n1.line_9_element.num = n1.hit.val
-            n1.line_10_element.num = n1.motion_chenge_flag
+            n1.line_9_element.num = n1.stop_flag
+            n1.line_10_element.num = n1.hitstop.val
+
+    if d1[0].stop_flag == 1 and d1[1].stop_flag == 1:
+        if cfg.stop_view_flag == 0:
+            cfg.stop_flag += 1
+        else:
+            cfg.stop_flag = 0
+
+    elif cfg.anten >= 1:
+        cfg.stop_flag += 1
+    else:
+        cfg.stop_flag = 0
 
     # 技の発生フレームの取得
     firstActive_calc(p1, p2, p1_old, p2_old)
@@ -472,9 +453,6 @@ def content_creation(current_index):
 
         p2.adv_element.val = 0
         p2.adv_element.num = 0
-
-    # p3.adv_element.num = ""
-    # p4.adv_element.num = ""
 
 
 def advantage_calc(p1, p2):
@@ -552,7 +530,7 @@ def template_view():
         state_str += '  stop ' + cfg.G_hit_stop + '01' + fini
         state_str += ' armor' + cfg.G_armor + '01' + fini
 
-        state_str += '              ^'
+        state_str += '      ^'
 
     return state_str
 
@@ -688,6 +666,12 @@ def function_key(data_index):
             cfg.on_flag = 1
             max_damage_ini()
 
+    # 位置入れ替え
+    elif keyboard.is_pressed("1"):
+        if cfg.on_flag == 0:
+            cfg.on_flag = 1
+            reversal()
+
     # デバッグ表示
     elif (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):
         if cfg.debug_flag == 0:
@@ -734,3 +718,15 @@ def startposi(current_index):
 
     data.start_posi.b_dat = b_ini_posi_flag
     data.start_posi.w_mem()
+
+
+def reversal():
+    data = cfg.game_data
+    data.cam_1.b_dat.raw = pack('l', data.cam_1.val * -1)
+    data.cam_1.w_mem()
+
+    characters_data = cfg.characters_data_list[0].characters_data
+    for n in characters_data:
+        n.x_posi.val = n.x_posi.val * -1
+        n.x_posi.b_dat.raw = pack('l', n.x_posi.val)
+        n.x_posi.w_mem()
