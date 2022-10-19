@@ -53,12 +53,14 @@ while 1:
 
         # タイマーチェック
         timer = cfg.game_data.timer.r_mem()
+        timer_2 = cfg.game_data.timer_2.r_mem()
+
         # cfg.loop_num += 1
 
         # フレームの切り替わりを監視
-        if timer != timer_old:
+        if timer_2 != timer_old:
 
-            timer_old = timer
+            timer_old = timer_2
             time.sleep(0.004)  # データが安定するまで待機
 
             sub.situationCheck(data_index)  # 各種数値の取得

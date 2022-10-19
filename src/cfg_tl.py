@@ -37,10 +37,13 @@ class Characters_Data_Class:
                                           self.characters_data[2].debug_elements,
                                           self.characters_data[3].debug_elements]
 
+
 class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
         self.timer = pack(list, 0x5E3CD4, 4)
+        self.timer_2 = pack(list, 0x5E357C, 4)
+
         self.tr_flag = pack(list, 0x82876C, 4)
         self.damage = pack(list, 0x85DF00, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)

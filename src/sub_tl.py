@@ -173,7 +173,7 @@ def content_creation(current_index):
     p2_old2 = d3[1]
 
     # anten作成
-    if p1.anten_stop.val == 16:  # 暗転しているとき
+    if p1.anten_stop.val == 16 or p1.anten_stop.val == 80:  # 暗転しているとき
         cfg.anten += 1
 
     elif abs(p2.anten_stop.val) == 128:  # 暗転しているとき
@@ -212,8 +212,8 @@ def content_creation(current_index):
         if n1.c_timer.val == n2.c_timer.val:
             n1.stop_flag = 1
 
-        elif n1.hitstop.val != 0:
-            n1.stop_flag = 1
+        # elif n1.hitstop.val != 0:
+        #     n1.stop_flag = 1
         else:
             n1.stop_flag = 0
 
@@ -417,9 +417,9 @@ def content_creation(current_index):
             n1.line_5_element.num = n1.noguard.val
             n1.line_6_element.num = n1.action_element.val
             n1.line_7_element.num = n1.c_timer.val
-            n1.line_8_element.num = n1.bunker.val
+            n1.line_8_element.num = cfg.anten
             n1.line_9_element.num = n1.stop_flag
-            n1.line_10_element.num = n1.hitstop.val
+            n1.line_10_element.num = cfg.stop_flag
 
     if d1[0].stop_flag == 1 and d1[1].stop_flag == 1:
         if cfg.stop_view_flag == 0:
@@ -441,12 +441,16 @@ def content_creation(current_index):
     # 硬直差の取得
     advantage_calc(p1, p2)
 
+    if p1_old.air_element.val == 1 and p1.air_element.val == 0 and cfg.advantage_f > 0:
+        cfg.advantage_f = 1
+
     if cfg.advantage_calc_flag == 1:
         p1.adv_element.val = 1
         p1.adv_element.num = abs(cfg.advantage_f)
 
         p2.adv_element.val = 1
         p2.adv_element.num = abs(cfg.advantage_f)
+
     elif cfg.advantage_calc_flag == 0:
         p1.adv_element.val = 0
         p1.adv_element.num = 0
@@ -510,7 +514,7 @@ def template_view():
     if cfg.template_view_flag == 0:
         cfg.template_view_flag = 1
 
-        fini = '\x1b[0m'
+        end = '\x1b[0m'
 
         #                                        10        20        30        40        50        60        70        80        90       100
         #                               123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789912345678991
@@ -518,17 +522,17 @@ def template_view():
         state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|       00000|'
 
         state_str += cursor_move(1, 122)
-        state_str += 'motion ' + cfg.G_mot + '01' + fini
-        state_str += '  atk ' + cfg.G_atk + '01' + fini
-        state_str += '  stun ' + cfg.G_grd_stun + '01' + fini
-        state_str += '  jmp ' + cfg.G_jmp + '01' + fini
-        state_str += ' air ' + '01' + fini
+        state_str += 'motion ' + cfg.G_mot + '01' + end
+        state_str += '  atk ' + cfg.G_atk + '01' + end
+        state_str += '  stun ' + cfg.G_grd_stun + '01' + end
+        state_str += '  jmp ' + cfg.G_jmp + '01' + end
+        state_str += ' air ' + '01' + end
 
         state_str += cursor_move(2, 122)
-        state_str += ' seeld ' + cfg.G_seeld + '01' + fini
-        state_str += '  inv ' + cfg.G_inv + '01' + fini
-        state_str += '  stop ' + cfg.G_hit_stop + '01' + fini
-        state_str += ' armor' + cfg.G_armor + '01' + fini
+        state_str += ' seeld ' + cfg.G_seeld + '01' + end
+        state_str += '  inv ' + cfg.G_inv + '01' + end
+        state_str += '  stop ' + cfg.G_hit_stop + '01' + end
+        state_str += ' armor' + cfg.G_armor + '01' + end
 
         state_str += '      ^'
 
