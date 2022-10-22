@@ -66,7 +66,7 @@ class Character_Data_Class:
         self.atk = pack(list, 0x60 + size, 1)
         self.inv = pack(list, 0x61 + size, 1)
         self.x_posi = pack(list, 0x64 + size, 4)
-        self.y_posi = pack(list, self.x_posi.ad + 4 + size, 4)
+        self.y_posi = pack(list, self.x_posi.ad + 4, 4)
         self.x_speed = pack(list, 0x1E0 + size, 4)
         self.y_speed = pack(list, 0x1E4 + size, 4)
         self.health = pack(list, 0x8C + size, 4)
@@ -184,8 +184,6 @@ def get_font(text_rgb, bg_rgb):
 
 G_atk = get_font((255, 255, 255), (240, 0, 0))
 G_mot = get_font((255, 255, 255), (65, 200, 0))
-# G_mot2 = get_font((35, 158, 0), (34, 40, 49))
-
 G_mot2 = get_font((255, 255, 255), (35, 158, 0))
 G_mot3 = get_font((255, 255, 255), (123, 184, 193))
 
