@@ -15,7 +15,7 @@ windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 indicator.ex_cmd_enable()
 os.system('mode con: cols=164 lines=7')
 os.system('cls')
-os.system('title MBTL_Training 1.9.7   [F1]Save_data_ini [F2]Save [F3]light mode [F4]Max_damage_ini')
+os.system('title MBTL_Training 1.10   [F1]Save_data_ini [F2]Save [F3]light mode [F4]Max_damage_ini')
 
 print('\x1b[1;1H' + '\x1b[?25l')
 
@@ -34,7 +34,7 @@ timer = 0
 timer_old = 0
 tr_flag = 0
 
-while 1:
+while True:
     time.sleep(0.001)
 
     # トレーニングモードチェック
@@ -61,7 +61,7 @@ while 1:
         if timer_2 != timer_old:
 
             timer_old = timer_2
-            time.sleep(0.004)  # データが安定するまで待機
+            time.sleep(0.009)  # データが安定するまで待機
 
             sub.situationCheck(data_index)  # 各種数値の取得
 

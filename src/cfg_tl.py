@@ -41,22 +41,22 @@ class Characters_Data_Class:
 class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
-        self.timer = pack(list, 0x5E5CF4, 4)
-        self.timer_2 = pack(list, 0x5E5CF4, 4)
-        self.tr_flag = pack(list, 0x82B248, 4)
-        self.damage = pack(list, 0x8609A0, 4)
+        self.timer = pack(list, 0x6607D0, 4)
+        self.timer_2 = pack(list, 0x6607D0, 4)
+        self.tr_flag = pack(list, 0x8707E4, 4)
+        self.damage = pack(list, 0x8A6020, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
         self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
-        self.cam = pack(list, 0x861390, 1500)
+        self.cam = pack(list, 0x8A6910, 1500)
         self.cam_1 = pack(list, self.cam.ad + 0xc8, 4)
-        self.start_posi = pack(list, 0x87CED4, 1)
-        self.max_damage_pointer = pack(list, 0x87FE1C, 4)
-        self.pause = pack(list, 0x8797F8, 1)
+        self.start_posi = pack(list, 0x8C52E4, 1)
+        self.max_damage_pointer = pack(list, 0x8C578C, 4)
+        self.pause = pack(list, 0x8BEDA8, 1)
 
 class Character_Data_Class:
     def __init__(self, p_num):
-        PLR_STRUCT_SIZE = 0xC3C  #
-        DAT_P1_AD = 0xCA6120     # 1Pデータ開始位置
+        PLR_STRUCT_SIZE = 0xC34  #
+        DAT_P1_AD = 0xCEC560     # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
         self.cont_list = list = []
@@ -85,7 +85,7 @@ class Character_Data_Class:
         self.armor_1 = pack(list, 0x614 + size, 1)
         self.armor_2 = pack(list, 0xC0 + size, 1)
 
-        self.anten_stop2 = pack(list, 0x6f0 + size, 4)
+        # self.anten_stop2 = pack(list, 0x6f0 + size, 4)
         self.moon = pack(list, 0x950 + size, 4)
         self.moon_st = pack(list, 0x94C + size, 1)
         self.noguard = pack(list, 0xBA4 + size, 1)
@@ -93,28 +93,24 @@ class Character_Data_Class:
         self.bunker_pointer = pack(list, 0x6EC + size, 4)
 
         if p_num == 0 or p_num == 2:
-            self.anten_stop = pack(list, 0xCA74B2, 1)
+            self.anten_stop = pack(list, 0xCED8EA, 1)
 
         elif p_num == 1 or p_num == 3:
-            self.anten_stop = pack(list, 0xCA74B5, 1)
+            self.anten_stop = pack(list, 0xCED8ED, 1)
 
         # 処理用変数
         self.elements = list = []
         self.adv_element = element_cre(list, 0, G_adv)
-
         self.action_element = element_cre(list, 0, G_mot)
         self.koutyoku_element = element_cre(list, 0, G_mot2)
-
         self.inv_element = element_cre(list, 0, G_inv)
         self.grd_stun_element = element_cre(list, 0, G_grd_stun)
-
         self.hit_stun_element = element_cre(list, 0, G_hit_stun)
         self.jmp_element = element_cre(list, 0, G_jmp)
         self.seeld_element = element_cre(list, 0, G_seeld)
         self.bunker_element = element_cre(list, 0, G_bunker)
         self.armor_element = element_cre(list, 0, G_armor)
         self.hitstop_element = element_cre(list, 0, G_hit_stop)
-
         self.wake_up_element = element_cre(list, 0, G_wake_up)
 
         self.air_element = element_cre(list, 1, G_air)
@@ -132,6 +128,8 @@ class Character_Data_Class:
         self.line_10_element = element_cre(list, 9, G_adv)
 
         self.ignore_flag = 0
+        self.noguard_flag = 0
+
         self.motion_chenge_flag = 0
         self.act_flag = 0
         self.first_active = 0

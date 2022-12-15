@@ -48,15 +48,8 @@ def tagCharacterCheck(index):
     d1 = cfg.characters_data_list[index].characters_data
     e1 = cfg.characters_data_list[index].characters_elements
 
-    p1 = d1[0]
-    p2 = d1[1]
-    p3 = d1[2]
-    p4 = d1[3]
-
-    e_p1 = e1[0]
-    e_p2 = e1[1]
-    e_p3 = e1[2]
-    e_p4 = e1[3]
+    p1, p2, p3, p4 = d1
+    e_p1, e_p2, e_p3, e_p4 = e1
 
     if p1.tag_flag.val == 1:
         cfg.characters_data_list[index].characters_data = [p3, p2, p1, p4]
@@ -106,19 +99,28 @@ def situationWrit():
 def action_element_cre(n1, n2):
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
+
+    noguard_number = [95]
+    n1.noguard_flag = 0
+    for list_a in noguard_number:
+        if n1.noguard.val == list_a:
+            n1.noguard_flag = 1
+            break
+
     # action_element作成
     n1.action_element.val = 0
 
-    if n1.noguard.val == 77:
+
+    if n1.noguard_flag == 1:
         n1.action_element.val = 0
 
-    if n1.noguard.val == 0 and n1.motion_type.val != 0:
+    if n1.noguard_flag == 0 and n1.motion_type.val != 0:
         n1.action_element.val = 1
 
-    if n1.noguard.val == 77 and n1.motion_chenge_flag == 0 and n1.ignore_flag == 0:  # ジャンプ後即行動対策
+    if n1.noguard_flag == 1 and n1.motion_chenge_flag == 0 and n1.ignore_flag == 0:  # ジャンプ後即行動対策
         n1.action_element.val = 1
 
-    if n1.noguard.val == 77 and n1.motion_type.val == 21:
+    if n1.noguard_flag == 1 and n1.motion_type.val == 21:
         n1.action_element.val = 0
 
     for list_a in jmp2_number:
@@ -148,7 +150,7 @@ def content_creation(current_index):
     tagCharacterCheck(current_index)
     check_data_list = cfg.characters_data_list
 
-    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44, 594, 596]
+    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44, 594, 596,39, 38, 40]
     stun_number = [620, 621, 624]
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
@@ -212,8 +214,8 @@ def content_creation(current_index):
         if n1.c_timer.val == n2.c_timer.val:
             n1.stop_flag = 1
 
-        # elif n1.hitstop.val != 0:
-        #     n1.stop_flag = 1
+        elif n1.hitstop.val != 0:
+            n1.stop_flag = 1
         else:
             n1.stop_flag = 0
 
