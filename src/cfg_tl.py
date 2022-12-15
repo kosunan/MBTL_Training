@@ -88,7 +88,8 @@ class Character_Data_Class:
         # self.anten_stop2 = pack(list, 0x6f0 + size, 4)
         self.moon = pack(list, 0x950 + size, 4)
         self.moon_st = pack(list, 0x94C + size, 1)
-        self.noguard = pack(list, 0xBA4 + size, 1)
+        self.noguard2 = pack(list, 0xBA4 + size, 1)
+        self.noguard = pack(list, 0xB9C + size, 1)
         self.bunker = pack(list, 0x6E4 + size, 1)
         self.bunker_pointer = pack(list, 0x6EC + size, 4)
 
