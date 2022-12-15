@@ -100,7 +100,7 @@ def action_element_cre(n1, n2):
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
 
-    noguard_number = [95]
+    noguard_number = [95,105]
     n1.noguard_flag = 0
     for list_a in noguard_number:
         if n1.noguard.val == list_a:
