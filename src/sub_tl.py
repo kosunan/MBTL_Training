@@ -653,31 +653,31 @@ def function_key(data_index):
     #         moon_change()
 
     # 簡易表示切り替え
+    # elif keyboard.is_pressed("F3"):
+    #     if cfg.on_flag == 0:
+    #         cfg.on_flag = 1
+    #         cfg.debug_flag = 0
+    #         if cfg.light_mode_flag == 0:
+    #             cfg.light_mode_flag = 1
+    #             os.system('cls')
+    #             os.system('mode con: cols=164 lines=5')
+    #
+    #         elif cfg.light_mode_flag == 1:
+    #             cfg.light_mode_flag = 0
+    #             os.system('cls')
+    #             os.system('mode con: cols=164 lines=7')
+
+    # 位置入れ替え
     elif keyboard.is_pressed("F3"):
         if cfg.on_flag == 0:
             cfg.on_flag = 1
-            cfg.debug_flag = 0
-            if cfg.light_mode_flag == 0:
-                cfg.light_mode_flag = 1
-                os.system('cls')
-                os.system('mode con: cols=164 lines=5')
-
-            elif cfg.light_mode_flag == 1:
-                cfg.light_mode_flag = 0
-                os.system('cls')
-                os.system('mode con: cols=164 lines=7')
+            reversal()
 
     # 最大ダメージ初期化
     elif keyboard.is_pressed("F4"):
         if cfg.on_flag == 0:
             cfg.on_flag = 1
             max_damage_ini()
-
-    # 位置入れ替え
-    elif keyboard.is_pressed("1"):
-        if cfg.on_flag == 0:
-            cfg.on_flag = 1
-            reversal()
 
     # デバッグ表示
     elif (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):

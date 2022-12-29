@@ -15,7 +15,7 @@ windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 indicator.ex_cmd_enable()
 os.system('mode con: cols=164 lines=7')
 os.system('cls')
-os.system('title MBTL_Training 1.10.2   [F1]Save_data_ini [F2]Save [F3]light mode [F4]Max_damage_ini')
+os.system('title MBTL_Training 1.10.3   [F1]Save_data_ini [F2]Save [F3]reverse the position [F4]Max_damage_ini')
 
 print('\x1b[1;1H' + '\x1b[?25l')
 
@@ -53,14 +53,14 @@ while True:
 
         # タイマーチェック
         timer = cfg.game_data.timer.r_mem()
-        timer_2 = cfg.game_data.timer_2.r_mem()
+        # timer_2 = cfg.game_data.timer_2.r_mem()
 
         # cfg.loop_num += 1
 
         # フレームの切り替わりを監視
-        if timer_2 != timer_old:
+        if timer != timer_old:
 
-            timer_old = timer_2
+            timer_old = timer
             time.sleep(0.009)  # データが安定するまで待機
 
             sub.situationCheck(data_index)  # 各種数値の取得
