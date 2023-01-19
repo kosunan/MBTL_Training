@@ -151,7 +151,7 @@ def content_creation(current_index):
     tagCharacterCheck(current_index)
     check_data_list = cfg.characters_data_list
 
-    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44, 594, 596]
+    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44,  596]
     stun_number = [620, 621, 624]
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
@@ -357,7 +357,7 @@ def content_creation(current_index):
         # wake_up_element作成
         n1.wake_up_element.val = 0
 
-        if n1.motion_type.val == 593:
+        if n1.motion_type.val == 593 or n1.motion_type.val == 594:
             n1.wake_up_element.val = 1
             n1.wake_up_element.num = 0
         # air_element作成
