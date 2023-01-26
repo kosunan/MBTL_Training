@@ -9,7 +9,7 @@ save_flag = 0
 game_data = 0
 
 characters_data_list = []
-anten = 0
+freeze_frame = 0
 hitstop = 0
 stop_flag = 0
 stop_view_flag = 0
@@ -42,24 +42,24 @@ class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
 
-        self.timer = pack(list, 0x6617CC, 4)
+        self.timer = pack(list, 0x6617DC, 4)
         # self.timer_2 = pack(list, 0x62ACB8, 4)
-        self.tr_flag = pack(list, 0x8717E4, 4)
+        self.tr_flag = pack(list, 0x8717F4, 4)
         self.damage = pack(list, 0x8A7030, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
         self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
         self.cam = pack(list, 0x8A7920, 1500)
-        self.cam_1 = pack(list, self.cam.ad + 0xE8, 4)
+        self.cam_1 = pack(list, self.cam.ad + 0xF8, 4)
 
-        self.start_posi = pack(list, 0x8C62D4, 1)
-        self.max_damage_pointer = pack(list, 0x8C676C, 4)
-        self.pause = pack(list, 0x8BFDA8, 1)
+        self.start_posi = pack(list, 0x8C62F4, 1)
+        self.max_damage_pointer = pack(list, 0x8C679C, 4)
+        self.pause = pack(list, 0x8BFDB8, 1)
 
 
 class Character_Data_Class:
     def __init__(self, p_num):
         PLR_STRUCT_SIZE = 0xC34  #
-        DAT_P1_AD = 0xCED4E0 + 0x80     # 1Pデータ開始位置
+        DAT_P1_AD = 0xCED570      # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
         self.cont_list = list = []
@@ -96,12 +96,12 @@ class Character_Data_Class:
         self.bunker = pack(list, 0x6E4 + size, 1)
         self.bunker_pointer = pack(list, 0x6EC + size, 4)
 
-        anten_stop = 0xCEE8EA
+        freeze_frame = 0xCEE8FA
         if p_num == 0 or p_num == 2:
-            self.anten_stop = pack(list, anten_stop, 1)
+            self.freeze_frame = pack(list, freeze_frame, 1)
 
         elif p_num == 1 or p_num == 3:
-            self.anten_stop = pack(list, anten_stop + 3, 1)
+            self.freeze_frame = pack(list, freeze_frame + 3, 1)
 
         # 処理用変数
         self.elements = list = []

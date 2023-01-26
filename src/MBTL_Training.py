@@ -15,7 +15,7 @@ windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 indicator.ex_cmd_enable()
 os.system('mode con: cols=164 lines=7')
 os.system('cls')
-os.system('title MBTL_Training 1.10.4   [F1]Save_data_ini [F2]Save [F3]reverse the position [F4]Max_damage_ini')
+os.system('title MBTL_Training 1.10.5   [F1]Save_data_ini [F2]Save [F3]reverse the position [F4]Max_damage_ini')
 
 print('\x1b[1;1H' + '\x1b[?25l')
 

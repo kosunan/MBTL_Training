@@ -136,6 +136,17 @@ def action_element_cre(n1, n2):
     if n1.ignore_flag == 1:
         n1.action_element.val = 0
 
+def freeze_frame_cre(p1,p2):
+
+    if p1.freeze_frame.val == 16 or p1.freeze_frame.val == 80:  # 暗転しているとき
+        cfg.freeze_frame += 1
+
+    elif abs(p2.freeze_frame.val) == 128:  # 暗転しているとき
+        cfg.freeze_frame += 1
+
+    else:
+        cfg.freeze_frame = 0
+
 
 def old_index_get(index, max_index):
 
@@ -175,15 +186,8 @@ def content_creation(current_index):
     p1_old2 = d3[0]
     p2_old2 = d3[1]
 
-    # anten作成
-    if p1.anten_stop.val == 16 or p1.anten_stop.val == 80:  # 暗転しているとき
-        cfg.anten += 1
-
-    elif abs(p2.anten_stop.val) == 128:  # 暗転しているとき
-        cfg.anten += 1
-
-    else:
-        cfg.anten = 0
+    # freeze_frame作成
+    freeze_frame_cre(p1,p2)
 
     for n1, n2, n3 in zip(d1, d2, d3):
         n1.overall = n2.overall
@@ -285,7 +289,7 @@ def content_creation(current_index):
             n1.atk_element.val = 1
 
         # 攻撃判定持続計算
-        if n1.atk_element.val == 1 and cfg.anten == 0 and cfg.hitstop == 0 and n1.c_timer.val != n2.c_timer.val:  # 攻撃判定を出しているとき
+        if n1.atk_element.val == 1 and cfg.freeze_frame == 0 and cfg.hitstop == 0 and n1.c_timer.val != n2.c_timer.val:  # 攻撃判定を出しているとき
             if n1.hitstop_element.val == 0:
                 n1.active += 1
 
@@ -420,7 +424,7 @@ def content_creation(current_index):
             n1.line_5_element.num = n1.noguard.val
             n1.line_6_element.num = n1.action_element.val
             n1.line_7_element.num = n1.c_timer.val
-            n1.line_8_element.num = cfg.anten
+            n1.line_8_element.num = cfg.freeze_frame
             n1.line_9_element.num = n1.stop_flag
             n1.line_10_element.num = cfg.stop_flag
 
@@ -430,7 +434,7 @@ def content_creation(current_index):
         else:
             cfg.stop_flag = 0
 
-    elif cfg.anten >= 1:
+    elif cfg.freeze_frame >= 1:
         cfg.stop_flag += 1
     else:
         cfg.stop_flag = 0
@@ -520,7 +524,7 @@ def template_view():
         end = '\x1b[0m'
 
         #                                        10        20        30        40        50        60        70        80        90       100
-        #                               123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789912345678991
+        #                               123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789012345678991
         state_str += cursor_move(1, 3) + '|firstAct|adv|proration|  untec|  range|position -000000|circuit 000.00%|moon 000.00%|speed x 0000|y 0000|health 00000|'
         state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|       00000|'
 
