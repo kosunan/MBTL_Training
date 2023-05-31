@@ -636,19 +636,19 @@ def max_damage_ini():
 
 def function_key(data_index):
 
-    # セーブデータリセット
-    if keyboard.is_pressed("F1"):
-        if cfg.on_flag == 0:
-            cfg.on_flag = 1
-            cfg.save_flag = 0
+    # # セーブデータリセット
+    # if keyboard.is_pressed("F1"):
+    #     if cfg.on_flag == 0:
+    #         cfg.on_flag = 1
+    #         cfg.save_flag = 0
 
-    # 状況記憶
-    elif keyboard.is_pressed("F2"):
-        if cfg.on_flag == 0:
-            cfg.save_flag = 1
-            cfg.on_flag = 1
-            pause()
-            situationMem(data_index)
+    # # 状況記憶
+    # elif keyboard.is_pressed("F2"):
+    #     if cfg.on_flag == 0:
+    #         cfg.save_flag = 1
+    #         cfg.on_flag = 1
+    #         pause()
+    #         situationMem(data_index)
 
     # # 月切り替え
     # elif keyboard.is_pressed("F12"):
@@ -671,14 +671,14 @@ def function_key(data_index):
     #             os.system('cls')
     #             os.system('mode con: cols=164 lines=7')
 
-    # 位置入れ替え
-    elif keyboard.is_pressed("F3"):
-        if cfg.on_flag == 0:
-            cfg.on_flag = 1
-            reversal()
+    # # 位置入れ替え
+    # elif keyboard.is_pressed("F3"):
+    #     if cfg.on_flag == 0:
+    #         cfg.on_flag = 1
+    #         reversal()
 
     # 最大ダメージ初期化
-    elif keyboard.is_pressed("F4"):
+    if keyboard.is_pressed("F1"):
         if cfg.on_flag == 0:
             cfg.on_flag = 1
             max_damage_ini()
