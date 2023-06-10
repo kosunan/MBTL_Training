@@ -22,44 +22,50 @@ loop_num = 0
 
 class Characters_Data_Class:
     def __init__(self):
-        self.characters_data = [Character_Data_Class(0),
-                                Character_Data_Class(1),
-                                Character_Data_Class(2),
-                                Character_Data_Class(3)]
+        self.characters_data = [
+            Character_Data_Class(0),
+            Character_Data_Class(1),
+            Character_Data_Class(2),
+            Character_Data_Class(3),
+        ]
 
-        self.characters_elements = [self.characters_data[0].elements,
-                                    self.characters_data[1].elements,
-                                    self.characters_data[2].elements,
-                                    self.characters_data[3].elements]
+        self.characters_elements = [
+            self.characters_data[0].elements,
+            self.characters_data[1].elements,
+            self.characters_data[2].elements,
+            self.characters_data[3].elements,
+        ]
 
-        self.characters_debug_elements = [self.characters_data[0].debug_elements,
-                                          self.characters_data[1].debug_elements,
-                                          self.characters_data[2].debug_elements,
-                                          self.characters_data[3].debug_elements]
+        self.characters_debug_elements = [
+            self.characters_data[0].debug_elements,
+            self.characters_data[1].debug_elements,
+            self.characters_data[2].debug_elements,
+            self.characters_data[3].debug_elements,
+        ]
 
 
 class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
 
-        self.timer = pack(list, 0x62BC8C, 4)
+        self.timer = pack(list, 0x62BCBC, 4)
         # self.timer_2 = pack(list, 0x62ACB8, 4)
-        self.tr_flag = pack(list, 0x8717D4, 4)
-        self.damage = pack(list, 0x8A6F40, 4)
+        self.tr_flag = pack(list, 0x871804, 4)
+        self.damage = pack(list, 0x8A6F70, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
         self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
-        self.cam = pack(list, 0x8A7930, 1500)
-        self.cam_1 = pack(list, self.cam.ad + 0xF8, 4)
+        # self.cam = pack(list, 0x8A7970, 1500)
+        # self.cam_1 = pack(list, self.cam.ad + 0xF8, 4)
 
-        self.start_posi = pack(list, 0x8C62DC, 1)
-        self.max_damage_pointer = pack(list, 0x8C676C, 4)
-        self.pause = pack(list, 0x8BFD98, 1)
+        # self.start_posi = pack(list, 0x8C62DC, 1)
+        self.max_damage_pointer = pack(list, 0x8C679C, 4)
+        # self.pause = pack(list, 0x8BFD98, 1)
 
 
 class Character_Data_Class:
     def __init__(self, p_num):
         PLR_STRUCT_SIZE = 0xC34  #
-        DAT_P1_AD = 0xCED4F0      # 1Pデータ開始位置
+        DAT_P1_AD = 0xCED520  # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
         self.cont_list = list = []
@@ -81,7 +87,7 @@ class Character_Data_Class:
         self.seeld = pack(list, 0x2A0 + size, 1)
         self.tag_flag = pack(list, 0x2A4 + size, 1)
         self.step_inv = pack(list, 0x2B8 + size, 1)
-        self.air_ukemi_1 = pack(list, 0x2c2 + size, 1)
+        self.air_ukemi_1 = pack(list, 0x2C2 + size, 1)
         self.air_ukemi_2 = pack(list, 0x230 + size, 1)
         self.hit = pack(list, 0x2D8 + size, 2)
         self.ukemi1 = pack(list, 0x2DC + size, 2)
@@ -96,7 +102,7 @@ class Character_Data_Class:
         self.bunker = pack(list, 0x6E4 + size, 1)
         self.bunker_pointer = pack(list, 0x6EC + size, 4)
 
-        freeze_frame = 0xCEE87A
+        freeze_frame = 0xCEE8AA
         if p_num == 0 or p_num == 2:
             self.freeze_frame = pack(list, freeze_frame, 1)
 
@@ -172,12 +178,28 @@ def element_cre(list, line, coler):
 
 
 def text_font(rgb):
-    Text_font_str = "\x1b[38;2;" + str(rgb[0]).rjust(3, "0")[-3:] + ";" + str(rgb[1]).rjust(3, "0")[-3:] + ";" + str(rgb[2]).rjust(3, "0")[-3:] + "m"
+    Text_font_str = (
+        "\x1b[38;2;"
+        + str(rgb[0]).rjust(3, "0")[-3:]
+        + ";"
+        + str(rgb[1]).rjust(3, "0")[-3:]
+        + ";"
+        + str(rgb[2]).rjust(3, "0")[-3:]
+        + "m"
+    )
     return Text_font_str
 
 
 def bg_font(rgb):
-    bg_font_str = "\x1b[48;2;" + str(rgb[0]).rjust(3, "0")[-3:] + ";" + str(rgb[1]).rjust(3, "0")[-3:] + ";" + str(rgb[2]).rjust(3, "0")[-3:] + "m"
+    bg_font_str = (
+        "\x1b[48;2;"
+        + str(rgb[0]).rjust(3, "0")[-3:]
+        + ";"
+        + str(rgb[1]).rjust(3, "0")[-3:]
+        + ";"
+        + str(rgb[2]).rjust(3, "0")[-3:]
+        + "m"
+    )
     return bg_font_str
 
 

@@ -22,29 +22,25 @@ ReadMem = windll.kernel32.ReadProcessMemory
 
 
 def pause():
-
     # 一時停止
-    cfg.game_data.pause.b_dat = b'\x01'
+    cfg.game_data.pause.b_dat = b"\x01"
     cfg.game_data.pause.w_mem()
 
 
 def play():
-
     # 再生
-    cfg.game_data.pause.b_dat = b'\x00'
+    cfg.game_data.pause.b_dat = b"\x00"
     cfg.game_data.pause.w_mem()
 
 
 def bunker_ad_cal(c_dat):
-
-    addres = c_dat.bunker_pointer.val + 0xb6
+    addres = c_dat.bunker_pointer.val + 0xB6
     b_dat = c_dat.bunker.b_dat
     # mem_util.w_mem_abs_addres(addres,b'\xC0')
     return mem_util.r_mem_abs_addres(addres, b_dat)
 
 
 def tagCharacterCheck(index):
-
     d1 = cfg.characters_data_list[index].characters_data
     e1 = cfg.characters_data_list[index].characters_elements
 
@@ -61,7 +57,6 @@ def tagCharacterCheck(index):
 
 
 def situationCheck(index):
-
     data = cfg.game_data
 
     characters_data = cfg.characters_data_list[index].characters_data
@@ -111,14 +106,15 @@ def action_element_cre(n1, n2):
     # action_element作成
     n1.action_element.val = 0
 
-
     if n1.noguard_flag == 1:
         n1.action_element.val = 0
 
     if n1.noguard_flag == 0 and n1.motion_type.val != 0:
         n1.action_element.val = 1
 
-    if n1.noguard_flag == 1 and n1.motion_chenge_flag == 0 and n1.ignore_flag == 0:  # ジャンプ後即行動対策
+    if (
+        n1.noguard_flag == 1 and n1.motion_chenge_flag == 0 and n1.ignore_flag == 0
+    ):  # ジャンプ後即行動対策
         n1.action_element.val = 1
 
     if n1.noguard_flag == 1 and n1.motion_type.val == 21:
@@ -136,8 +132,8 @@ def action_element_cre(n1, n2):
     if n1.ignore_flag == 1:
         n1.action_element.val = 0
 
-def freeze_frame_cre(p1,p2):
 
+def freeze_frame_cre(p1, p2):
     if p1.freeze_frame.val == 16 or p1.freeze_frame.val == 80:  # 暗転しているとき
         cfg.freeze_frame += 1
 
@@ -149,7 +145,6 @@ def freeze_frame_cre(p1,p2):
 
 
 def old_index_get(index, max_index):
-
     old_index = index - 1
 
     if old_index == -1:
@@ -162,7 +157,7 @@ def content_creation(current_index):
     tagCharacterCheck(current_index)
     check_data_list = cfg.characters_data_list
 
-    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44,  596]
+    ignore_number = [0, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 44, 596]
     stun_number = [620, 621, 624]
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
@@ -187,7 +182,7 @@ def content_creation(current_index):
     p2_old2 = d3[1]
 
     # freeze_frame作成
-    freeze_frame_cre(p1,p2)
+    freeze_frame_cre(p1, p2)
 
     for n1, n2, n3 in zip(d1, d2, d3):
         n1.overall = n2.overall
@@ -236,7 +231,9 @@ def content_creation(current_index):
         # motion_chenge_flag作成
         n1.motion_chenge_flag = 0
 
-        if n1.motion_type.val == n2.motion_type.val or (n1.motion.val == n2.motion.val + 1 and n2.motion.val != 0):
+        if n1.motion_type.val == n2.motion_type.val or (
+            n1.motion.val == n2.motion.val + 1 and n2.motion.val != 0
+        ):
             n1.motion_chenge_flag += 1
         else:
             n1.motion_chenge_flag = 0
@@ -289,7 +286,12 @@ def content_creation(current_index):
             n1.atk_element.val = 1
 
         # 攻撃判定持続計算
-        if n1.atk_element.val == 1 and cfg.freeze_frame == 0 and cfg.hitstop == 0 and n1.c_timer.val != n2.c_timer.val:  # 攻撃判定を出しているとき
+        if (
+            n1.atk_element.val == 1
+            and cfg.freeze_frame == 0
+            and cfg.hitstop == 0
+            and n1.c_timer.val != n2.c_timer.val
+        ):  # 攻撃判定を出しているとき
             if n1.hitstop_element.val == 0:
                 n1.active += 1
 
@@ -337,7 +339,11 @@ def content_creation(current_index):
         if n1.step_inv.val != 0 and n1.motion_type.val == 46:
             n1.inv_element.val = 1
 
-        if n1.air_ukemi_1.val != 0 and n1.air_ukemi_2.val != 0 and n1.hit_stun_element.val == 0:
+        if (
+            n1.air_ukemi_1.val != 0
+            and n1.air_ukemi_2.val != 0
+            and n1.hit_stun_element.val == 0
+        ):
             n1.inv_element.val = 1
 
         if n1.motion_type.val == 147 or n1.motion_type.val == 148:
@@ -404,12 +410,13 @@ def content_creation(current_index):
 
         n1.armor_element.num = n1.armor_f
 
-        if (n1.action_element.val == 1 and
-            n1.motion.val == 0 and
-            n1.inv_element.val == 0 and
-            n1.jmp_element.val == 0 and
-                n1.seeld_element.val == 0):
-
+        if (
+            n1.action_element.val == 1
+            and n1.motion.val == 0
+            and n1.inv_element.val == 0
+            and n1.jmp_element.val == 0
+            and n1.seeld_element.val == 0
+        ):
             n1.koutyoku_element.val = 1
             n1.koutyoku_f += 1
             n1.koutyoku_element.num = n1.koutyoku_f
@@ -467,27 +474,35 @@ def content_creation(current_index):
 
 
 def advantage_calc(p1, p2):
-
-    if p1.hit.val == 0 and p2.hit.val == 0 and p1.action_element.val == 0 and p2.action_element.val == 0:
+    if (
+        p1.hit.val == 0
+        and p2.hit.val == 0
+        and p1.action_element.val == 0
+        and p2.action_element.val == 0
+    ):
         cfg.advantage_calc_flag = 0
 
-    elif (p1.hit.val != 0 or p1.action_element.val == 1) and (p2.hit.val != 0 or p2.action_element.val == 1):
+    elif (p1.hit.val != 0 or p1.action_element.val == 1) and (
+        p2.hit.val != 0 or p2.action_element.val == 1
+    ):
         cfg.advantage_calc_flag = 1
         cfg.advantage_f = 0
 
     if cfg.advantage_calc_flag == 1:
-
         # 有利フレーム検証
-        if (p1.hit.val == 0 and p1.action_element.val == 0) and (p2.hit.val != 0 or p2.action_element.val == 1):
+        if (p1.hit.val == 0 and p1.action_element.val == 0) and (
+            p2.hit.val != 0 or p2.action_element.val == 1
+        ):
             cfg.advantage_f += 1
 
         # 不利フレーム検証
-        if (p1.hit.val != 0 or p1.action_element.val == 1) and (p2.hit.val == 0 and p2.action_element.val == 0):
+        if (p1.hit.val != 0 or p1.action_element.val == 1) and (
+            p2.hit.val == 0 and p2.action_element.val == 0
+        ):
             cfg.advantage_f -= 1
 
 
 def overall_calc(p1, p2):
-
     if p1.motion.val != 0:  # 全体フレームの取得
         p1.overall = p1.motion.val
 
@@ -521,35 +536,41 @@ def template_view():
     if cfg.template_view_flag == 0:
         cfg.template_view_flag = 1
 
-        end = '\x1b[0m'
+        end = "\x1b[0m"
 
         #                                        10        20        30        40        50        60        70        80        90       100
         #                               123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789012345678991
-        state_str += cursor_move(1, 3) + '|firstAct|adv|proration|  untec|  range|position -000000|circuit 000.00%|moon 000.00%|speed x 0000|y 0000|health 00000|'
-        state_str += cursor_move(2, 3) + '|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|       00000|'
+        state_str += (
+            cursor_move(1, 3)
+            + "|firstAct|adv|proration|  untec|  range|position -000000|circuit 000.00%|moon 000.00%|speed x 0000|y 0000|health 00000|"
+        )
+        state_str += (
+            cursor_move(2, 3)
+            + "|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|       00000|"
+        )
 
         state_str += cursor_move(1, 122)
-        state_str += 'motion ' + cfg.G_mot + '01' + end
-        state_str += '  atk ' + cfg.G_atk + '01' + end
-        state_str += '  stun ' + cfg.G_grd_stun + '01' + end
-        state_str += '  jmp ' + cfg.G_jmp + '01' + end
-        state_str += ' air ' + '01' + end
+        state_str += "motion " + cfg.G_mot + "01" + end
+        state_str += "  atk " + cfg.G_atk + "01" + end
+        state_str += "  stun " + cfg.G_grd_stun + "01" + end
+        state_str += "  jmp " + cfg.G_jmp + "01" + end
+        state_str += " air " + "01" + end
 
         state_str += cursor_move(2, 122)
-        state_str += ' seeld ' + cfg.G_seeld + '01' + end
-        state_str += '  inv ' + cfg.G_inv + '01' + end
-        state_str += '  stop ' + cfg.G_hit_stop + '01' + end
-        state_str += ' armor' + cfg.G_armor + '01' + end
+        state_str += " seeld " + cfg.G_seeld + "01" + end
+        state_str += "  inv " + cfg.G_inv + "01" + end
+        state_str += "  stop " + cfg.G_hit_stop + "01" + end
+        state_str += " armor" + cfg.G_armor + "01" + end
 
-        state_str += '      ^'
+        state_str += "      ^"
 
     return state_str
 
 
 def view(view_data, debug_data, current_index):
-    DEF = '\x1b[0m'
-    END = '\x1b[0m' + '\x1b[49m' + '\x1b[K' + '\x1b[1E'
-    state_str = '\x1b[1;1H' + '\x1b[?25l'
+    DEF = "\x1b[0m"
+    END = "\x1b[0m" + "\x1b[49m" + "\x1b[K" + "\x1b[1E"
+    state_str = "\x1b[1;1H" + "\x1b[?25l"
 
     if cfg.light_mode_flag == 0:
         state_str += template_view()
@@ -572,10 +593,18 @@ def view(view_data, debug_data, current_index):
         state_str += cursor_move(2, 36) + str(abs(Range)).rjust(6, " ")
         state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ")
         state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ")
-        state_str += cursor_move(1, 68) + str('{:.02f}'.format(p1.gauge.val / 100)).rjust(6, " ")
-        state_str += cursor_move(2, 68) + str('{:.02f}'.format(p2.gauge.val / 100)).rjust(6, " ")
-        state_str += cursor_move(1, 81) + str('{:.02f}'.format(p1.moon.val / 100)).rjust(6, " ")
-        state_str += cursor_move(2, 81) + str('{:.02f}'.format(p2.moon.val / 100)).rjust(6, " ")
+        state_str += cursor_move(1, 68) + str(
+            "{:.02f}".format(p1.gauge.val / 100)
+        ).rjust(6, " ")
+        state_str += cursor_move(2, 68) + str(
+            "{:.02f}".format(p2.gauge.val / 100)
+        ).rjust(6, " ")
+        state_str += cursor_move(1, 81) + str(
+            "{:.02f}".format(p1.moon.val / 100)
+        ).rjust(6, " ")
+        state_str += cursor_move(2, 81) + str(
+            "{:.02f}".format(p2.moon.val / 100)
+        ).rjust(6, " ")
 
         state_str += cursor_move(1, 96) + str(abs(p1.x_speed.val)).rjust(5, " ")
         state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ")
@@ -603,39 +632,36 @@ def degug_view(debug_data):
 
 
 def moon_change():
-
     characters_data = cfg.characters_data_list[0].characters_data
     p1 = characters_data[0]
     p2 = characters_data[1]
 
     for n in characters_data:
-        n.moon.b_dat = b'\x10\x27'
+        n.moon.b_dat = b"\x10\x27"
         n.moon.w_mem()
 
     if p1.moon_st.val == 0:
-        p1.moon_st.b_dat = b'\x01'
+        p1.moon_st.b_dat = b"\x01"
         p1.moon_st.w_mem()
 
-        p2.moon_st.b_dat = b'\x01'
+        p2.moon_st.b_dat = b"\x01"
         p2.moon_st.w_mem()
 
     elif p1.moon_st.val == 1:
-        p1.moon_st.b_dat = b'\x00'
+        p1.moon_st.b_dat = b"\x00"
         p1.moon_st.w_mem()
 
-        p2.moon_st.b_dat = b'\x00'
+        p2.moon_st.b_dat = b"\x00"
         p2.moon_st.w_mem()
 
 
 def max_damage_ini():
-
     addres = cfg.game_data.max_damage_pointer.val + 0x1C + 0x24
 
-    mem_util.w_mem_abs_addres(addres, b'\x01')
+    mem_util.w_mem_abs_addres(addres, b"\x01")
 
 
 def function_key(data_index):
-
     # # セーブデータリセット
     # if keyboard.is_pressed("F1"):
     #     if cfg.on_flag == 0:
@@ -688,17 +714,17 @@ def function_key(data_index):
         if cfg.debug_flag == 0:
             cfg.debug_flag = 1
             cfg.template_view_flag = 0
-            os.system('mode con: cols=180 lines=30')
+            os.system("mode con: cols=180 lines=30")
 
         elif cfg.debug_flag == 1:
             cfg.debug_flag = 0
             cfg.template_view_flag = 0
-            os.system('mode con: cols=165 lines=8')
+            os.system("mode con: cols=165 lines=8")
         time.sleep(0.3)
 
     elif cfg.on_flag == 1:
         cfg.on_flag = 0
-        play()
+        # play()
 
 
 def startposi(current_index):
@@ -708,24 +734,24 @@ def startposi(current_index):
     x_p1 = d1[0].x_posi.val
     x_p2 = d1[1].x_posi.val
 
-    b_ini_posi_flag = b'\x00'
+    b_ini_posi_flag = b"\x00"
     if x_p1 < x_p2:
-        b_ini_posi_flag = b'\x00'
+        b_ini_posi_flag = b"\x00"
 
     if x_p1 > x_p2:
-        b_ini_posi_flag = b'\x05'
+        b_ini_posi_flag = b"\x05"
 
     if x_p1 == 262144:
-        b_ini_posi_flag = b'\x04'
+        b_ini_posi_flag = b"\x04"
 
     if x_p1 == -262144:
-        b_ini_posi_flag = b'\x03'
+        b_ini_posi_flag = b"\x03"
 
     if x_p2 == 262144:
-        b_ini_posi_flag = b'\x02'
+        b_ini_posi_flag = b"\x02"
 
     if x_p2 == -262144:
-        b_ini_posi_flag = b'\x01'
+        b_ini_posi_flag = b"\x01"
 
     data.start_posi.b_dat = b_ini_posi_flag
     data.start_posi.w_mem()
@@ -733,11 +759,11 @@ def startposi(current_index):
 
 def reversal():
     data = cfg.game_data
-    data.cam_1.b_dat.raw = pack('l', data.cam_1.val * -1)
+    data.cam_1.b_dat.raw = pack("l", data.cam_1.val * -1)
     data.cam_1.w_mem()
 
     characters_data = cfg.characters_data_list[0].characters_data
     for n in characters_data:
         n.x_posi.val = n.x_posi.val * -1
-        n.x_posi.b_dat.raw = pack('l', n.x_posi.val)
+        n.x_posi.b_dat.raw = pack("l", n.x_posi.val)
         n.x_posi.w_mem()
