@@ -580,38 +580,38 @@ def view(view_data, debug_data, current_index):
         p1 = d1[0]
         p2 = d1[1]
 
-        state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ")
-        state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ")
-        state_str += cursor_move(2, 22) + str(data.hosei.val).rjust(3, " ")
-
-        state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ")
+        state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ") # firstAct
+        state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ") # advantage
+        state_str += cursor_move(2, 22) + str(data.ukemi.val).rjust(3, " ") # proration
+        # p1.ukemi1.val
+        state_str += cursor_move(2, 27) + str(data.hosei.val).rjust(3, " ") # untec val 1
 
         if p2.ukemi2.val != 0:
-            state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ")
+            state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ") # untec val 2
         Range = p1.x_posi.val - p2.x_posi.val
 
-        state_str += cursor_move(2, 36) + str(abs(Range)).rjust(6, " ")
-        state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ")
-        state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ")
+        state_str += cursor_move(2, 36) + str(abs(Range)).rjust(6, " ") # range
+        state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ") # position p1 val
+        state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ") # position p2 val
         state_str += cursor_move(1, 68) + str(
             "{:.02f}".format(p1.gauge.val / 100)
-        ).rjust(6, " ")
+        ).rjust(6, " ") # circuit p1 val
         state_str += cursor_move(2, 68) + str(
             "{:.02f}".format(p2.gauge.val / 100)
-        ).rjust(6, " ")
+        ).rjust(6, " ") # circuit p2 val
         state_str += cursor_move(1, 81) + str(
             "{:.02f}".format(p1.moon.val / 100)
-        ).rjust(6, " ")
+        ).rjust(6, " ") # moon p1 val
         state_str += cursor_move(2, 81) + str(
             "{:.02f}".format(p2.moon.val / 100)
-        ).rjust(6, " ")
+        ).rjust(6, " ") # moon p2 val
 
-        state_str += cursor_move(1, 96) + str(abs(p1.x_speed.val)).rjust(5, " ")
-        state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ")
-        state_str += cursor_move(1, 103) + str(p1.y_speed.val).rjust(5, " ")
-        state_str += cursor_move(2, 103) + str(p2.y_speed.val).rjust(5, " ")
-        state_str += cursor_move(1, 116) + str(p1.health.val).rjust(5, " ")
-        state_str += cursor_move(2, 116) + str(p2.health.val).rjust(5, " ")
+        state_str += cursor_move(1, 96) + str(abs(p1.x_speed.val)).rjust(5, " ") # speed x p1 val
+        state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ") # speed x p2 val
+        state_str += cursor_move(1, 103) + str(p1.y_speed.val).rjust(5, " ")  # speed y p1 val
+        state_str += cursor_move(2, 103) + str(p2.y_speed.val).rjust(5, " ") # speed y p2 val
+        state_str += cursor_move(1, 116) + str(p1.health.val).rjust(5, " ") # health p1 val
+        state_str += cursor_move(2, 116) + str(p2.health.val).rjust(5, " ") # health p2 val
 
         # state_str += cursor_move(2, 4) + str(cfg.loop_num).rjust(4, " ")
 
