@@ -19,6 +19,13 @@ mem_index = 0
 template_view_flag = 0
 loop_num = 0
 
+# list of addresses 
+TIMER_ADDRESS = 0x62CC9C
+TR_FLAG_ADDRESS = 0x8A704C
+DAMAGE_ADDRESS = 0x8A7F98
+MAX_DAMAGE_ADDRESS = 0x8C3A20
+P1_DATA_START_ADDRESS = 0xCEE540
+FREEZE_FRAME_ADDRESS = 0x8A8BCC
 
 class Characters_Data_Class:
     def __init__(self):
@@ -48,24 +55,25 @@ class Game_Data_Class:
     def __init__(self):
         self.cont_list = list = []
 
-        self.timer = pack(list, 0x62BCBC, 4)
+        self.timer = pack(list, TIMER_ADDRESS, 4)
         # self.timer_2 = pack(list, 0x62ACB8, 4)
-        self.tr_flag = pack(list, 0x871804, 4)
-        self.damage = pack(list, 0x8A6F70, 4)
+        self.tr_flag = pack(list, TR_FLAG_ADDRESS, 4)
+        self.damage = pack(list, DAMAGE_ADDRESS, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)
-        self.ukemi = pack(list, self.damage.ad - 4, 2)  # 受け身不能時間補正
+        # proration
+        self.ukemi = pack(list, 0x8A7F84, 2)  # 受け身不能時間補正 # 
         # self.cam = pack(list, 0x8A7970, 1500)
         # self.cam_1 = pack(list, self.cam.ad + 0xF8, 4)
 
         # self.start_posi = pack(list, 0x8C62DC, 1)
-        self.max_damage_pointer = pack(list, 0x8C679C, 4)
+        self.max_damage_pointer = pack(list, MAX_DAMAGE_ADDRESS, 4)
         # self.pause = pack(list, 0x8BFD98, 1)
 
 
 class Character_Data_Class:
     def __init__(self, p_num):
         PLR_STRUCT_SIZE = 0xC34  #
-        DAT_P1_AD = 0xCED520  # 1Pデータ開始位置
+        DAT_P1_AD = P1_DATA_START_ADDRESS  # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
         self.cont_list = list = []
@@ -102,7 +110,7 @@ class Character_Data_Class:
         self.bunker = pack(list, 0x6E4 + size, 1)
         self.bunker_pointer = pack(list, 0x6EC + size, 4)
 
-        freeze_frame = 0xCEE8AA
+        freeze_frame = FREEZE_FRAME_ADDRESS
         if p_num == 0 or p_num == 2:
             self.freeze_frame = pack(list, freeze_frame, 1)
 

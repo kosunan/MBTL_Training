@@ -1,0 +1,6 @@
+[submodule "src/Fighting_Game_Indicator"]
+	path = src/Fighting_Game_Indicator
+	url = https://github.com/kosunan/Fighting_Game_Indicator
+[submodule "src/mem_access_util"]
+	path = src/mem_access_util
+	url = https://github.com/kosunan/mem_access_util
