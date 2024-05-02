@@ -15,18 +15,18 @@ windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 indicator.ex_cmd_enable()
 os.system("mode con: cols=164 lines=7")
 os.system("cls")
-os.system("title MBTL_Training 1.11.1   [F1]Max_damage_ini")
+os.system("title MBTL_Training 1.11.2   [F1]Max_damage_ini")
 
 print("\x1b[1;1H" + "\x1b[?25l")
 
-# ベースアドレス取得
+# ベースアドレス取得 # Get base address
 mem_util.get_connection("MBTL.exe")
 mem_util.changeFontSize(7, 14)
 
 data_index = 0
-# check_data格納用オブジェクト作成
+# check_data格納用オブジェクト作成 # Create storage object
 cfg.game_data = cfg.Game_Data_Class()
-for n in range(3):  # 3フレーム分のデータ格納領域作成
+for n in range(3):  # 3フレーム分のデータ格納領域作成 # Create data storage area for 3 frames
     cfg.characters_data_list.append(cfg.Characters_Data_Class())
 
 list_len = len(cfg.characters_data_list)
@@ -37,7 +37,7 @@ tr_flag = 0
 while True:
     time.sleep(0.001)
 
-    # トレーニングモードチェック
+    # トレーニングモードチェック # Training mode check
     tr_flag = cfg.game_data.tr_flag.r_mem()
 
     # トレーニングモードではない場合
