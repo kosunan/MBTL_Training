@@ -19,13 +19,14 @@ mem_index = 0
 template_view_flag = 0
 loop_num = 0
 
-# list of addresses 
-TIMER_ADDRESS = 0x62CC9C
-TR_FLAG_ADDRESS = 0x8A704C
-DAMAGE_ADDRESS = 0x8A7F98
-MAX_DAMAGE_ADDRESS = 0x8C3A20
-P1_DATA_START_ADDRESS = 0xCEE540
-FREEZE_FRAME_ADDRESS = 0x8A8BCC
+# list of addresses
+TIMER_ADDRESS = 0x8A9C58
+TR_FLAG_ADDRESS = 0x874874
+DAMAGE_ADDRESS = 0x8AA020
+MAX_DAMAGE_ADDRESS = 0x8C5AB0
+P1_DATA_START_ADDRESS = 0xCF82D0
+FREEZE_FRAME_ADDRESS = 0xCF967A
+
 
 class Characters_Data_Class:
     def __init__(self):
@@ -59,9 +60,9 @@ class Game_Data_Class:
         # self.timer_2 = pack(list, 0x62ACB8, 4)
         self.tr_flag = pack(list, TR_FLAG_ADDRESS, 4)
         self.damage = pack(list, DAMAGE_ADDRESS, 4)
-        self.hosei = pack(list, self.damage.ad - 12, 4)
-        # proration
-        self.ukemi = pack(list, 0x8A7F84, 2)  # 受け身不能時間補正 # 
+        self.hosei = pack(list, self.damage.ad - 12, 4)# proration
+        
+        self.ukemi = pack(list, 0x8A7F84, 2)  # 受け身不能時間補正 #
         # self.cam = pack(list, 0x8A7970, 1500)
         # self.cam_1 = pack(list, self.cam.ad + 0xF8, 4)
 
@@ -72,7 +73,7 @@ class Game_Data_Class:
 
 class Character_Data_Class:
     def __init__(self, p_num):
-        PLR_STRUCT_SIZE = 0xC34  #
+        PLR_STRUCT_SIZE = 0xC44  #
         DAT_P1_AD = P1_DATA_START_ADDRESS  # 1Pデータ開始位置
 
         size = DAT_P1_AD + (PLR_STRUCT_SIZE * p_num)
@@ -89,7 +90,6 @@ class Character_Data_Class:
         self.health = pack(list, 0x8C + size, 4)
         self.air = pack(list, 0x6B + size, 2)
         self.gauge = pack(list, 0xA0 + size, 4)
-        # self.gauge = pack(list, 0x120 + size, 4)
 
         self.hitstop = pack(list, 0x298 + size, 1)
         self.seeld = pack(list, 0x2A0 + size, 1)
@@ -103,10 +103,10 @@ class Character_Data_Class:
         self.heat_inv = pack(list, 0x5E4 + size, 1)
         self.armor_1 = pack(list, 0x614 + size, 1)
         self.armor_2 = pack(list, 0xC0 + size, 1)
-        self.moon = pack(list, 0x948 + size, 4)
-        self.moon_st = pack(list, 0x94A + size, 1)
-        self.noguard2 = pack(list, 0xBA4 + size, 1)
-        self.noguard = pack(list, 0xB9C + size, 1)
+        self.moon = pack(list, 0x958 + size, 4)
+        self.moon_st = pack(list, 0x954 + size, 1)
+        self.noguard2 = pack(list, 0xBAC + 8 + size, 1)
+        self.noguard = pack(list, 0xBAC + size, 1)
         self.bunker = pack(list, 0x6E4 + size, 1)
         self.bunker_pointer = pack(list, 0x6EC + size, 4)
 

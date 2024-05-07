@@ -1,6 +1,9 @@
 from ctypes import windll
 import os
 import time
+import subprocess
+import pygetwindow as gw
+
 
 from Fighting_Game_Indicator import indicator
 from mem_access_util import mem_util
@@ -13,11 +16,49 @@ sub = sub_tl
 
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 indicator.ex_cmd_enable()
-os.system("mode con: cols=164 lines=7")
-os.system("cls")
-os.system("title MBTL_Training 1.11.2   [F1]Max_damage_ini")
 
-print("\x1b[1;1H" + "\x1b[?25l")
+# 画面をクリアする
+subprocess.run("cls", shell=True)
+
+
+# タイトルを設定する
+title = "MBTL_Training 1.12"
+subprocess.run("title "+title, shell=True)
+
+# タイトルに合致するウィンドウを取得するまで待機
+max_attempts = 100  # 最大試行回数
+attempt = 0
+cmd_window = None
+
+while attempt < max_attempts:
+    cmd_window = gw.getWindowsWithTitle(title)
+    if cmd_window:
+        cmd_window = cmd_window[0]  # リストからウィンドウを取得
+        break
+    else:
+        attempt += 1
+        time.sleep(0.1)  # 0.1秒待機して再試行
+
+# ウィンドウが見つかった場合にサイズを設定
+if cmd_window:
+    time.sleep(0.1)
+    def resize_windows_with_title(title, width, height):
+        # 指定したタイトルを持つすべてのウィンドウを取得
+        windows = gw.getWindowsWithTitle(title)
+        
+        if windows:
+            for window in windows:
+                # ウィンドウのサイズを変更
+                window.resizeTo(width, height)
+
+    # タイトルと変更後の幅・高さを指定してウィンドウのサイズを変更
+    title_to_resize = title
+    new_width = 1525  # 変更後の幅
+    new_height = 200  # 変更後の高さ
+
+    resize_windows_with_title(title_to_resize, new_width, new_height)
+
+
 
 # ベースアドレス取得 # Get base address
 mem_util.get_connection("MBTL.exe")
@@ -35,6 +76,7 @@ timer_old = 0
 tr_flag = 0
 
 while True:
+
     time.sleep(0.001)
 
     # トレーニングモードチェック # Training mode check
@@ -85,7 +127,7 @@ while True:
                 # リセット時の開始位置固定化
                 sub.startposi(data_index)
 
-            if timer <= 1:
+            if timer <= 3:
                 indicator.bar_ini()
                 if cfg.save_flag == 1:
                     sub.situationWrit()  # 状況再現

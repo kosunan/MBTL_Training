@@ -582,9 +582,9 @@ def view(view_data, debug_data, current_index):
 
         state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ") # firstAct
         state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ") # advantage
-        state_str += cursor_move(2, 22) + str(data.ukemi.val).rjust(3, " ") # proration
+        state_str += cursor_move(2, 22) + str(data.hosei.val).rjust(3, " ") # proration
         # p1.ukemi1.val
-        state_str += cursor_move(2, 27) + str(data.hosei.val).rjust(3, " ") # untec val 1
+        # state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ") # untec val 1
 
         if p2.ukemi2.val != 0:
             state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ") # untec val 2
@@ -662,55 +662,8 @@ def max_damage_ini():
 
 
 def function_key(data_index):
-    # # セーブデータリセット
-    # if keyboard.is_pressed("F1"):
-    #     if cfg.on_flag == 0:
-    #         cfg.on_flag = 1
-    #         cfg.save_flag = 0
-
-    # # 状況記憶
-    # elif keyboard.is_pressed("F2"):
-    #     if cfg.on_flag == 0:
-    #         cfg.save_flag = 1
-    #         cfg.on_flag = 1
-    #         pause()
-    #         situationMem(data_index)
-
-    # # 月切り替え
-    # elif keyboard.is_pressed("F12"):
-    #     if cfg.on_flag == 0:
-    #         cfg.on_flag = 1
-    #         moon_change()
-
-    # 簡易表示切り替え
-    # elif keyboard.is_pressed("F3"):
-    #     if cfg.on_flag == 0:
-    #         cfg.on_flag = 1
-    #         cfg.debug_flag = 0
-    #         if cfg.light_mode_flag == 0:
-    #             cfg.light_mode_flag = 1
-    #             os.system('cls')
-    #             os.system('mode con: cols=164 lines=5')
-    #
-    #         elif cfg.light_mode_flag == 1:
-    #             cfg.light_mode_flag = 0
-    #             os.system('cls')
-    #             os.system('mode con: cols=164 lines=7')
-
-    # # 位置入れ替え
-    # elif keyboard.is_pressed("F3"):
-    #     if cfg.on_flag == 0:
-    #         cfg.on_flag = 1
-    #         reversal()
-
-    # 最大ダメージ初期化
-    if keyboard.is_pressed("F1"):
-        if cfg.on_flag == 0:
-            cfg.on_flag = 1
-            max_damage_ini()
-
     # デバッグ表示
-    elif (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):
+    if (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):
         if cfg.debug_flag == 0:
             cfg.debug_flag = 1
             cfg.template_view_flag = 0
