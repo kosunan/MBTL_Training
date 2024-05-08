@@ -22,7 +22,7 @@ subprocess.run("cls", shell=True)
 
 
 # タイトルを設定する
-title = "MBTL_Training 1.12"
+title = "MBTL_Training 1.12.1"
 subprocess.run("title "+title, shell=True)
 
 # タイトルに合致するウィンドウを取得するまで待機
