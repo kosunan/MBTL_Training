@@ -62,7 +62,7 @@ class Game_Data_Class:
         self.damage = pack(list, DAMAGE_ADDRESS, 4)
         self.hosei = pack(list, self.damage.ad - 12, 4)# proration
         
-        self.ukemi = pack(list, 0x8A7F84, 2)  # 受け身不能時間補正 #
+        self.ukemi = pack(list, 0x8AA01C, 2)  # 受け身不能時間補正 #
         # self.cam = pack(list, 0x8A7970, 1500)
         # self.cam_1 = pack(list, self.cam.ad + 0xF8, 4)
 

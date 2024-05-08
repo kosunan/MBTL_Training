@@ -584,7 +584,7 @@ def view(view_data, debug_data, current_index):
         state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ") # advantage
         state_str += cursor_move(2, 22) + str(data.hosei.val).rjust(3, " ") # proration
         # p1.ukemi1.val
-        # state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ") # untec val 1
+        state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ") # untec val 1
 
         if p2.ukemi2.val != 0:
             state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ") # untec val 2
