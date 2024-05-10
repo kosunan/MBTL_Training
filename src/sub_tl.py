@@ -134,7 +134,7 @@ def action_element_cre(n1, n2):
 
 
 def freeze_frame_cre(p1, p2):
-    if p1.freeze_frame.val == 16 or p1.freeze_frame.val == 80 or p1.freeze_frame.val == 1:  # 暗転しているとき
+    if p1.freeze_frame.val == 16: ## or p1.freeze_frame.val == 80 or p1.freeze_frame.val == 1:  # 暗転しているとき
         cfg.freeze_frame += 1
 
     elif abs(p2.freeze_frame.val) == 128:  # 暗転しているとき
