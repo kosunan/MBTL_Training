@@ -9,11 +9,9 @@ from Fighting_Game_Indicator import indicator
 
 from mem_access_util import mem_util
 
-import save_tl
 import cfg_tl
 
 cfg = cfg_tl
-save = save_tl
 
 windll = ctypes.windll
 create_string_buffer = ctypes.create_string_buffer
@@ -69,28 +67,6 @@ def situationCheck(index):
             n.r_mem()
 
 
-def situationMem(index):
-    cfg.mem_index = index
-    save.game_data = copy.deepcopy(cfg.game_data)  # 状況を記憶
-    save.characters_data_list = copy.deepcopy(cfg.characters_data_list)  # 状況を記憶
-
-
-def situationWrit():
-    data = save.game_data
-
-    check_data_list = save.characters_data_list
-
-    d1 = check_data_list[cfg.mem_index].characters_data
-
-    data.cam.w_mem()  # 状況を再現
-
-    for n in d1:
-        n.gauge.w_mem()
-        n.moon.w_mem()
-        n.moon_st.w_mem()
-        n.x_posi.w_mem()
-
-
 def action_element_cre(n1, n2):
     jmp_number = [34, 35, 36, 37]
     jmp2_number = [39, 38, 40]
@@ -135,6 +111,7 @@ def action_element_cre(n1, n2):
 
 def freeze_frame_cre(p1, p2):
     if p1.freeze_frame.val == 16: ## or p1.freeze_frame.val == 80 or p1.freeze_frame.val == 1:  # 暗転しているとき
+    if p1.freeze_frame.val == 16:  # or p1.freeze_frame.val == 80 or p1.freeze_frame.val == 1:  # 暗転しているとき
         cfg.freeze_frame += 1
 
     elif abs(p2.freeze_frame.val) == 128:  # 暗転しているとき
@@ -580,38 +557,38 @@ def view(view_data, debug_data, current_index):
         p1 = d1[0]
         p2 = d1[1]
 
-        state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ") # firstAct
-        state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ") # advantage
-        state_str += cursor_move(2, 22) + str(data.hosei.val).rjust(3, " ") # proration
+        state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ")  # firstAct
+        state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ")  # advantage
+        state_str += cursor_move(2, 22) + str(data.hosei.val).rjust(3, " ")  # proration
         # p1.ukemi1.val
-        state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ") # untec val 1
+        state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ")  # untec val 1
 
         if p2.ukemi2.val != 0:
-            state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ") # untec val 2
+            state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ")  # untec val 2
         Range = p1.x_posi.val - p2.x_posi.val
 
-        state_str += cursor_move(2, 36) + str(abs(Range)).rjust(6, " ") # range
-        state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ") # position p1 val
-        state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ") # position p2 val
+        state_str += cursor_move(2, 36) + str(abs(Range)).rjust(6, " ")  # range
+        state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ")  # position p1 val
+        state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ")  # position p2 val
         state_str += cursor_move(1, 68) + str(
             "{:.02f}".format(p1.gauge.val / 100)
-        ).rjust(6, " ") # circuit p1 val
+        ).rjust(6, " ")  # circuit p1 val
         state_str += cursor_move(2, 68) + str(
             "{:.02f}".format(p2.gauge.val / 100)
-        ).rjust(6, " ") # circuit p2 val
+        ).rjust(6, " ")  # circuit p2 val
         state_str += cursor_move(1, 81) + str(
             "{:.02f}".format(p1.moon.val / 100)
-        ).rjust(6, " ") # moon p1 val
+        ).rjust(6, " ")  # moon p1 val
         state_str += cursor_move(2, 81) + str(
             "{:.02f}".format(p2.moon.val / 100)
-        ).rjust(6, " ") # moon p2 val
+        ).rjust(6, " ")  # moon p2 val
 
-        state_str += cursor_move(1, 96) + str(abs(p1.x_speed.val)).rjust(5, " ") # speed x p1 val
-        state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ") # speed x p2 val
+        state_str += cursor_move(1, 96) + str(abs(p1.x_speed.val)).rjust(5, " ")  # speed x p1 val
+        state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ")  # speed x p2 val
         state_str += cursor_move(1, 103) + str(p1.y_speed.val).rjust(5, " ")  # speed y p1 val
-        state_str += cursor_move(2, 103) + str(p2.y_speed.val).rjust(5, " ") # speed y p2 val
-        state_str += cursor_move(1, 116) + str(p1.health.val).rjust(5, " ") # health p1 val
-        state_str += cursor_move(2, 116) + str(p2.health.val).rjust(5, " ") # health p2 val
+        state_str += cursor_move(2, 103) + str(p2.y_speed.val).rjust(5, " ")  # speed y p2 val
+        state_str += cursor_move(1, 116) + str(p1.health.val).rjust(5, " ")  # health p1 val
+        state_str += cursor_move(2, 116) + str(p2.health.val).rjust(5, " ")  # health p2 val
 
         # state_str += cursor_move(2, 4) + str(cfg.loop_num).rjust(4, " ")
 
@@ -629,30 +606,6 @@ def view(view_data, debug_data, current_index):
 
 def degug_view(debug_data):
     print(debug_data)
-
-
-def moon_change():
-    characters_data = cfg.characters_data_list[0].characters_data
-    p1 = characters_data[0]
-    p2 = characters_data[1]
-
-    for n in characters_data:
-        n.moon.b_dat = b"\x10\x27"
-        n.moon.w_mem()
-
-    if p1.moon_st.val == 0:
-        p1.moon_st.b_dat = b"\x01"
-        p1.moon_st.w_mem()
-
-        p2.moon_st.b_dat = b"\x01"
-        p2.moon_st.w_mem()
-
-    elif p1.moon_st.val == 1:
-        p1.moon_st.b_dat = b"\x00"
-        p1.moon_st.w_mem()
-
-        p2.moon_st.b_dat = b"\x00"
-        p2.moon_st.w_mem()
 
 
 def max_damage_ini():
@@ -678,45 +631,3 @@ def function_key(data_index):
     elif cfg.on_flag == 1:
         cfg.on_flag = 0
         # play()
-
-
-def startposi(current_index):
-    data = save.game_data
-    d1 = save.characters_data_list[cfg.mem_index].characters_data
-
-    x_p1 = d1[0].x_posi.val
-    x_p2 = d1[1].x_posi.val
-
-    b_ini_posi_flag = b"\x00"
-    if x_p1 < x_p2:
-        b_ini_posi_flag = b"\x00"
-
-    if x_p1 > x_p2:
-        b_ini_posi_flag = b"\x05"
-
-    if x_p1 == 262144:
-        b_ini_posi_flag = b"\x04"
-
-    if x_p1 == -262144:
-        b_ini_posi_flag = b"\x03"
-
-    if x_p2 == 262144:
-        b_ini_posi_flag = b"\x02"
-
-    if x_p2 == -262144:
-        b_ini_posi_flag = b"\x01"
-
-    data.start_posi.b_dat = b_ini_posi_flag
-    data.start_posi.w_mem()
-
-
-def reversal():
-    data = cfg.game_data
-    data.cam_1.b_dat.raw = pack("l", data.cam_1.val * -1)
-    data.cam_1.w_mem()
-
-    characters_data = cfg.characters_data_list[0].characters_data
-    for n in characters_data:
-        n.x_posi.val = n.x_posi.val * -1
-        n.x_posi.b_dat.raw = pack("l", n.x_posi.val)
-        n.x_posi.w_mem()
