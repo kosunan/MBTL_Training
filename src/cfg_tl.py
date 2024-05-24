@@ -20,7 +20,7 @@ template_view_flag = 0
 loop_num = 0
 
 # list of addresses
-TIMER_ADDRESS = 0x62ED04
+TIMER_ADDRESS = 0x8A9E00
 TR_FLAG_ADDRESS = 0x874874
 DAMAGE_ADDRESS = 0x8AA020
 MAX_DAMAGE_ADDRESS = 0x8C5AB0
@@ -60,8 +60,8 @@ class Game_Data_Class:
         # self.timer_2 = pack(list, 0x62ACB8, 4)
         self.tr_flag = pack(list, TR_FLAG_ADDRESS, 4)
         self.damage = pack(list, DAMAGE_ADDRESS, 4)
-        self.hosei = pack(list, self.damage.ad - 12, 4)# proration
-        
+        self.hosei = pack(list, self.damage.ad - 12, 4)  # proration
+
         self.ukemi = pack(list, 0x8AA01C, 2)  # 受け身不能時間補正 #
         # self.cam = pack(list, 0x8A7970, 1500)
         # self.cam_1 = pack(list, self.cam.ad + 0xF8, 4)
