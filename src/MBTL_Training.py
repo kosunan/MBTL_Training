@@ -42,10 +42,11 @@ while attempt < max_attempts:
 # ウィンドウが見つかった場合にサイズを設定
 if cmd_window:
     time.sleep(0.1)
+
     def resize_windows_with_title(title, width, height):
         # 指定したタイトルを持つすべてのウィンドウを取得
         windows = gw.getWindowsWithTitle(title)
-        
+
         if windows:
             for window in windows:
                 # ウィンドウのサイズを変更
@@ -57,7 +58,6 @@ if cmd_window:
     new_height = 200  # 変更後の高さ
 
     resize_windows_with_title(title_to_resize, new_width, new_height)
-
 
 
 # ベースアドレス取得 # Get base address
@@ -126,11 +126,6 @@ while True:
             if cfg.save_flag == 1:
                 # リセット時の開始位置固定化
                 sub.startposi(data_index)
-
-            if timer <= 3:
-                indicator.bar_ini()
-                if cfg.save_flag == 1:
-                    sub.situationWrit()  # 状況再現
 
             data_index += 1
 
