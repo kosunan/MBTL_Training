@@ -14,6 +14,22 @@ import sub_tl
 cfg = cfg_tl
 sub = sub_tl
 
+
+def high_precision_sleep_until(target_absolute_time):
+    # Calculate the remaining time until the target absolute time
+    remaining_time = target_absolute_time - time.perf_counter()
+
+    if remaining_time > 0:
+        # Initial wait for the major part of the time
+        initial_sleep_time = remaining_time - 0.002
+        if initial_sleep_time > 0:
+            time.sleep(initial_sleep_time)
+
+        # Actively wait for the remaining time
+        while time.perf_counter() < target_absolute_time:
+            pass
+
+
 windll.winmm.timeBeginPeriod(1)  # タイマー精度を1msec単位にする
 indicator.ex_cmd_enable()
 
@@ -22,7 +38,7 @@ subprocess.run("cls", shell=True)
 
 
 # タイトルを設定する
-title = "MBTL_Training 1.12.2"
+title = "MBTL_Training 1.12.4"
 subprocess.run("title "+title, shell=True)
 
 # タイトルに合致するウィンドウを取得するまで待機
@@ -74,11 +90,9 @@ list_len = len(cfg.characters_data_list)
 timer = 0
 timer_old = 0
 tr_flag = 0
+FRAME_DURATION = 0.013
 
 while True:
-
-    time.sleep(0.001)
-
     # トレーニングモードチェック # Training mode check
     tr_flag = cfg.game_data.tr_flag.r_mem()
 
@@ -88,6 +102,7 @@ while True:
         time.sleep(0.5)
         os.system("cls")
         cfg.save_flag = 0
+        time.sleep(0.01)
 
     # トレーニングモードの場合
     elif tr_flag == 300 or tr_flag == 103:
@@ -95,24 +110,20 @@ while True:
 
         # タイマーチェック
         timer = cfg.game_data.timer.r_mem()
-        # timer_2 = cfg.game_data.timer_2.r_mem()
-
-        # cfg.loop_num += 1
 
         # フレームの切り替わりを監視
         if timer != timer_old:
             timer_old = timer
+
+            start_time = time.perf_counter()
+            end_time = start_time + FRAME_DURATION
             time.sleep(0.009)  # データが安定するまで待機
 
             sub.situationCheck(data_index)  # 各種数値の取得
 
             sub.content_creation(data_index)  # 各種データ作成
-            characters_elements = cfg.characters_data_list[
-                data_index
-            ].characters_elements
-            characters_debug_elements = cfg.characters_data_list[
-                data_index
-            ].characters_debug_elements
+            characters_elements = cfg.characters_data_list[data_index].characters_elements
+            characters_debug_elements = cfg.characters_data_list[data_index].characters_debug_elements
 
             view_data, debug_data = indicator.frame_circulation_indicator(
                 characters_elements,
@@ -122,12 +133,10 @@ while True:
             )
 
             sub.view(view_data, debug_data, data_index)
-            # cfg.loop_num = 0
-            if cfg.save_flag == 1:
-                # リセット時の開始位置固定化
-                sub.startposi(data_index)
 
             data_index += 1
 
             if data_index == list_len:
                 data_index = 0
+
+            high_precision_sleep_until(end_time)
