@@ -110,7 +110,6 @@ def action_element_cre(n1, n2):
 
 
 def freeze_frame_cre(p1, p2):
-    if p1.freeze_frame.val == 16: ## or p1.freeze_frame.val == 80 or p1.freeze_frame.val == 1:  # 暗転しているとき
     if p1.freeze_frame.val == 16:  # or p1.freeze_frame.val == 80 or p1.freeze_frame.val == 1:  # 暗転しているとき
         cfg.freeze_frame += 1
 
@@ -510,87 +509,91 @@ def cursor_move(line, index):
 
 def template_view():
     state_str = ""
-    if cfg.template_view_flag == 0:
-        cfg.template_view_flag = 1
+    end_color = "\x1b[0m"
 
-        end = "\x1b[0m"
+    # 行ごとに情報を整理
+    first_row_info = "|firstAct|adv|proration|  untec|  range|position -000000|circuit 000.00%|moon 000.00%|speed x 0000|y 0000|health 00000|"
+    second_row_info = "|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|       00000|"
 
-        #                                        10        20        30        40        50        60        70        80        90       100
-        #                               123456789112345678921234567893123456789412345678951234567896123456789712345678981234567899123456789012345678991
-        state_str += (
-            cursor_move(1, 3)
-            + "|firstAct|adv|proration|  untec|  range|position -000000|circuit 000.00%|moon 000.00%|speed x 0000|y 0000|health 00000|"
-        )
-        state_str += (
-            cursor_move(2, 3)
-            + "|      00|-00|     000%|000,000| 000000|         -000000|        000.00%|     000.00%|        0000|  0000|       00000|"
-        )
+    # フォーマットされた文字列に情報を追加
+    state_str += cursor_move(1, 3) + first_row_info
+    state_str += cursor_move(2, 3) + second_row_info
 
-        state_str += cursor_move(1, 122)
-        state_str += "motion " + cfg.G_mot + "01" + end
-        state_str += "  atk " + cfg.G_atk + "01" + end
-        state_str += "  stun " + cfg.G_grd_stun + "01" + end
-        state_str += "  jmp " + cfg.G_jmp + "01" + end
-        state_str += " air " + "01" + end
+    # カラーコード付きの文字列の情報を整理
+    motion_info = f"motion {cfg.G_mot}01{end_color}"
+    atk_info = f"  atk {cfg.G_atk}01{end_color}"
+    stun_info = f"  stun {cfg.G_grd_stun}01{end_color}"
+    jmp_info = f"  jmp {cfg.G_jmp}01{end_color}"
+    air_info = f" air 01{end_color}"
 
-        state_str += cursor_move(2, 122)
-        state_str += " seeld " + cfg.G_seeld + "01" + end
-        state_str += "  inv " + cfg.G_inv + "01" + end
-        state_str += "  stop " + cfg.G_hit_stop + "01" + end
-        state_str += " armor" + cfg.G_armor + "01" + end
+    # カラーコード付きの文字列を追加
+    state_str += cursor_move(1, 122) + motion_info
+    state_str += atk_info
+    state_str += stun_info
+    state_str += jmp_info
+    state_str += air_info
 
-        state_str += "      ^"
+    # カラーコード付きの文字列の情報を整理
+    seeld_info = f" seeld {cfg.G_seeld}01{end_color}"
+    inv_info = f"  inv {cfg.G_inv}01{end_color}"
+    stop_info = f"  stop {cfg.G_hit_stop}01{end_color}"
+    armor_info = f" armor{cfg.G_armor}01{end_color}"
+
+    # カラーコード付きの文字列を追加
+    state_str += cursor_move(2, 122) + seeld_info
+    state_str += inv_info
+    state_str += stop_info
+    state_str += armor_info
+
+    state_str += "      ^"
 
     return state_str
 
 
+# 定数の定義
+RESET_COLOR = "\x1b[0m"
+ERASE_LINE = "\x1b[0m\x1b[49m\x1b[K\x1b[1E"
+CURSOR_HOME = "\x1b[1;1H"
+HIDE_CURSOR = "\x1b[?25l"
+
+
+def format_value(value, width):
+    """指定された幅で値を右寄せしてフォーマットします。"""
+    return str(value).rjust(width, " ")
+
+
 def view(view_data, debug_data, current_index):
-    DEF = "\x1b[0m"
-    END = "\x1b[0m" + "\x1b[49m" + "\x1b[K" + "\x1b[1E"
-    state_str = "\x1b[1;1H" + "\x1b[?25l"
+    state_str = CURSOR_HOME + HIDE_CURSOR
 
     if cfg.light_mode_flag == 0:
         state_str += template_view()
 
-        data = cfg.game_data
-        d1 = cfg.characters_data_list[current_index].characters_data
-        p1 = d1[0]
-        p2 = d1[1]
+        p1, p2 = cfg.characters_data_list[current_index].characters_data[:2]
+        p1_pos, p2_pos = format_value(p1.x_posi.val, 7), format_value(p2.x_posi.val, 7)
+        p1_circuit, p2_circuit = format_value(p1.gauge.val / 100, 6), format_value(p2.gauge.val / 100, 6)
+        p1_moon, p2_moon = format_value(p1.moon.val / 100, 6), format_value(p2.moon.val / 100, 6)
+        p1_x_speed, p2_x_speed = format_value(abs(p1.x_speed.val), 5), format_value(abs(p2.x_speed.val), 5)
+        p1_health, p2_health = format_value(p1.health.val, 5), format_value(p2.health.val, 5)
 
-        state_str += cursor_move(2, 10) + str(p1.first_active).rjust(2, " ")  # firstAct
-        state_str += cursor_move(2, 13) + str(cfg.advantage_f).rjust(3, " ")  # advantage
-        state_str += cursor_move(2, 22) + str(data.hosei.val).rjust(3, " ")  # proration
-        # p1.ukemi1.val
-        state_str += cursor_move(2, 27) + str(data.ukemi.val).rjust(3, " ")  # untec val 1
-
+        state_str += cursor_move(2, 10) + format_value(p1.first_active, 2)  # firstAct
+        state_str += cursor_move(2, 13) + format_value(cfg.advantage_f, 3)  # advantage
+        state_str += cursor_move(2, 22) + format_value(cfg.game_data.hosei.val, 3)  # proration
+        state_str += cursor_move(2, 27) + format_value(cfg.game_data.ukemi.val, 3)  # untec val 1
         if p2.ukemi2.val != 0:
-            state_str += cursor_move(2, 31) + str(p2.ukemi2.val + 1).rjust(3, " ")  # untec val 2
-        Range = p1.x_posi.val - p2.x_posi.val
-
-        state_str += cursor_move(2, 36) + str(abs(Range)).rjust(6, " ")  # range
-        state_str += cursor_move(1, 52) + str(p1.x_posi.val).rjust(7, " ")  # position p1 val
-        state_str += cursor_move(2, 52) + str(p2.x_posi.val).rjust(7, " ")  # position p2 val
-        state_str += cursor_move(1, 68) + str(
-            "{:.02f}".format(p1.gauge.val / 100)
-        ).rjust(6, " ")  # circuit p1 val
-        state_str += cursor_move(2, 68) + str(
-            "{:.02f}".format(p2.gauge.val / 100)
-        ).rjust(6, " ")  # circuit p2 val
-        state_str += cursor_move(1, 81) + str(
-            "{:.02f}".format(p1.moon.val / 100)
-        ).rjust(6, " ")  # moon p1 val
-        state_str += cursor_move(2, 81) + str(
-            "{:.02f}".format(p2.moon.val / 100)
-        ).rjust(6, " ")  # moon p2 val
-
-        state_str += cursor_move(1, 96) + str(abs(p1.x_speed.val)).rjust(5, " ")  # speed x p1 val
-        state_str += cursor_move(2, 96) + str(abs(p2.x_speed.val)).rjust(5, " ")  # speed x p2 val
-        state_str += cursor_move(1, 103) + str(p1.y_speed.val).rjust(5, " ")  # speed y p1 val
-        state_str += cursor_move(2, 103) + str(p2.y_speed.val).rjust(5, " ")  # speed y p2 val
-        state_str += cursor_move(1, 116) + str(p1.health.val).rjust(5, " ")  # health p1 val
-        state_str += cursor_move(2, 116) + str(p2.health.val).rjust(5, " ")  # health p2 val
-
-        # state_str += cursor_move(2, 4) + str(cfg.loop_num).rjust(4, " ")
+            state_str += cursor_move(2, 31) + format_value(p2.ukemi2.val + 1, 3)  # untec val 2
+        state_str += cursor_move(2, 36) + format_value(abs(p1.x_posi.val - p2.x_posi.val), 6)  # range
+        state_str += cursor_move(1, 52) + p1_pos  # position p1 val
+        state_str += cursor_move(2, 52) + p2_pos  # position p2 val
+        state_str += cursor_move(1, 68) + p1_circuit  # circuit p1 val
+        state_str += cursor_move(2, 68) + p2_circuit  # circuit p2 val
+        state_str += cursor_move(1, 81) + p1_moon  # moon p1 val
+        state_str += cursor_move(2, 81) + p2_moon  # moon p2 val
+        state_str += cursor_move(1, 96) + p1_x_speed  # speed x p1 val
+        state_str += cursor_move(2, 96) + p2_x_speed  # speed x p2 val
+        state_str += cursor_move(1, 103) + format_value(p1.y_speed.val, 5)  # speed y p1 val
+        state_str += cursor_move(2, 103) + format_value(p2.y_speed.val, 5)  # speed y p2 val
+        state_str += cursor_move(1, 116) + p1_health  # health p1 val
+        state_str += cursor_move(2, 116) + p2_health  # health p2 val
 
         state_str += cursor_move(3, 1) + view_data
     elif cfg.light_mode_flag == 1:
@@ -600,7 +603,7 @@ def view(view_data, debug_data, current_index):
     if cfg.debug_flag == 1:
         state_str += debug_data
 
-    state_str += "\x1b[1;1H"
+    state_str += CURSOR_HOME
     print(state_str)
 
 
