@@ -174,9 +174,9 @@ def content_creation(current_index):
         n1.armor_f = n2.armor_f
         n1.bunker_f = n2.bunker_f
 
-        n1.motion.val = 256 - n1.motion.val
-        if n1.motion.val == 256:
-            n1.motion.val = 0
+        # n1.motion.val = 256 - n1.motion.val
+        # if n1.motion.val == 256:
+        #     n1.motion.val = 0
 
         if n1.hitstop.val == 65536:
             n1.hitstop.val = 0
@@ -233,6 +233,8 @@ def content_creation(current_index):
         for list_a in ignore_number:
             if n1.motion_type.val == list_a:
                 n1.ignore_flag = 1
+                n1.motion.val = 0
+
                 break
 
         action_element_cre(n1, n2)
@@ -597,7 +599,6 @@ def view(view_data, debug_data, current_index):
 
         state_str += cursor_move(3, 1) + view_data
     elif cfg.light_mode_flag == 1:
-        cfg.template_view_flag = 0
         state_str += cursor_move(1, 1) + view_data
 
     if cfg.debug_flag == 1:
@@ -622,12 +623,12 @@ def function_key(data_index):
     if (keyboard.is_pressed("9")) and (keyboard.is_pressed("0")):
         if cfg.debug_flag == 0:
             cfg.debug_flag = 1
-            cfg.template_view_flag = 0
+
             os.system("mode con: cols=180 lines=30")
 
         elif cfg.debug_flag == 1:
             cfg.debug_flag = 0
-            cfg.template_view_flag = 0
+
             os.system("mode con: cols=165 lines=8")
         time.sleep(0.3)
 

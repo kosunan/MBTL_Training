@@ -80,7 +80,7 @@ class Character_Data_Class:
         self.cont_list = list = []
         self.motion_type = pack(list, 0x1C + size, 2)
         self.c_timer = pack(list, 0x4C + size, 2)
-        self.motion = pack(list, 0x570 + size, 4)
+        self.motion = pack(list, 0x728 + size, 1)
         self.atk = pack(list, 0x60 + size, 1)
         self.inv = pack(list, 0x61 + size, 1)
         self.x_posi = pack(list, 0x64 + size, 4)
